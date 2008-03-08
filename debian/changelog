@@ -1,5 +1,5 @@
-sugar-toolkit (0.79.0-1) UNRELEASED; urgency=low
+sugar-toolkit (0.79.0-1) unstable; urgency=low
 
   * Initial release. Closes: bug#444021.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sat, 08 Mar 2008 19:11:21 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 08 Mar 2008 20:57:22 +0100
