@@ -151,7 +151,6 @@ class Palette(gtk.Window):
         self.set_border_width(self.style.xthickness)
         self.connect('realize', self._realize_cb)
         self.connect('destroy', self.__destroy_cb)
-        self.connect('map-event', self.__map_event_cb)
 
         self.palette_state = self.PRIMARY
 
@@ -415,10 +414,15 @@ class Palette(gtk.Window):
             self._update_full_request()
             self._alignment = self._invoker.get_alignment(self._full_request)
             self._update_position()
-            self.set_transient_for(self._invoker.get_toplevel())
 
         self.menu.set_active(True)
         self.show()
+
+        self._invoker.notify_popup()
+
+        self._up = True
+        _palette_observer.emit('popup', self)
+        self.emit('popup')
 
     def _hide(self):
         self._secondary_anim.stop()
@@ -509,13 +513,6 @@ class Palette(gtk.Window):
     def _palette_observer_popup_cb(self, observer, palette):
         if self != palette:
             self._hide()
-
-    def __map_event_cb(self, widget, event):
-        self._invoker.notify_popup()
-
-        self._up = True
-        _palette_observer.emit('popup', self)
-        self.emit('popup')
 
 class PaletteActionBar(gtk.HButtonBox):
     def add_action(label, icon_name=None):

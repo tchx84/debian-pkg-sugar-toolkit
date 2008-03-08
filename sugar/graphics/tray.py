@@ -261,10 +261,10 @@ class _IconWidget(gtk.EventBox):
 
         self.set_app_paintable(True)
 
-        self._icon = Icon(icon_name=icon_name, xo_color=xo_color,
-                          icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
-        self.add(self._icon)
-        self._icon.show()
+        icon = Icon(icon_name=icon_name, xo_color=xo_color,
+                    icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+        self.add(icon)
+        icon.show()
 
     def do_expose_event(self, event):
         if self._palette and self._palette.is_up():
@@ -278,9 +278,6 @@ class _IconWidget(gtk.EventBox):
             self._palette.props.invoker = None
         self._palette = palette
         self._palette.props.invoker = ToolInvoker(self)
-
-    def get_icon(self):
-        return self._icon
 
 class TrayIcon(gtk.ToolItem):
     __gtype_name__ = "SugarTrayIcon"
@@ -299,8 +296,4 @@ class TrayIcon(gtk.ToolItem):
 
     def set_tooltip(self, text):
         self.set_palette(Palette(text))
-
-    def get_icon(self):
-        return self._icon_widget.get_icon()
-    icon = property(get_icon, None)
 
