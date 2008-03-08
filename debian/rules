@@ -1,0 +1,33 @@
+#!/usr/bin/make -f
+# -*- mode: makefile; coding: utf-8 -*-
+# Copyright © 2008 Jonas Smedegaard <dr@jones.dk>
+
+# NB! Local CDBS tweaks in use. More info in README.cdbs-tweaks
+DEB_AUTO_UPDATE_ACLOCAL = 1.10
+DEB_AUTO_UPDATE_LIBTOOL = pre
+include debian/cdbs/1/rules/upstream-tarball.mk
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+include debian/cdbs/1/rules/copyright-check.mk
+include debian/cdbs/1/rules/buildinfo.mk
+
+pkg = sugar-toolkit
+
+DEB_UPSTREAM_URL = http://dev.laptop.org/pub/sugar/sources/$(pkg)
+DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
+DEB_UPSTREAM_TARBALL_MD5 = 73bdb8353e5c1d3c0e167f5044f67c11
+
+binary-install/$(pkg)::
+	dh_pycentral
+
+binary-post-install/$(pkg)::
+	rmdir --ignore-fail-on-non-empty --parents $(DEB_DESTDIR)/usr/share/locale
+
+# Needed by upstream build process
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, gettext, intltool, libxml-parser-perl
+
+# Needed for our packaging routines
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-central
+
+# Merge duplicate build-dependencies
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.39)/ s/ *,* *\bcdbs (>= \(0.4.23-1.1\)) *,* */, /g' -e 's/^ *, *//' -e 's/ *, *$$//')
