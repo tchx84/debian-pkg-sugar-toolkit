@@ -49,7 +49,11 @@ import logging
 import os
 import time
 import tempfile
-from hashlib import sha1
+try:
+    from hashlib import sha1
+except ImportError:
+    # Python < 2.5
+    from sha import new as sha1
 import traceback
 
 import gtk, gobject
