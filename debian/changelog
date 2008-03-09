@@ -6,6 +6,8 @@ sugar-toolkit (0.79.0-2) UNRELEASED; urgency=low
   * Recommend sugar, sugar-artwork, sugar-datastore,
     sugar-presence-service, sugar-journal-activity and ttf-dejavu-core.
   * Suggest git-core, subversion and ttf-dejavu-extra.
+  * Patch sugar/activity/activity.py to work on Python < 2.5 missing
+    hashlib module.
 
  -- Jonas Smedegaard <dr@jones.dk>  Sun, 09 Mar 2008 02:20:49 +0100
 
