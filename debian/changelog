@@ -1,4 +1,4 @@
-sugar-toolkit (0.79.0-2) UNRELEASED; urgency=low
+sugar-toolkit (0.79.0-2) unstable; urgency=low
 
   * Depend on sugar-base, python-gtk2, python-dbus, python-gobject,
     python-cairo, python-gnome2-desktop (new enough to include rsvg),
@@ -8,8 +8,12 @@ sugar-toolkit (0.79.0-2) UNRELEASED; urgency=low
   * Suggest git-core, subversion and ttf-dejavu-extra.
   * Patch sugar/activity/activity.py to work on Python < 2.5 missing
     hashlib module.
+  * Update CDBS tweaks:
+    + Replace virtual automake1.10 build-dependency with automake
+  * Semi-auto-update debian/control to update build-dependencies:
+    DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 09 Mar 2008 02:20:49 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Mar 2008 02:10:15 +0100
 
 sugar-toolkit (0.79.0-1) unstable; urgency=low
 
