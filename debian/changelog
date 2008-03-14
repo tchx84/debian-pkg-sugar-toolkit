@@ -14,7 +14,9 @@ sugar-toolkit (0.79.0-3) UNRELEASED; urgency=low
     + Add local autotools.mk, autotools-vars.mk, makefile.mk and
       makefile-vars.mk providing multi-flavor build support needed by
       py-compile.mk.
+    + Add patchsys-quilt.mk.
     + README.cdbs-tweaks updated to mention the above.
+  * Add already applied patch 1001 to fix sha1 routine on python < 2.5.
   * Semi-auto-update debian/control to update build-dependencies:
       DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
