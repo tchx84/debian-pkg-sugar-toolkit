@@ -27,8 +27,8 @@ DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
 DEB_UPSTREAM_TARBALL_MD5 = 73bdb8353e5c1d3c0e167f5044f67c11
 
 # Drop created dir if empty to please lintian
-#binary-post-install/$(pkg)::
-#	rmdir --ignore-fail-on-non-empty --parents $(DEB_DESTDIR)/usr/share/locale
+binary-post-install/$(pkg)::
+	rmdir --ignore-fail-on-non-empty --parents $(DEB_DESTDIR)/usr/share/locale
 
 # Regenerate automade files when explicitly requested with
 #   DEB_BUILD_OPTIONS=init,git fakeroot debian/rules autogen
