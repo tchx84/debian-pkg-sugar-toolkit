@@ -3,6 +3,9 @@ sugar-toolkit (0.79.0-3) UNRELEASED; urgency=low
   * Pass over maintenance of the package to the OLPC team: Change
     Maintainer, and add myself to Uploaders.
   * Fix README.packaging to use "pull; fetch --tags" (not "pull -t").
+  * Depend on python-sugar (not sugar-base).
+  * Semi-auto-update debian/control to update build-dependencies:
+      DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
  -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Mar 2008 09:45:54 +0100
 
