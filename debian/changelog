@@ -17,6 +17,8 @@ sugar-toolkit (0.79.0-3) UNRELEASED; urgency=low
     + Add patchsys-quilt.mk.
     + README.cdbs-tweaks updated to mention the above.
   * Add already applied patch 1001 to fix sha1 routine on python < 2.5.
+  * Regenerate patched automade files only explicitly (not at every
+    build), and apply as patch 2991.
   * Semi-auto-update debian/control to update build-dependencies:
       DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
