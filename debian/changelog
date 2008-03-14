@@ -1,3 +1,11 @@
+sugar-toolkit (0.79.0-4) unstable; urgency=low
+
+  * Depend on python-sugar-datastore (not sugar-datastore).
+  * Semi-auto-update debian/control to update build-dependencies:
+      DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 14 Mar 2008 15:57:07 +0100
+
 sugar-toolkit (0.79.0-3) unstable; urgency=low
 
   * Pass over maintenance of the package to the OLPC team: Change
