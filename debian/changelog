@@ -9,9 +9,9 @@ sugar-toolkit (0.79.0-3) UNRELEASED; urgency=low
     be packaged separately?).
   * Change binary package to section python.
   * Update CDBS tweaks:
-    + Add py-compile.mk and python-vars.mk to handle autotools-based
-      Python compilation.  This fixes completely broken packaging.
-    + Add autotools.mk, autotools-vars.mk, makefile.mk and
+    + Add local py-compile.mk and python-vars.mk to handle autotools-
+      based Python compilation.  This fixes completely broken packaging.
+    + Add local autotools.mk, autotools-vars.mk, makefile.mk and
       makefile-vars.mk providing multi-flavor build support needed by
       py-compile.mk.
     + README.cdbs-tweaks updated to mention the above.
