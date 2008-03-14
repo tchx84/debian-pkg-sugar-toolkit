@@ -4,6 +4,17 @@ sugar-toolkit (0.79.0-3) UNRELEASED; urgency=low
     Maintainer, and add myself to Uploaders.
   * Fix README.packaging to use "pull; fetch --tags" (not "pull -t").
   * Depend on python-sugar (not sugar-base).
+  * Rename binary package sugar-toolkit -> python-sugar-toolkit, to
+    comply with Python policy (or maybe not: should each Python module
+    be packaged separately?).
+  * Change binary package to section python.
+  * Update CDBS tweaks:
+    + Add py-compile.mk and python-vars.mk to handle autotools-based
+      Python compilation.  This fixes completely broken packaging.
+    + Add autotools.mk, autotools-vars.mk, makefile.mk and
+      makefile-vars.mk providing multi-flavor build support needed by
+      py-compile.mk.
+    + README.cdbs-tweaks updated to mention the above.
   * Semi-auto-update debian/control to update build-dependencies:
       DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
