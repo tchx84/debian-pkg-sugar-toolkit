@@ -1,3 +1,9 @@
+sugar-toolkit (0.79.0-6) UNRELEASED; urgency=low
+
+  * Recommend unzip, needed for bundlebuilder (activity packaging).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 16 Mar 2008 22:27:54 +0100
+
 sugar-toolkit (0.79.0-5) unstable; urgency=low
 
   * Update CDBS tweaks:
