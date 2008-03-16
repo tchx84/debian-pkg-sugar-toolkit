@@ -5,6 +5,7 @@ sugar-toolkit (0.79.0-5) unstable; urgency=low
     + Update python-vars.mk and makefile.mk for improved DEB_*PACKAGES
       and build-dependency resolving.
     + Cosmetic updates to README.cdbs-tweaks.
+  * Recommend python-olpc-datastore (not python-sugar-datastore).
 
  -- Jonas Smedegaard <dr@jones.dk>  Sat, 15 Mar 2008 21:26:50 +0100
 

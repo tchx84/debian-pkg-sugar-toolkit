@@ -13,7 +13,7 @@ XS-Python-Version: all
 Package: python-sugar-toolkit
 Architecture: any
 Depends: ${shlibs:Depends}, ${python:Depends}, python-gtk2, python-dbus, python-gobject, python-cairo, python-gnome2-desktop (>= 2.16), python-telepathy, python-json, python-sugar
-Recommends: sugar, python-sugar-datastore, sugar-presence-service, sugar-journal-service, ttf-dejavu-core
+Recommends: sugar, python-olpc-datastore, sugar-presence-service, sugar-journal-service, ttf-dejavu-core
 Suggests: git-core, subversion, ttf-dejavu-extra
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}
