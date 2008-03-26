@@ -37,7 +37,7 @@ binary-post-install/$(pkg)::
 ifneq (,$(findstring init,$(DEB_BUILD_OPTIONS)))
 DEB_PHONY_RULES += autogen
 autogen: debian/stamp-autotools-files clean
-ifneq (,$(findstring init,$(DEB_BUILD_OPTIONS)))
+ifneq (,$(findstring git,$(DEB_BUILD_OPTIONS)))
 	git-ls-files -m -z -x debian/\* -x config.guess -x config.sub \
 		| xargs -0 git diff -- \
 		> debian/patches/2991_autoreconf.patch
