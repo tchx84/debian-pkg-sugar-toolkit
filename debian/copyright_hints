@@ -1,11 +1,84 @@
-*No copyright* UNKNOWN []: AUTHORS, Makefile.am, README, configure.ac, m4/python.m4, po/ChangeLog, po/POTFILES.in, sugar/Makefile.am, sugar/_sugarext.defs, sugar/_sugarext.override, sugar/activity/Makefile.am, sugar/bundle/Makefile.am, sugar/clipboard/Makefile.am, sugar/datastore/Makefile.am, sugar/graphics/Makefile.am, sugar/presence/Makefile.am, sugar/sugar-marshal.c, sugar/sugar-marshal.h, sugar/sugar-marshal.list
-LGPL-2+ [2007, Red Hat, Inc]: sugar/bundle/activitybundle.py, sugar/bundle/bundle.py, sugar/bundle/contentbundle.py, sugar/graphics/animator.py, sugar/graphics/entry.py, sugar/graphics/panel.py, sugar/graphics/style.py, sugar/graphics/toggletoolbutton.py, sugar/graphics/toolbox.py, sugar/graphics/toolbutton.py, sugar/graphics/toolcombobox.py, sugar/graphics/window.py, sugar/presence/activity.py, sugar/presence/buddy.py, sugar/presence/presenceservice.py, sugar/sugar-preview.c, sugar/sugar-preview.h, sugar/wm.py
-LGPL-2+ [2006-2007 Red Hat, Inc]: sugar/activity/activity.py, sugar/activity/activityfactory.py, sugar/activity/activityhandle.py, sugar/activity/activityservice.py, sugar/activity/bundlebuilder.py, sugar/env.py, sugar/graphics/icon.py, sugar/graphics/roundbox.py, sugar/graphics/xocolor.py, sugar/network.py, sugar/sugar-address-entry.c, sugar/sugar-address-entry.h, sugar/util.py
-LGPL-2+ [2006-2007, Red Hat, Inc]: sugar/_sugarextmodule.c, sugar/activity/__init__.py, sugar/bundle/__init__.py, sugar/graphics/__init__.py, sugar/presence/__init__.py, sugar/profile.py, sugar/sugar-key-grabber.c, sugar/sugar-key-grabber.h, sugar/sugar-menu.c, sugar/sugar-menu.h
-LGPL-2+ [2007, One Laptop Per Child]: sugar/clipboard/__init__.py, sugar/clipboard/clipboardservice.py, sugar/datastore/__init__.py, sugar/datastore/datastore.py, sugar/graphics/alert.py, sugar/graphics/combobox.py, sugar/graphics/iconentry.py, sugar/graphics/objectchooser.py, sugar/graphics/tray.py
-GENERATED FILE [1994-2002]: Makefile.in, sugar/Makefile.in, sugar/activity/Makefile.in, sugar/bundle/Makefile.in, sugar/clipboard/Makefile.in, sugar/datastore/Makefile.in, sugar/graphics/Makefile.in, sugar/presence/Makefile.in
-LGPL-2+ [2004-2006 Christian Hammond]: sugar/sexy-icon-entry.c, sugar/sexy-icon-entry.h
-LGPL-2+ [2007, Eduardo Silva <edsiper@gmail.com>]: sugar/graphics/menuitem.py, sugar/graphics/palette.py
+*No copyright* UNKNOWN []: AUTHORS
+	Makefile.am
+	README
+	configure.ac
+	m4/python.m4
+	po/ChangeLog
+	po/POTFILES.in
+	sugar/Makefile.am
+	sugar/_sugarext.defs
+	sugar/_sugarext.override
+	sugar/activity/Makefile.am
+	sugar/bundle/Makefile.am
+	sugar/clipboard/Makefile.am
+	sugar/datastore/Makefile.am
+	sugar/graphics/Makefile.am
+	sugar/presence/Makefile.am
+	sugar/sugar-marshal.c
+	sugar/sugar-marshal.h
+	sugar/sugar-marshal.list
+LGPL-2+ [2007, Red Hat, Inc]: sugar/bundle/activitybundle.py
+	sugar/bundle/bundle.py
+	sugar/bundle/contentbundle.py
+	sugar/graphics/animator.py
+	sugar/graphics/entry.py
+	sugar/graphics/panel.py
+	sugar/graphics/style.py
+	sugar/graphics/toggletoolbutton.py
+	sugar/graphics/toolbox.py
+	sugar/graphics/toolbutton.py
+	sugar/graphics/toolcombobox.py
+	sugar/graphics/window.py
+	sugar/presence/activity.py
+	sugar/presence/buddy.py
+	sugar/presence/presenceservice.py
+	sugar/sugar-preview.c
+	sugar/sugar-preview.h
+	sugar/wm.py
+LGPL-2+ [2006-2007 Red Hat, Inc]: sugar/activity/activity.py
+	sugar/activity/activityfactory.py
+	sugar/activity/activityhandle.py
+	sugar/activity/activityservice.py
+	sugar/activity/bundlebuilder.py
+	sugar/env.py
+	sugar/graphics/icon.py
+	sugar/graphics/roundbox.py
+	sugar/graphics/xocolor.py
+	sugar/network.py
+	sugar/sugar-address-entry.c
+	sugar/sugar-address-entry.h
+	sugar/util.py
+LGPL-2+ [2006-2007, Red Hat, Inc]: sugar/_sugarextmodule.c
+	sugar/activity/__init__.py
+	sugar/bundle/__init__.py
+	sugar/graphics/__init__.py
+	sugar/presence/__init__.py
+	sugar/profile.py
+	sugar/sugar-key-grabber.c
+	sugar/sugar-key-grabber.h
+	sugar/sugar-menu.c
+	sugar/sugar-menu.h
+LGPL-2+ [2007, One Laptop Per Child]: sugar/clipboard/__init__.py
+	sugar/clipboard/clipboardservice.py
+	sugar/datastore/__init__.py
+	sugar/datastore/datastore.py
+	sugar/graphics/alert.py
+	sugar/graphics/combobox.py
+	sugar/graphics/iconentry.py
+	sugar/graphics/objectchooser.py
+	sugar/graphics/tray.py
+GENERATED FILE [1994-2002]: Makefile.in
+	sugar/Makefile.in
+	sugar/activity/Makefile.in
+	sugar/bundle/Makefile.in
+	sugar/clipboard/Makefile.in
+	sugar/datastore/Makefile.in
+	sugar/graphics/Makefile.in
+	sugar/presence/Makefile.in
+LGPL-2+ [2004-2006 Christian Hammond]: sugar/sexy-icon-entry.c
+	sugar/sexy-icon-entry.h
+LGPL-2+ [2007, Eduardo Silva <edsiper@gmail.com>]: sugar/graphics/menuitem.py
+	sugar/graphics/palette.py
 *No copyright* GENERATED FILE []: sugar/_sugarext.c
 GENERATED FILE [1992-1996, 1998-2001]: configure
 GENERATED FILE [1995-2002 Free Software Foundation, Inc / 2001-2004 Red Hat, Inc / 1996-2004]: aclocal.m4

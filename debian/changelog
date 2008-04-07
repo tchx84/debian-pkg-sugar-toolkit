@@ -1,8 +1,13 @@
 sugar-toolkit (0.79.0-6) UNRELEASED; urgency=low
 
   * Recommend unzip, needed for bundlebuilder (activity packaging).
+  * Update local cdbs snippets:
+    + Newline-delimit found files in copyright-check.  Update
+      copyright-hints.
+    + Drop wget options broken with recent versions of wget in
+      update-tarball.mk.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 16 Mar 2008 22:27:54 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 07 Apr 2008 21:31:11 +0200
 
 sugar-toolkit (0.79.0-5) unstable; urgency=low
 
