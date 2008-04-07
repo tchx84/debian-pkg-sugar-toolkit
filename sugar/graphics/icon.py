@@ -147,9 +147,20 @@ class _IconBuffer(object):
             badge_file_name = badge_info.get_filename()
             if badge_file_name.endswith('.svg'):
                 handle = self._loader.load(badge_file_name, {}, self.cache)
+
+                dimensions = handle.get_dimension_data()
+                icon_width = int(dimensions[0])
+                icon_height = int(dimensions[1])
+
                 pixbuf = handle.get_pixbuf()
             else:
                 pixbuf = gtk.gdk.pixbuf_new_from_file(badge_file_name)
+
+                icon_width = pixbuf.get_width()
+                icon_height = pixbuf.get_height()
+
+            context.scale(float(size) / icon_width,
+                          float(size) / icon_height)
 
             if not sensitive:
                 pixbuf = self._get_insensitive_pixbuf(pixbuf, widget)
@@ -309,7 +320,10 @@ class Icon(gtk.Image):
         if self._buffer.file_name != self.props.file:
             self._buffer.file_name = self.props.file
 
-        width, height = gtk.icon_size_lookup(self.props.icon_size)
+        if self.props.pixel_size == -1:    
+            width, height = gtk.icon_size_lookup(self.props.icon_size)
+        else:
+            width = height = self.props.pixel_size 
         if self._buffer.width != width or self._buffer.height != height:
             self._buffer.width = width
             self._buffer.height = height
@@ -322,12 +336,6 @@ class Icon(gtk.Image):
 
     def _file_changed_cb(self, image, pspec):
         self._buffer.file_name = self.props.file
-
-    def _update_buffer_size(self):
-        width, height = gtk.icon_size_lookup(self.props.icon_size)
-
-        self._buffer.width = width
-        self._buffer.height = height
 
     def do_size_request(self, requisition):
         self._sync_image_properties()
