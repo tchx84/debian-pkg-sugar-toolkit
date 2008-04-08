@@ -5,8 +5,8 @@ sugar-toolkit (0.79.2-1) unstable; urgency=low
     Highlights:
     + Add default to label arg in palette constructor, for API backwards
       compatibility
-  * Drop no longer needed patch 2991 to apply reconfigured autotools
-    files.
+  * Drop patch 2991 to apply reconfigured autotools files, and instead
+    use (and build-depend on) chrpath to remove hardcoded rpath.
   * Recommend unzip, needed for bundlebuilder (activity packaging).
   * Update local cdbs snippets:
     + Newline-delimit found files in copyright-check.  Update
