@@ -1,11 +1,16 @@
-sugar-toolkit (0.79.0-6) UNRELEASED; urgency=low
+sugar-toolkit (0.79.2-1) unstable; urgency=low
 
+  * New upstream source.
   * Recommend unzip, needed for bundlebuilder (activity packaging).
   * Update local cdbs snippets:
     + Newline-delimit found files in copyright-check.  Update
       copyright-hints.
     + Drop wget options broken with recent versions of wget in
       update-tarball.mk.
+  * Update debian/copyright:
+    + Update some copyright years
+    + Add some changed ownership (Redhat -> OLPC)
+    + Add some new GPL-2+ and LGPL-2+ licensed files.
 
  -- Jonas Smedegaard <dr@jones.dk>  Mon, 07 Apr 2008 21:31:11 +0200
 

@@ -26,7 +26,6 @@ LGPL-2+ [2007, Red Hat, Inc]: sugar/bundle/activitybundle.py
 	sugar/graphics/style.py
 	sugar/graphics/toggletoolbutton.py
 	sugar/graphics/toolbox.py
-	sugar/graphics/toolbutton.py
 	sugar/graphics/toolcombobox.py
 	sugar/graphics/window.py
 	sugar/presence/activity.py
@@ -35,8 +34,7 @@ LGPL-2+ [2007, Red Hat, Inc]: sugar/bundle/activitybundle.py
 	sugar/sugar-preview.c
 	sugar/sugar-preview.h
 	sugar/wm.py
-LGPL-2+ [2006-2007 Red Hat, Inc]: sugar/activity/activity.py
-	sugar/activity/activityfactory.py
+LGPL-2+ [2006-2007 Red Hat, Inc]: sugar/activity/activityfactory.py
 	sugar/activity/activityhandle.py
 	sugar/activity/activityservice.py
 	sugar/activity/bundlebuilder.py
@@ -77,8 +75,6 @@ GENERATED FILE [1994-2002]: Makefile.in
 	sugar/presence/Makefile.in
 LGPL-2+ [2004-2006 Christian Hammond]: sugar/sexy-icon-entry.c
 	sugar/sexy-icon-entry.h
-LGPL-2+ [2007, Eduardo Silva <edsiper@gmail.com>]: sugar/graphics/menuitem.py
-	sugar/graphics/palette.py
 *No copyright* GENERATED FILE []: sugar/_sugarext.c
 GENERATED FILE [1992-1996, 1998-2001]: configure
 GENERATED FILE [1995-2002 Free Software Foundation, Inc / 2001-2004 Red Hat, Inc / 1996-2004]: aclocal.m4
@@ -89,13 +85,18 @@ GPL GENERATED FILE [2000-2001, 2003-2005 Free Software Foundation, Inc]: py-comp
 GPL GENERATED FILE [2000-2003 Free Software Foundation]: intltool-update.in
 GPL-2+ GENERATED FILE [1996-2001, 2003-2006]: ltmain.sh
 GPL-2+ GENERATED FILE [2000-2001, 2003 Free Software Foundation]: intltool-extract.in
+GPL-2+ GENERATED FILE [2001 Eazel, Inc]: m4/intltool.m4
 LGPL-2+ [2002 Red Hat, Inc.; Copyright 1998, 2001 Tim Janik]: sugar/eggaccelerators.c
 LGPL-2+ [2002 Red Hat, Inc]: sugar/eggaccelerators.h
 LGPL-2+ [2006-2007 Red Hat, Inc / 2007, One Laptop Per Child]: sugar/datastore/dbus_helpers.py
+LGPL-2+ [2006-2007 Red Hat, Inc / 2007-2008 One Laptop Per Child]: sugar/activity/activity.py
 LGPL-2+ [2007 One Laptop Per Child / 2006-2007 Red Hat, Inc]: sugar/activity/registry.py
 LGPL-2+ [2007 Red Hat, Inc]: sugar/graphics/palettegroup.py
 LGPL-2+ [2007, Eduardo Silva (edsiper@gmail.com)]: sugar/graphics/notebook.py
-LGPL-2+ [2007, Red Hat, Inc / 2007, One Laptop Per Child]: sugar/graphics/radiotoolbutton.py
+LGPL-2+ [2007, Eduardo Silva <edsiper@gmail.com> / 2008, One Laptop Per Child]: sugar/graphics/palette.py
+LGPL-2+ [2007, Eduardo Silva <edsiper@gmail.com>]: sugar/graphics/menuitem.py
+LGPL-2+ [2007, Red Hat, Inc / 2007-2008, One Laptop Per Child]: sugar/graphics/radiotoolbutton.py
+LGPL-2+ [2007, Red Hat, Inc / 2008, One Laptop Per Child]: sugar/graphics/toolbutton.py
 LGPL-2.1+ [2007 Collabora Ltd. <http://www.collabora.co.uk/>]: sugar/presence/tubeconn.py
 MIT/X11 (BSD like) [and license / notice and this permission notice shall be included in / 1994 X Consortium]: install-sh
 UNKNOWN [1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu>]: po/Makefile.in.in
