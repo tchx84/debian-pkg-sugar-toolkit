@@ -73,13 +73,14 @@ GENERATED FILE [1994-2002]: Makefile.in
 	sugar/datastore/Makefile.in
 	sugar/graphics/Makefile.in
 	sugar/presence/Makefile.in
+GPL GENERATED FILE [1999-2000, 2003-2005 Free Software Foundation, Inc]: compile
+	depcomp
 LGPL-2+ [2004-2006 Christian Hammond]: sugar/sexy-icon-entry.c
 	sugar/sexy-icon-entry.h
 *No copyright* GENERATED FILE []: sugar/_sugarext.c
 GENERATED FILE [1992-1996, 1998-2001]: configure
 GENERATED FILE [1995-2002 Free Software Foundation, Inc / 2001-2004 Red Hat, Inc / 1996-2004]: aclocal.m4
-GPL GENERATED FILE [1996-1997, 1999-2000, 2002-2006]: missing
-GPL GENERATED FILE [1999-2000, 2003-2006 Free Software]: depcomp
+GPL GENERATED FILE [1996-1997, 1999-2000, 2002-2005]: missing
 GPL GENERATED FILE [2000-2001 Eazel, Inc / 2000, 2003 Free Software Foundation]: intltool-merge.in
 GPL GENERATED FILE [2000-2001, 2003-2005 Free Software Foundation, Inc]: py-compile
 GPL GENERATED FILE [2000-2003 Free Software Foundation]: intltool-update.in
