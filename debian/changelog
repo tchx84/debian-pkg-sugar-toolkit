@@ -1,5 +1,9 @@
-sugar-toolkit (0.79.2-2) unstable; urgency=low
+sugar-toolkit (0.79.3-1) unstable; urgency=low
 
+  * New upstream release.
+    Highlights:
+    + Added default to label arg in palette constructor
+  * Drop patch 0001 now applied upstream.
   * Depend on python-hippocanvas (used in graphics routines).
 
  -- Jonas Smedegaard <dr@jones.dk>  Sun, 13 Apr 2008 00:08:19 +0200
