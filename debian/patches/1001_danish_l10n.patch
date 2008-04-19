@@ -1,0 +1,98 @@
+diff --git a/po/da.po b/po/da.po
+new file mode 100644
+index 0000000..e1bb032
+--- /dev/null
++++ b/po/da.po
+@@ -0,0 +1,92 @@
++# Translation into danish of Sugar
++# Copyright (C) 2008 Jonas Smedegaard
++# This file is distributed under the same license as the Sugar package.
++# Jonas Smedegaard <dr@jones.dk>, 2008.
++#
++#, fuzzy
++msgid ""
++msgstr ""
++"Project-Id-Version: Sugar 0.79.0\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2008-04-19 02:45+0200\n"
++"PO-Revision-Date: 2008-04-19 02:45+0200\n"
++"Last-Translator: Jonas Smedegaard <dr@jones.dk>\n"
++"Language-Team: LANGUAGE <LL@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:123
++msgid "Share with:"
++msgstr "Del med:"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:125
++msgid "Private"
++msgstr "Privat"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:126
++msgid "My Neighborhood"
++msgstr "Mit nabolag"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:133
++msgid "Keep"
++msgstr "Behold"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:139
++msgid "Stop"
++msgstr "Stop"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:253
++msgid "Undo"
++msgstr "Fortryd"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:258
++msgid "Redo"
++msgstr "Gentag"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:268
++msgid "Copy"
++msgstr "Kopiér"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:273
++msgid "Paste"
++msgstr "Sæt ind"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:299
++msgid "Activity"
++msgstr "Aktivitet"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:465
++#, python-format
++msgid "%s Activity"
++msgstr "%s aktivitet"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:835
++msgid "Keep error"
++msgstr "Beholdefejl"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:836
++msgid "Keep error: all changes will be lost"
++msgstr "Beholdefejl: alle ændringer går tabt"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:839
++msgid "Don't stop"
++msgstr "Stop ikke"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/activity/activity.py:842
++msgid "Stop anyway"
++msgstr "Stop alligevel"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/graphics/alert.py:166
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/graphics/alert.py:209
++msgid "Cancel"
++msgstr "Afbryd"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/graphics/alert.py:170
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/graphics/alert.py:247
++msgid "Ok"
++msgstr "Ok"
++
++#: /home/jonas/src/GITauth/collab-maint/sugar-toolkit/./po/../sugar/graphics/alert.py:219
++msgid "Continue"
++msgstr "Fortsæt"
