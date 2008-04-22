@@ -1,5 +1,12 @@
-sugar-toolkit (0.79.3-2) UNRELEASED; urgency=low
+sugar-toolkit (0.79.5-1) UNRELEASED; urgency=low
 
+  * New upstream release.
+    Highlights:
+    + Fix callback name for private-invitation
+    + Coding style improvements thanks to pylint
+    + Work around circular dep between Icon and Palette
+    + Use new style properties
+    + Correctly use tempfile.mkstemp()
   * Add patch 1001 adding danish l10n.
   * Add patch 2991 to enable danish l10n in configure.
 
