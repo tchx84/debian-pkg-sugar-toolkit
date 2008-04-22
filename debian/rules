@@ -22,7 +22,7 @@ DEB_UPSTREAM_TARBALL_MD5 = 69a597a94f45d61a345eaef991532ce9
 binary-post-install/$(pkg)::
 	rmdir --ignore-fail-on-non-empty --parents $(DEB_DESTDIR)/usr/share/locale
 
-# Drop created dir if empty to please lintian
+# Strip hardcoded rpath
 binary-strip/$(pkg)::
 	find $(DEB_DESTDIR)/usr/lib -type f -name '*.so' -exec chrpath -d '{}' ';'
 
