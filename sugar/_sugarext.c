@@ -53,7 +53,7 @@ PyTypeObject G_GNUC_INTERNAL PySexyIconEntry_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarAddressEntry_Type = {
     PyObject_HEAD_INIT(NULL)
     0,                                 /* ob_size */
-    "_sugarext.AddressEntry",                   /* tp_name */
+    "sugar._sugarext.AddressEntry",                   /* tp_name */
     sizeof(PyGObject),          /* tp_basicsize */
     0,                                 /* tp_itemsize */
     /* methods */
@@ -167,7 +167,7 @@ static const PyMethodDef _PySugarKeyGrabber_methods[] = {
 PyTypeObject G_GNUC_INTERNAL PySugarKeyGrabber_Type = {
     PyObject_HEAD_INIT(NULL)
     0,                                 /* ob_size */
-    "_sugarext.KeyGrabber",                   /* tp_name */
+    "sugar._sugarext.KeyGrabber",                   /* tp_name */
     sizeof(PyGObject),          /* tp_basicsize */
     0,                                 /* tp_itemsize */
     /* methods */
@@ -266,7 +266,7 @@ static const PyMethodDef _PySugarMenu_methods[] = {
 PyTypeObject G_GNUC_INTERNAL PySugarMenu_Type = {
     PyObject_HEAD_INIT(NULL)
     0,                                 /* ob_size */
-    "_sugarext.Menu",                   /* tp_name */
+    "sugar._sugarext.Menu",                   /* tp_name */
     sizeof(PyGObject),          /* tp_basicsize */
     0,                                 /* tp_itemsize */
     /* methods */
@@ -379,7 +379,7 @@ static const PyMethodDef _PySugarPreview_methods[] = {
 PyTypeObject G_GNUC_INTERNAL PySugarPreview_Type = {
     PyObject_HEAD_INIT(NULL)
     0,                                 /* ob_size */
-    "_sugarext.Preview",                   /* tp_name */
+    "sugar._sugarext.Preview",                   /* tp_name */
     sizeof(PyGObject),          /* tp_basicsize */
     0,                                 /* tp_itemsize */
     /* methods */
@@ -431,7 +431,7 @@ _wrap_sexy_icon_entry_new(PyGObject *self, PyObject *args, PyObject *kwargs)
     static char* kwlist[] = { NULL };
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs,
-                                     ":_sugarext.IconEntry.__init__",
+                                     ":sugar._sugarext.IconEntry.__init__",
                                      kwlist))
         return -1;
 
@@ -439,7 +439,7 @@ _wrap_sexy_icon_entry_new(PyGObject *self, PyObject *args, PyObject *kwargs)
     if (!self->obj) {
         PyErr_SetString(
             PyExc_RuntimeError, 
-            "could not create _sugarext.IconEntry object");
+            "could not create sugar._sugarext.IconEntry object");
         return -1;
     }
     return 0;
@@ -555,7 +555,7 @@ static const PyMethodDef _PySexyIconEntry_methods[] = {
 PyTypeObject G_GNUC_INTERNAL PySexyIconEntry_Type = {
     PyObject_HEAD_INIT(NULL)
     0,                                 /* ob_size */
-    "_sugarext.IconEntry",                   /* tp_name */
+    "sugar._sugarext.IconEntry",                   /* tp_name */
     sizeof(PyGObject),          /* tp_basicsize */
     0,                                 /* tp_itemsize */
     /* methods */

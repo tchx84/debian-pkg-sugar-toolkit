@@ -15,10 +15,8 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import os
 import re
 import math
-import time
 import logging
 
 import gobject
@@ -26,10 +24,7 @@ import gtk
 import hippo
 import cairo
 
-from sugar.graphics.style import Color
 from sugar.graphics.xocolor import XoColor
-from sugar.graphics import style
-from sugar.graphics.palette import Palette, CanvasInvoker
 from sugar.util import LRU
 
 _BADGE_SIZE = 0.45
@@ -79,6 +74,7 @@ class _IconBuffer(object):
 
     def __init__(self):
         self.icon_name = None
+        self.icon_size = None
         self.file_name = None
         self.fill_color = None
         self.stroke_color = None
@@ -362,10 +358,11 @@ class Icon(gtk.Image):
         if self.get_direction() != gtk.TEXT_DIR_LTR:
             xalign = 1.0 - xalign
 
-        x = math.floor(self.allocation.x + xpad +
-            (self.allocation.width - requisition[0]) * xalign)
-        y = math.floor(self.allocation.y + ypad +
-            (self.allocation.height - requisition[1]) * yalign)
+        allocation = self.get_allocation()
+        x = math.floor(allocation.x + xpad +
+            (allocation.width - requisition[0]) * xalign)
+        y = math.floor(allocation.y + ypad +
+            (allocation.height - requisition[1]) * yalign)
 
         cr = self.window.cairo_create()
         cr.set_source_surface(surface, x, y)
@@ -464,7 +461,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                 self._buffer.height = value
                 self.emit_request_changed()
         elif pspec.name == 'scale':
-            logging.warning('CanvasIcon: the scale parameter is currently unsupported')
+            logging.warning(
+                'CanvasIcon: the scale parameter is currently unsupported')
             if self._buffer.scale != value:
                 self._buffer.scale = value
                 self.emit_request_changed()
@@ -534,6 +532,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         return self._palette
     
     def set_palette(self, palette):
+        from sugar.graphics.palette import CanvasInvoker
+
         if self._palette is not None:        
             self._palette.props.invoker = None
         self._palette = palette
@@ -541,18 +541,20 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self._palette.props.invoker = CanvasInvoker(self)
 
     def set_tooltip(self, text):
+        from sugar.graphics.palette import Palette
+
         self.set_palette(Palette(text))
     
     palette = property(get_palette, set_palette)
 
 def get_icon_state(base_name, perc):
-        step = 5
-        strength = round(perc / step) * step
-        icon_theme = gtk.icon_theme_get_default()
+    step = 5
+    strength = round(perc / step) * step
+    icon_theme = gtk.icon_theme_get_default()
 
-        while strength <= 100:
-            icon_name = '%s-%03d' % (base_name, strength)
-            if icon_theme.has_icon(icon_name):
-                return icon_name
+    while strength <= 100:
+        icon_name = '%s-%03d' % (base_name, strength)
+        if icon_theme.has_icon(icon_name):
+            return icon_name
 
-            strength = strength + step
+        strength = strength + step
