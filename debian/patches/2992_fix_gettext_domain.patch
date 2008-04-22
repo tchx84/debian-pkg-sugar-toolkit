@@ -5,7 +5,7 @@ index e8df779..af933de 100755
 @@ -19929,7 +19929,7 @@ PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
  # Setup GETTEXT
  #
- ALL_LINGUAS=""
+ ALL_LINGUAS="da"
 -GETTEXT_PACKAGE=sugar
 +GETTEXT_PACKAGE=sugar-toolkit
  
