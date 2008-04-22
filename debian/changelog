@@ -4,6 +4,7 @@ sugar-toolkit (0.79.5-2) unstable; urgency=low
   * Update local cdbs snippets:
     + Relax python-central and python-support build-dependencies in
       python-autotools.mk.
+  * Mention exact upstream Git source in debian/copyright.
   * Semi-auto-update debian/control to update build-dependencies:
       DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
