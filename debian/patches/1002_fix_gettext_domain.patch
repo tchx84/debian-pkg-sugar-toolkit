@@ -1,0 +1,39 @@
+diff --git a/configure.ac b/configure.ac
+index 4f4f407..002254c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -25,7 +25,7 @@ AC_SUBST(PYGTK_DEFSDIR)
+ # Setup GETTEXT
+ #
+ ALL_LINGUAS=""
+-GETTEXT_PACKAGE=sugar
++GETTEXT_PACKAGE=sugar-toolkit
+ AC_PROG_INTLTOOL([0.33])
+ AC_SUBST(GETTEXT_PACKAGE)
+ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+diff --git a/sugar/activity/activity.py b/sugar/activity/activity.py
+index 6204354..65f0428 100644
+--- a/sugar/activity/activity.py
++++ b/sugar/activity/activity.py
+@@ -73,7 +73,7 @@ from sugar import wm
+ from sugar import profile
+ from sugar import _sugarext
+ 
+-_ = lambda msg: gettext.dgettext('sugar', msg)
++_ = lambda msg: gettext.dgettext('sugar-toolkit', msg)
+ 
+ SCOPE_PRIVATE = "private"
+ SCOPE_INVITE_ONLY = "invite"  # shouldn't be shown in UI, it's implicit
+diff --git a/sugar/graphics/alert.py b/sugar/graphics/alert.py
+index cab3c3b..fad90bb 100644
+--- a/sugar/graphics/alert.py
++++ b/sugar/graphics/alert.py
+@@ -25,7 +25,7 @@ import math
+ from sugar.graphics import style
+ from sugar.graphics.icon import Icon
+ 
+-_ = lambda msg: gettext.dgettext('sugar', msg)
++_ = lambda msg: gettext.dgettext('sugar-toolkit', msg)
+ 
+ class Alert(gtk.EventBox):
+     """UI interface for Alerts

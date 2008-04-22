@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index e8df779..af933de 100755
+--- a/configure
++++ b/configure
+@@ -19929,7 +19929,7 @@ PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
+ # Setup GETTEXT
+ #
+ ALL_LINGUAS=""
+-GETTEXT_PACKAGE=sugar
++GETTEXT_PACKAGE=sugar-toolkit
+ 
+ case "$am__api_version" in
+     1.01234)

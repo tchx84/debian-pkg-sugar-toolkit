@@ -1,3 +1,9 @@
+sugar-toolkit (0.79.5-3) unstable; urgency=low
+
+  * Use gettext domain sugar-toolkit (to not clash with sugar package).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 23 Apr 2008 00:23:40 +0200
+
 sugar-toolkit (0.79.5-2) unstable; urgency=low
 
   * Bump debhelper compatibility level to 6.
