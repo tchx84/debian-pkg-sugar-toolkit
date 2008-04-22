@@ -1,4 +1,4 @@
-sugar-toolkit (0.79.5-1) UNRELEASED; urgency=low
+sugar-toolkit (0.79.5-1) unstable; urgency=low
 
   * New upstream release.
     Highlights:
@@ -10,7 +10,7 @@ sugar-toolkit (0.79.5-1) UNRELEASED; urgency=low
   * Add patch 1001 adding danish l10n.
   * Add patch 2991 to enable danish l10n in configure.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sat, 19 Apr 2008 02:54:54 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 22 Apr 2008 20:40:23 +0200
 
 sugar-toolkit (0.79.3-1) unstable; urgency=low
 
