@@ -1,11 +1,15 @@
-sugar-toolkit (0.79.6-1) UNRELEASED; urgency=low
+sugar-toolkit (0.79.6-1) unstable; urgency=low
 
   * New upstream release.
     Highlights:
     + Fix installation of bundles
     + Use new style for unused variables
+  * Update local cdbs snippets:
+    + Strip any non-printable characters in copyright-check.mk.  Update
+      copyright_hints.
+  * Fix upstream Git source in debian/copyright.
 
- -- Jonas Smedegaard <dr@jones.dk>  Thu, 24 Apr 2008 22:05:43 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 24 Apr 2008 22:17:27 +0200
 
 sugar-toolkit (0.79.5-3) unstable; urgency=low
 
