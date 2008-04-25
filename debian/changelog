@@ -1,3 +1,11 @@
+sugar-toolkit (0.79.6-2) unstable; urgency=high
+
+  * Add patch 1003 to fix installing zip-based bundles (*.xo files).
+  * Set urgency=high to get this into testing ASAP, as sugar activity
+    building is currently broken due to the above.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 25 Apr 2008 15:11:05 +0200
+
 sugar-toolkit (0.79.6-1) unstable; urgency=low
 
   * New upstream release.
