@@ -1,3 +1,11 @@
+sugar-toolkit (0.79.6-3) unstable; urgency=medium
+
+  * Recommend sugar-journal-activity (not bogus sugar-journal-service).
+    Closes: bug#480857, thanks to Holger Levsen.
+  * Set urgency=medium to not have the above delay entering testing.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 12 May 2008 14:34:55 +0200
+
 sugar-toolkit (0.79.6-2) unstable; urgency=high
 
   * Add patch 1003 to fix installing zip-based bundles (*.xo files).
