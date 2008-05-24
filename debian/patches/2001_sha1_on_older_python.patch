@@ -1,5 +1,5 @@
---- sugar-toolkit-0.79.0.orig/sugar/activity/activity.py
-+++ sugar-toolkit-0.79.0/sugar/activity/activity.py
+--- sugar-toolkit-0.79.0.orig/src/sugar/activity/activity.py
++++ sugar-toolkit-0.79.0/src/sugar/activity/activity.py
 @@ -49,7 +49,11 @@
  import os
  import time

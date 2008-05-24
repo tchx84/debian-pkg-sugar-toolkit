@@ -1,7 +1,7 @@
-diff --git a/sugar/activity/bundlebuilder.py b/sugar/activity/bundlebuilder.py
+diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuilder.py
 index 4ea05f8..3e70b3c 100644
---- a/sugar/activity/bundlebuilder.py
-+++ b/sugar/activity/bundlebuilder.py
+--- a/src/sugar/activity/bundlebuilder.py
++++ b/src/sugar/activity/bundlebuilder.py
 @@ -78,10 +78,10 @@ def _extract_bundle(source_file, dest_dir):
          if not os.path.exists(os.path.dirname(path)):
              os.makedirs(os.path.dirname(path))
