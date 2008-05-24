@@ -60,10 +60,10 @@ extern void sugar_marshal_BOOLEAN__UINT_UINT (GClosure     *closure,
                                               gpointer      marshal_data);
 void
 sugar_marshal_BOOLEAN__UINT_UINT (GClosure     *closure,
-                                  GValue       *return_value G_GNUC_UNUSED,
+                                  GValue       *return_value,
                                   guint         n_param_values,
                                   const GValue *param_values,
-                                  gpointer      invocation_hint G_GNUC_UNUSED,
+                                  gpointer      invocation_hint,
                                   gpointer      marshal_data)
 {
   typedef gboolean (*GMarshalFunc_BOOLEAN__UINT_UINT) (gpointer     data1,
