@@ -16,7 +16,7 @@ pkg = python-sugar-toolkit
 
 DEB_UPSTREAM_URL = http://dev.laptop.org/pub/sugar/sources/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
-DEB_UPSTREAM_TARBALL_MD5 = e92489893bb1822667ec5844867a79e7
+DEB_UPSTREAM_TARBALL_MD5 = 3ba593de4cb4a4b3ec2493ee644ab3d9
 
 # Drop created dir if empty to please lintian
 binary-post-install/$(pkg)::

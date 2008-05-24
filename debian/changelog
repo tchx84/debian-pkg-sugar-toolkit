@@ -1,3 +1,9 @@
+sugar-toolkit (0.79.7-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 24 May 2008 21:51:37 +0200
+
 sugar-toolkit (0.79.6-3) unstable; urgency=medium
 
   * Recommend sugar-journal-activity (not bogus sugar-journal-service).
