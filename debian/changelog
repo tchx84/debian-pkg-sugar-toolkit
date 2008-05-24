@@ -2,6 +2,8 @@ sugar-toolkit (0.79.7-1) unstable; urgency=low
 
   * New upstream release.
   * Unfuzz patches (most of sources moved sugar -> src/sugar).
+  * Drop patch 1003 fixing zip-based bundle install (upstream identical
+    fix applied within an hour(!) from the earlier Debian patch).
   * Mention new file src/sugar/presence/sugartubeconn.py in
     debian/copyright (LGPL-2.1+) and update paths, thanks to local
     copyright-check.mk cdbs snippet. Update debian/copyright-hints.
