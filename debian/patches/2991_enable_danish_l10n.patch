@@ -2,7 +2,7 @@ diff --git a/configure b/configure
 index 0a16ecd..2b93998 100755
 --- a/configure
 +++ b/configure
-@@ -19928,7 +19928,7 @@ PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
+@@ -19896,7 +19896,7 @@ PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
  
  # Setup GETTEXT
  #
