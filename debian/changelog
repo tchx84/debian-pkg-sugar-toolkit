@@ -1,3 +1,11 @@
+sugar-toolkit (0.81.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * Mention po/Makefile.in.in (freeware) in debian/copyright.  Update
+    debian/copyright-hints.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 26 May 2008 10:42:48 +0200
+
 sugar-toolkit (0.79.7-1) unstable; urgency=low
 
   * New upstream release.

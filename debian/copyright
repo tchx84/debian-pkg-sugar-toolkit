@@ -84,6 +84,14 @@ Files: sugar/activity/*, sugar/env.py, sugar/graphics/icon.py,
 Copyright: © 2006-2007, Red Hat, Inc.
 License: GPL-2+
 
+Files: po/Makefile.in.in
+Copyright: © 1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+	   © 2004-2008 Rodney Dawes <dobey.pwns@gmail.com>
+License: other
+ This file may be copied and used freely without restrictions.  It may
+ be used in projects which are not available under a GNU Public License,
+ but which still want to provide support for the GNU gettext functionality.
+
 Files: m4/intltool.m4
 Copyright: © 2001 Eazel, Inc.
 License: GPL-2+ | other
