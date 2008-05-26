@@ -724,11 +724,20 @@ class Invoker(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
+        self.parent = None
+
         self._screen_area = gtk.gdk.Rectangle(0, 0, gtk.gdk.screen_width(),
                                               gtk.gdk.screen_height())
         self._position_hint = self.ANCHORED
         self._cursor_x = -1
         self._cursor_y = -1
+        self._palette = None
+
+    def attach(self, parent):
+        self.parent = parent
+
+    def detach(self):
+        self.parent = None
 
     def _get_position_for_alignment(self, alignment, palette_dim):
         palette_halign = alignment[0]
@@ -868,13 +877,58 @@ class Invoker(gobject.GObject):
         self._cursor_x = -1
         self._cursor_y = -1
 
-class WidgetInvoker(Invoker):
-    def __init__(self, widget):
-        Invoker.__init__(self)
-        self._widget = widget
+    def notify_mouse_enter(self):
+        if self.parent and self.palette is None:
+            palette = self.parent.create_palette()
+            if palette:
+                self.palette = palette
 
-        widget.connect('enter-notify-event', self._enter_notify_event_cb)
-        widget.connect('leave-notify-event', self._leave_notify_event_cb)
+        self.emit('mouse-enter')
+
+    def notify_mouse_leave(self):
+        self.emit('mouse-leave')
+
+    def get_palette(self):
+        return self._palette
+    
+    def set_palette(self, palette):
+        if self._palette:
+            self._palette.props.invoker = None
+
+        self._palette = palette
+
+        if self._palette:
+            self._palette.props.invoker = self
+
+    palette = gobject.property(
+        type=object, setter=set_palette, getter=get_palette)
+
+class WidgetInvoker(Invoker):
+    def __init__(self, parent=None, widget=None):
+        Invoker.__init__(self)
+
+        self._widget = None
+
+        if parent or widget:
+            self.attach_widget(parent, widget)
+
+    def attach_widget(self, parent, widget=None):
+        if widget:
+            self._widget = widget
+        else:
+            self._widget = parent
+
+        self._enter_hid = widget.connect('enter-notify-event',
+                                         self._enter_notify_event_cb)
+        self._leave_hid = widget.connect('leave-notify-event',
+                                         self._leave_notify_event_cb)
+
+        self.attach(parent)
+
+    def detach(self):
+        Invoker.detach(self)
+        self._widget.disconnect(self._enter_hid)
+        self._widget.disconnect(self._leave_hid)
 
     def get_rect(self):
         allocation = self._widget.get_allocation()
@@ -920,10 +974,10 @@ class WidgetInvoker(Invoker):
                              self._widget.allocation.height)
 
     def _enter_notify_event_cb(self, widget, event):
-        self.emit('mouse-enter')
+        self.notify_mouse_enter()
 
     def _leave_notify_event_cb(self, widget, event):
-        self.emit('mouse-leave')
+        self.notify_mouse_leave()
 
     def get_toplevel(self):
         return self._widget.get_toplevel()
@@ -941,14 +995,24 @@ class WidgetInvoker(Invoker):
     widget = gobject.property(type=object, getter=_get_widget, setter=None)
 
 class CanvasInvoker(Invoker):
-    def __init__(self, item):
+    def __init__(self, parent=None):
         Invoker.__init__(self)
 
-        self._item = item
         self._position_hint = self.AT_CURSOR
 
-        item.connect('motion-notify-event',
-                     self._motion_notify_event_cb)
+        if parent:
+            self.attach(parent)
+
+    def attach(self, parent):
+        Invoker.attach(self, parent)
+
+        self._item = parent
+        self._motion_hid = self._item.connect('motion-notify-event',
+                                              self._motion_notify_event_cb)
+
+    def detach(self):
+        Invoker.detach(self)
+        self._item.disconnect(self._motion_hid)
 
     def get_default_position(self):
         return self.AT_CURSOR
@@ -964,9 +1028,9 @@ class CanvasInvoker(Invoker):
         
     def _motion_notify_event_cb(self, button, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
-            self.emit('mouse-enter')
+            self.notify_mouse_enter()
         elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            self.emit('mouse-leave')
+            self.notify_mouse_leave()
 
         return False
 
@@ -974,8 +1038,14 @@ class CanvasInvoker(Invoker):
         return hippo.get_canvas_for_item(self._item).get_toplevel()
 
 class ToolInvoker(WidgetInvoker):
-    def __init__(self, widget):
-        WidgetInvoker.__init__(self, widget.child)
+    def __init__(self, parent=None):
+        WidgetInvoker.__init__(self)
+
+        if parent:
+            self.attach_tool(parent)
+
+    def attach_tool(self, widget):
+        self.attach_widget(widget, widget.child)
 
     def _get_alignments(self):
         parent = self._widget.get_parent()

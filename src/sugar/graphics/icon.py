@@ -401,95 +401,118 @@ class Icon(gtk.Image):
 class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'CanvasIcon'
 
-    __gproperties__ = {
-        'file-name'     : (str, None, None, None,
-                           gobject.PARAM_READWRITE),
-        'icon-name'     : (str, None, None, None,
-                           gobject.PARAM_READWRITE),
-        'xo-color'      : (object, None, None,
-                           gobject.PARAM_WRITABLE),
-        'fill-color'    : (object, None, None,
-                           gobject.PARAM_READWRITE),
-        'stroke-color'  : (object, None, None,
-                           gobject.PARAM_READWRITE),
-        'size'          : (int, None, None, 0, 1024, 0,
-                           gobject.PARAM_READWRITE),
-        'scale'         : (float, None, None, -1024.0, 1024.0, 1.0,
-                           gobject.PARAM_READWRITE),
-        'cache'         : (bool, None, None, False,
-                           gobject.PARAM_READWRITE),
-        'badge-name'    : (str, None, None, None,
-                           gobject.PARAM_READWRITE)
-    }
-
     def __init__(self, **kwargs):
+        from sugar.graphics.palette import CanvasInvoker
+
         self._buffer = _IconBuffer()
+        self._palette_invoker = CanvasInvoker()
 
         hippo.CanvasBox.__init__(self, **kwargs)
 
-        self._palette = None
+        self._palette_invoker.attach(self)
+
         self.connect('destroy', self.__destroy_cb)
 
     def __destroy_cb(self, icon):
         if self._palette is not None:
             self._palette.destroy()
 
-    def do_set_property(self, pspec, value):
-        if pspec.name == 'file-name':
-            if self._buffer.file_name != value:
-                self._buffer.file_name = value
-                self.emit_paint_needed(0, 0, -1, -1)
-        elif pspec.name == 'icon-name':
-            if self._buffer.icon_name != value:
-                self._buffer.icon_name = value
-                self.emit_paint_needed(0, 0, -1, -1)
-        elif pspec.name == 'xo-color':
-            if self._buffer.xo_color != value:
-                self._buffer.xo_color = value
-                self.emit_paint_needed(0, 0, -1, -1)
-        elif pspec.name == 'fill-color':
-            if self._buffer.fill_color != value:
-                self._buffer.fill_color = value
-                self.emit_paint_needed(0, 0, -1, -1)
-        elif pspec.name == 'stroke-color':
-            if self._buffer.stroke_color != value:
-                self._buffer.stroke_color = value
-                self.emit_paint_needed(0, 0, -1, -1)
-        elif pspec.name == 'size':
-            if self._buffer.width != value:
-                self._buffer.width = value
-                self._buffer.height = value
-                self.emit_request_changed()
-        elif pspec.name == 'scale':
-            logging.warning(
-                'CanvasIcon: the scale parameter is currently unsupported')
-            if self._buffer.scale != value:
-                self._buffer.scale = value
-                self.emit_request_changed()
-        elif pspec.name == 'cache':
-            self._buffer.cache = value
-        elif pspec.name == 'badge-name':
-            if self._buffer.badge_name != value:
-                self._buffer.badge_name = value
-                self.emit_paint_needed(0, 0, -1, -1)
+    def set_file_name(self, value):
+        if self._buffer.file_name != value:
+            self._buffer.file_name = value
+            self.emit_paint_needed(0, 0, -1, -1)
 
-    def do_get_property(self, pspec):
-        if pspec.name == 'size':
-            return self._buffer.width
-        elif pspec.name == 'file-name':
-            return self._buffer.file_name
-        elif pspec.name == 'icon-name':
-            return self._buffer.icon_name
-        elif pspec.name == 'fill-color':
-            return self._buffer.fill_color
-        elif pspec.name == 'stroke-color':
-            return self._buffer.stroke_color
-        elif pspec.name == 'cache':
-            return self._buffer.cache
-        elif pspec.name == 'badge-name':
-            return self._buffer.badge_name
-        elif pspec.name == 'scale':
-            return self._buffer.scale
+    def get_file_name(self):
+        return self._buffer.file_name
+
+    file_name = gobject.property(
+        type=str, getter=get_file_name, setter=set_file_name)
+
+    def set_icon_name(self, value):
+        if self._buffer.icon_name != value:
+            self._buffer.icon_name = value
+            self.emit_paint_needed(0, 0, -1, -1)
+
+    def get_icon_name(self):
+        return self._buffer.icon_name
+
+    icon_name = gobject.property(
+        type=str, getter=get_icon_name, setter=set_icon_name)
+
+    def set_xo_color(self, value):
+        if self._buffer.xo_color != value:
+            self._buffer.xo_color = value
+            self.emit_paint_needed(0, 0, -1, -1)
+
+    xo_color = gobject.property(
+        type=object, getter=None, setter=set_xo_color)
+
+    def set_fill_color(self, value):
+        if self._buffer.fill_color != value:
+            self._buffer.fill_color = value
+            self.emit_paint_needed(0, 0, -1, -1)
+
+    def get_fill_color(self):
+        return self._buffer.fill_color
+
+    fill_color = gobject.property(
+        type=object, getter=get_fill_color, setter=set_fill_color)
+
+    def set_stroke_color(self, value):
+        if self._buffer.stroke_color != value:
+            self._buffer.stroke_color = value
+            self.emit_paint_needed(0, 0, -1, -1)
+
+    def get_stroke_color(self):
+        return self._buffer.stroke_color
+
+    stroke_color = gobject.property(
+        type=object, getter=get_stroke_color, setter=set_stroke_color)
+
+    def set_size(self, value):
+        if self._buffer.width != value:
+            self._buffer.width = value
+            self._buffer.height = value
+            self.emit_request_changed()
+
+    def get_size(self):
+        return self._buffer.width
+
+    size = gobject.property(
+        type=int, getter=get_size, setter=set_size)
+
+    def set_scale(self, value):
+        logging.warning(
+            'CanvasIcon: the scale parameter is currently unsupported')
+        if self._buffer.scale != value:
+            self._buffer.scale = value
+            self.emit_request_changed()
+
+    def get_scale(self):
+        return self._buffer.scale
+
+    scale = gobject.property(
+        type=float, getter=get_scale, setter=set_scale)
+
+    def set_cache(self, value):
+        self._buffer.cache = value
+
+    def get_cache(self):
+        return self._buffer.cache
+
+    cache = gobject.property(
+        type=bool, default=False, getter=get_cache, setter=set_cache)
+
+    def set_badge_name(self, value):
+        if self._buffer.badge_name != value:
+            self._buffer.badge_name = value
+            self.emit_paint_needed(0, 0, -1, -1)
+
+    def get_badge_name(self, value):
+        return self._buffer.badge_name
+
+    badge_name = gobject.property(
+        type=str, getter=get_badge_name, setter=set_badge_name)
 
     def do_paint_below_children(self, cr, damaged_box):
         surface = self._buffer.get_surface()
@@ -528,17 +551,27 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self.emit_activated()
         return True
 
-    def get_palette(self):
-        return self._palette
-    
-    def set_palette(self, palette):
-        from sugar.graphics.palette import CanvasInvoker
+    def create_palette(self):
+        return None
 
-        if self._palette is not None:        
-            self._palette.props.invoker = None
-        self._palette = palette
-        if not self._palette.props.invoker:
-            self._palette.props.invoker = CanvasInvoker(self)
+    def get_palette(self):
+        return self._palette_invoker.palette
+
+    def set_palette(self, palette):
+        self._palette_invoker.palette = palette
+
+    palette = gobject.property(
+        type=object, setter=set_palette, getter=get_palette)
+
+    def get_palette_invoker(self):
+        return self._palette_invoker
+    
+    def set_palette_invoker(self, palette_invoker):
+        self._palette_invoker.detach()
+        self._palette_invoker = palette_invoker
+
+    palette_invoker = gobject.property(
+        type=object, setter=set_palette_invoker, getter=get_palette_invoker)
 
     def set_tooltip(self, text):
         from sugar.graphics.palette import Palette
