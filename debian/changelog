@@ -1,3 +1,14 @@
+sugar-toolkit (0.81.4-1) unstable; urgency=low
+
+  * New upstream release.
+  * Update debian/copyright:
+    + Really adjust paths as promised in 0.79.7-1
+    + Update copyright year and license owner for
+      src/sugar/activity/bundlebuilder.py
+  * Update copyright-hints regarding above mentioned bundlebuilder.py.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 09 Jun 2008 12:22:13 +0200
+
 sugar-toolkit (0.81.3-1) unstable; urgency=low
 
   * New upstream release.

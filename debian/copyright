@@ -10,77 +10,85 @@ Files: debian/*
 Copyright: © 2008 Jonas Smedegaard <dr@jones.dk>
 License: GPL-2+
 
-Files: sugar/bundle/*, sugar/graphics/*, sugar/presence/*,
- sugar/sugar-preview.[ch], sugar/wm.py
+Files: src/sugar/bundle/*, src/sugar/graphics/*, src/sugar/presence/*,
+ src/sugar/sugar-preview.[ch], src/sugar/wm.py
 Copyright: © 2007, Red Hat, Inc.
 License: LGPL-2+
 
-Files: sugar/graphics/palettegroup.py
+Files: src/sugar/graphics/palettegroup.py
 Copyright: © 2006-2007, Red Hat, Inc.
 License: LGPL-2+
 
-Files: sugar/graphics/toolbutton.py
+Files: src/sugar/graphics/toolbutton.py
 Copyright: © 2008, One Laptop Per Child
 	   © 2007, Red Hat, Inc.
 License: LGPL-2+
 
-Files: sugar/eggaccelerators.c
+Files: src/sugar/eggaccelerators.c
 Copyright: © 2002 Red Hat, Inc.
 	   © 1998, 2001 Tim Janik
 License: LGPL-2+
 
-Files: sugar/eggaccelerators.h
+Files: src/sugar/eggaccelerators.h
 Copyright: © 2002 Red Hat, Inc.
 License: LGPL-2+
 
-Files: sugar/clipboard/*, sugar/datastore/*, sugar/graphics/alert.py,
- sugar/graphics/combobox.py, sugar/graphics/iconentry.py,
- sugar/graphics/objectchooser.py, sugar/graphics/tray.py
+Files: src/sugar/clipboard/*, src/sugar/datastore/*,
+ src/sugar/graphics/alert.py, src/sugar/graphics/combobox.py,
+ src/sugar/graphics/iconentry.py, src/sugar/graphics/objectchooser.py,
+ src/sugar/graphics/tray.py
 Copyright: © 2007, One Laptop Per Child
 License: LGPL-2+
 
-Files: sugar/graphics/radiotoolbutton.py
+Files: src/sugar/graphics/radiotoolbutton.py
 Copyright: © 2007-2008, One Laptop Per Child
 	   © 2007 Red Hat, Inc
 License: LGPL-2+
 
-Files: sugar/activity/activity.py
+Files: src/sugar/activity/bundlebuilder.py
+Copyright: © 2008 Red Hat, Inc
+License: LGPL-2+
+
+Files: src/sugar/activity/activity.py
 Copyright: © 2007-2008, One Laptop Per Child
 	   © 2006-2007 Red Hat, Inc
 License: LGPL-2+
 
-Files: sugar/datastore/dbus_helpers.py, sugar/activity/registry.py
+Files: src/sugar/datastore/dbus_helpers.py,
+ src/sugar/activity/registry.py
 Copyright: © 2007, One Laptop Per Child
 	   © 2006-2007 Red Hat, Inc
 License: LGPL-2+
 
-Files: src/sugar/presence/sugartubeconn.py
+Files: src/src/sugar/presence/sugartubeconn.py
 Copyright: © 2008, One Laptop Per Child
 License: LGPL-2.1+
 
-Files: sugar/presence/tubeconn.py
+Files: src/sugar/presence/tubeconn.py
 Copyright: © 2007 Collabora Ltd. <http://www.collabora.co.uk/>
 License: LGPL-2.1+
 
-Files: sugar/sexy-icon-entry.c, sugar/sexy-icon-entry.h
+Files: src/sugar/sexy-icon-entry.c, src/sugar/sexy-icon-entry.h
 Copyright: © 2004-2006 Christian Hammond
 License: LGPL-2+
 
-Files: sugar/graphics/menuitem.py, sugar/graphics/notebook.py
+Files: src/sugar/graphics/menuitem.py, src/sugar/graphics/notebook.py
 Copyright: © 2007, Eduardo Silva <edsiper@gmail.com>
 License: LGPL-2+
 
-Files: sugar/graphics/palette.py
+Files: src/sugar/graphics/palette.py
 Copyright: © 2008, One Laptop Per Child
 	   © 2007, Eduardo Silva <edsiper@gmail.com>
 License: LGPL-2+
 
-Files: sugar/activity/*, sugar/env.py, sugar/graphics/icon.py,
- sugar/graphics/roundbox.py, sugar/graphics/xocolor.py,
- sugar/network.py, sugar/sugar-address-entry.[ch], sugar/util.py,
- sugar/_sugarextmodule.c, sugar/bundle/__init__.py,
- sugar/graphics/__init__.py, sugar/presence/__init__.py,
- sugar/profile.py, sugar/sugar-key-grabber.[ch], sugar/sugar-menu.[ch]
+Files: src/sugar/activity/*, src/sugar/env.py,
+ src/sugar/graphics/icon.py, src/sugar/graphics/roundbox.py,
+ src/sugar/graphics/xocolor.py, src/sugar/network.py,
+ src/sugar/sugar-address-entry.[ch], src/sugar/util.py,
+ src/sugar/_sugarextmodule.c, src/sugar/bundle/__init__.py,
+ src/sugar/graphics/__init__.py, src/sugar/presence/__init__.py,
+ src/sugar/profile.py, src/sugar/sugar-key-grabber.[ch],
+ src/sugar/sugar-menu.[ch]
 Copyright: © 2006-2007, Red Hat, Inc.
 License: GPL-2+
 

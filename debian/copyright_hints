@@ -38,7 +38,6 @@ LGPL-2+ [2007, Red Hat, Inc]: src/sugar/bundle/activitybundle.py
 LGPL-2+ [2006-2007 Red Hat, Inc]: src/sugar/activity/activityfactory.py
 	src/sugar/activity/activityhandle.py
 	src/sugar/activity/activityservice.py
-	src/sugar/activity/bundlebuilder.py
 	src/sugar/env.py
 	src/sugar/graphics/icon.py
 	src/sugar/graphics/roundbox.py
@@ -99,6 +98,7 @@ LGPL-2+ [2007, Eduardo Silva <edsiper@gmail.com> / 2008, One Laptop Per Child]: 
 LGPL-2+ [2007, Eduardo Silva <edsiper@gmail.com>]: src/sugar/graphics/menuitem.py
 LGPL-2+ [2007, Red Hat, Inc / 2007-2008, One Laptop Per Child]: src/sugar/graphics/radiotoolbutton.py
 LGPL-2+ [2007, Red Hat, Inc / 2008, One Laptop Per Child]: src/sugar/graphics/toolbutton.py
+LGPL-2+ [2008 Red Hat, Inc]: src/sugar/activity/bundlebuilder.py
 LGPL-2.1+ [2007 Collabora Ltd. <http://www.collabora.co.uk/>]: src/sugar/presence/tubeconn.py
 LGPL-2.1+ [2008 One Laptop Per Child]: src/sugar/presence/sugartubeconn.py
 MIT/X11 (BSD like) [and license / notice and this permission notice shall be included in / 1994 X Consortium]: install-sh
