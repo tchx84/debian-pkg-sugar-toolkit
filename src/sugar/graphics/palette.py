@@ -209,10 +209,10 @@ class Palette(gtk.Window):
 
         self._menu_content_separator = gtk.HSeparator()
 
-        self._popup_anim = animator.Animator(0.3, 10)
+        self._popup_anim = animator.Animator(.5, 10)
         self._popup_anim.add(_PopupAnimation(self))
 
-        self._secondary_anim = animator.Animator(1.0, 10)
+        self._secondary_anim = animator.Animator(2.0, 10)
         self._secondary_anim.add(_SecondaryAnimation(self))
 
         self._popdown_anim = animator.Animator(0.6, 10)
@@ -246,6 +246,7 @@ class Palette(gtk.Window):
         self._palette_popup_sid = None
         self._enter_invoker_hid = None
         self._leave_invoker_hid = None
+        self._right_click_invoker_hid = None
 
         # we set these for backward compatibility
         if label is not None:
@@ -265,10 +266,8 @@ class Palette(gtk.Window):
         # The menu is not shown here until an item is added
         self.menu = _Menu(self)
 
-        self.connect('enter-notify-event',
-                     self._enter_notify_event_cb)
-        self.connect('leave-notify-event',
-                     self._leave_notify_event_cb)
+        self.connect('enter-notify-event', self.__enter_notify_event_cb)
+        self.connect('leave-notify-event', self.__leave_notify_event_cb)
 
         self._mouse_detector = MouseSpeedDetector(self, 200, 5)
         self._mouse_detector.connect('motion-slow', self._mouse_slow_cb)
@@ -314,6 +313,7 @@ class Palette(gtk.Window):
         if self._invoker is not None:
             self._invoker.disconnect(self._enter_invoker_hid)
             self._invoker.disconnect(self._leave_invoker_hid)
+            self._invoker.disconnect(self._right_click_invoker_hid)
 
         self._invoker = invoker
         if invoker is not None:
@@ -321,6 +321,8 @@ class Palette(gtk.Window):
                 'mouse-enter', self._invoker_mouse_enter_cb)
             self._leave_invoker_hid = self._invoker.connect(
                 'mouse-leave', self._invoker_mouse_leave_cb)
+            self._right_click_invoker_hid = self._invoker.connect(
+                'right-click', self._invoker_right_click_cb)
             if hasattr(invoker.props, 'widget'):
                 self._label.props.accel_widget = invoker.props.widget
 
@@ -586,9 +588,6 @@ class Palette(gtk.Window):
 
         self.palette_state = state
 
-    def _invoker_mouse_enter_cb(self, invoker):
-        self._mouse_detector.start()
-
     def _mouse_slow_cb(self, widget):
         self._mouse_detector.stop()
         self._palette_do_popup()
@@ -610,16 +609,26 @@ class Palette(gtk.Window):
 
         self.popup(immediate=immediate)
 
+    def _invoker_mouse_enter_cb(self, invoker):
+        self._mouse_detector.start()
+
     def _invoker_mouse_leave_cb(self, invoker):
         self._mouse_detector.stop()
         self.popdown()
 
-    def _enter_notify_event_cb(self, widget, event):
+    def _invoker_right_click_cb(self, invoker):
+        self._popup_anim.stop()
+        self._secondary_anim.stop()
+        self._popdown_anim.stop()
+        self._set_state(self.SECONDARY)
+        self._show()
+
+    def __enter_notify_event_cb(self, widget, event):
         if event.detail != gtk.gdk.NOTIFY_INFERIOR:
             self._popdown_anim.stop()
             self._secondary_anim.start()
 
-    def _leave_notify_event_cb(self, widget, event):
+    def __leave_notify_event_cb(self, widget, event):
         if event.detail != gtk.gdk.NOTIFY_INFERIOR:
             self.popdown()
 
@@ -706,6 +715,7 @@ class Invoker(gobject.GObject):
     __gsignals__ = {
         'mouse-enter': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
         'mouse-leave': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'right-click': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
         'focus-out':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
     }
 
@@ -877,16 +887,22 @@ class Invoker(gobject.GObject):
         self._cursor_x = -1
         self._cursor_y = -1
 
-    def notify_mouse_enter(self):
+    def _ensure_palette_exists(self):
         if self.parent and self.palette is None:
             palette = self.parent.create_palette()
             if palette:
                 self.palette = palette
 
+    def notify_mouse_enter(self):
+        self._ensure_palette_exists()
         self.emit('mouse-enter')
 
     def notify_mouse_leave(self):
         self.emit('mouse-leave')
+
+    def notify_right_click(self):
+        self._ensure_palette_exists()
+        self.emit('right-click')
 
     def get_palette(self):
         return self._palette
@@ -908,6 +924,9 @@ class WidgetInvoker(Invoker):
         Invoker.__init__(self)
 
         self._widget = None
+        self._enter_hid = None
+        self._leave_hid = None
+        self._release_hid = None
 
         if parent or widget:
             self.attach_widget(parent, widget)
@@ -918,10 +937,12 @@ class WidgetInvoker(Invoker):
         else:
             self._widget = parent
 
-        self._enter_hid = widget.connect('enter-notify-event',
-                                         self._enter_notify_event_cb)
-        self._leave_hid = widget.connect('leave-notify-event',
-                                         self._leave_notify_event_cb)
+        self._enter_hid = self._widget.connect('enter-notify-event',
+                                               self.__enter_notify_event_cb)
+        self._leave_hid = self._widget.connect('leave-notify-event',
+                                               self.__leave_notify_event_cb)
+        self._release_hid = self._widget.connect('button-release-event',
+                                                 self.__button_release_event_cb)
 
         self.attach(parent)
 
@@ -929,6 +950,7 @@ class WidgetInvoker(Invoker):
         Invoker.detach(self)
         self._widget.disconnect(self._enter_hid)
         self._widget.disconnect(self._leave_hid)
+        self._widget.disconnect(self._release_hid)
 
     def get_rect(self):
         allocation = self._widget.get_allocation()
@@ -973,11 +995,18 @@ class WidgetInvoker(Invoker):
                              self._widget.allocation.width,
                              self._widget.allocation.height)
 
-    def _enter_notify_event_cb(self, widget, event):
+    def __enter_notify_event_cb(self, widget, event):
         self.notify_mouse_enter()
 
-    def _leave_notify_event_cb(self, widget, event):
+    def __leave_notify_event_cb(self, widget, event):
         self.notify_mouse_leave()
+
+    def __button_release_event_cb(self, widget, event):
+        if event.button == 3:
+            self.notify_right_click()
+            return True
+        else:
+            return False
 
     def get_toplevel(self):
         return self._widget.get_toplevel()
@@ -999,6 +1028,8 @@ class CanvasInvoker(Invoker):
         Invoker.__init__(self)
 
         self._position_hint = self.AT_CURSOR
+        self._motion_hid = None
+        self._release_hid = None
 
         if parent:
             self.attach(parent)
@@ -1008,11 +1039,14 @@ class CanvasInvoker(Invoker):
 
         self._item = parent
         self._motion_hid = self._item.connect('motion-notify-event',
-                                              self._motion_notify_event_cb)
+                                              self.__motion_notify_event_cb)
+        self._release_hid = self._item.connect('button-release-event',
+                                               self.__button_release_event_cb)
 
     def detach(self):
         Invoker.detach(self)
         self._item.disconnect(self._motion_hid)
+        self._item.disconnect(self._release_hid)
 
     def get_default_position(self):
         return self.AT_CURSOR
@@ -1026,13 +1060,20 @@ class CanvasInvoker(Invoker):
         else:
             return gtk.gdk.Rectangle()
         
-    def _motion_notify_event_cb(self, button, event):
+    def __motion_notify_event_cb(self, button, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
             self.notify_mouse_enter()
         elif event.detail == hippo.MOTION_DETAIL_LEAVE:
             self.notify_mouse_leave()
 
         return False
+
+    def __button_release_event_cb(self, button, event):
+        if event.button == 3:
+            self.notify_right_click()
+            return True
+        else:
+            return False
 
     def get_toplevel(self):
         return hippo.get_canvas_for_item(self._item).get_toplevel()

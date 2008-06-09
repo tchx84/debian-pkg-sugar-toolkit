@@ -414,8 +414,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self.connect('destroy', self.__destroy_cb)
 
     def __destroy_cb(self, icon):
-        if self._palette is not None:
-            self._palette.destroy()
+        if self._palette_invoker is not None:
+            self._palette_invoker.detach()
 
     def set_file_name(self, value):
         if self._buffer.file_name != value:
@@ -508,7 +508,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self._buffer.badge_name = value
             self.emit_paint_needed(0, 0, -1, -1)
 
-    def get_badge_name(self, value):
+    def get_badge_name(self):
         return self._buffer.badge_name
 
     badge_name = gobject.property(
