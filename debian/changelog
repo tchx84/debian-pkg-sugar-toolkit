@@ -1,3 +1,13 @@
+sugar-toolkit (0.81.4-2) unstable; urgency=medium
+
+  * Add patch 2002 to ignore debian subdir and .pc quilt subdir when
+    packaging bundles (since version 0.81.4 the MANIFEST file is ignored
+    and instead everything but an internally hardcoded exception list is
+    included).
+  * Set urgency=medium as -1 causes FTBFS for sugar activities.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 11 Jun 2008 03:30:01 +0200
+
 sugar-toolkit (0.81.4-1) unstable; urgency=low
 
   * New upstream release.

@@ -1,0 +1,22 @@
+diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuilder.py
+index bf21085..5aad4ef 100644
+--- a/src/sugar/activity/bundlebuilder.py
++++ b/src/sugar/activity/bundlebuilder.py
+@@ -115,7 +115,7 @@ class BuildPackager(Packager):
+ 
+     def get_files(self):
+         return list_files(self.build_dir,
+-                          ignore_dirs=['po', 'dist', '.git'],
++                          ignore_dirs=['po', 'dist', '.git', 'debian', '.pc'],
+                           ignore_files=['.gitignore'])
+ 
+ class XOPackager(BuildPackager):
+@@ -141,7 +141,7 @@ class SourcePackager(Packager):
+ 
+     def get_files(self):
+         return list_files(self.config.source_dir,
+-                          ignore_dirs=['locale', 'dist', '.git'],
++                          ignore_dirs=['locale', 'dist', '.git', 'debian', '.pc'],
+                           ignore_files=['.gitignore'])
+ 
+     def package(self):
