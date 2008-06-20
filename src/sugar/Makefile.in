@@ -56,8 +56,11 @@ _sugarext_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__objects_1 = _sugarext_la-_sugarext.lo \
 	_sugarext_la-sugar-marshal.lo
 am__sugarext_la_OBJECTS = $(am__objects_1) \
-	_sugarext_la-_sugarextmodule.lo \
-	_sugarext_la-eggaccelerators.lo \
+	_sugarext_la-_sugarextmodule.lo _sugarext_la-gsm-app.lo \
+	_sugarext_la-gsm-client.lo _sugarext_la-gsm-client-xsmp.lo \
+	_sugarext_la-gsm-xsmp.lo _sugarext_la-gsm-session.lo \
+	_sugarext_la-eggaccelerators.lo _sugarext_la-eggdesktopfile.lo \
+	_sugarext_la-eggsmclient.lo _sugarext_la-eggsmclient-xsmp.lo \
 	_sugarext_la-sexy-icon-entry.lo \
 	_sugarext_la-sugar-address-entry.lo \
 	_sugarext_la-sugar-key-grabber.lo _sugarext_la-sugar-menu.lo \
@@ -265,6 +268,7 @@ sugar_PYTHON = \
 	env.py		\
         network.py	\
 	profile.py	\
+	session.py	\
 	util.py		\
 	wm.py
 
@@ -274,12 +278,28 @@ _sugarext_la_CFLAGS = \
 	$(PYTHON_INCLUDES)
 
 _sugarext_la_LDFLAGS = -module -avoid-version
-_sugarext_la_LIBADD = $(EXT_LIBS)
+_sugarext_la_LIBADD = $(EXT_LIBS) -lSM -lICE
 _sugarext_la_SOURCES = \
 	$(BUILT_SOURCES)		\
 	_sugarextmodule.c		\
+        gsm-app.h			\
+	gsm-app.c			\
+	gsm-client.h			\
+	gsm-client.c			\
+	gsm-client-xsmp.h		\
+	gsm-client-xsmp.c		\
+	gsm-xsmp.h			\
+	gsm-xsmp.c			\
+	gsm-session.h			\
+	gsm-session.c			\
 	eggaccelerators.c		\
 	eggaccelerators.h		\
+	eggdesktopfile.h		\
+	eggdesktopfile.c		\
+	eggsmclient.h			\
+	eggsmclient.c			\
+	eggsmclient-private.h		\
+	eggsmclient-xsmp.c		\
 	sexy-icon-entry.h		\
 	sexy-icon-entry.c		\
 	sugar-address-entry.c		\
@@ -371,6 +391,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-_sugarext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-_sugarextmodule.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-eggaccelerators.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-eggdesktopfile.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-eggsmclient-xsmp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-eggsmclient.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-gsm-app.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-gsm-client-xsmp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-gsm-client.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-gsm-session.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-gsm-xsmp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sexy-icon-entry.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-address-entry.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-key-grabber.Plo@am__quote@
@@ -420,12 +448,68 @@ _sugarext_la-_sugarextmodule.lo: _sugarextmodule.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-_sugarextmodule.lo `test -f '_sugarextmodule.c' || echo '$(srcdir)/'`_sugarextmodule.c
 
+_sugarext_la-gsm-app.lo: gsm-app.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-gsm-app.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-gsm-app.Tpo -c -o _sugarext_la-gsm-app.lo `test -f 'gsm-app.c' || echo '$(srcdir)/'`gsm-app.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-gsm-app.Tpo $(DEPDIR)/_sugarext_la-gsm-app.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gsm-app.c' object='_sugarext_la-gsm-app.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-gsm-app.lo `test -f 'gsm-app.c' || echo '$(srcdir)/'`gsm-app.c
+
+_sugarext_la-gsm-client.lo: gsm-client.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-gsm-client.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-gsm-client.Tpo -c -o _sugarext_la-gsm-client.lo `test -f 'gsm-client.c' || echo '$(srcdir)/'`gsm-client.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-gsm-client.Tpo $(DEPDIR)/_sugarext_la-gsm-client.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gsm-client.c' object='_sugarext_la-gsm-client.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-gsm-client.lo `test -f 'gsm-client.c' || echo '$(srcdir)/'`gsm-client.c
+
+_sugarext_la-gsm-client-xsmp.lo: gsm-client-xsmp.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-gsm-client-xsmp.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-gsm-client-xsmp.Tpo -c -o _sugarext_la-gsm-client-xsmp.lo `test -f 'gsm-client-xsmp.c' || echo '$(srcdir)/'`gsm-client-xsmp.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-gsm-client-xsmp.Tpo $(DEPDIR)/_sugarext_la-gsm-client-xsmp.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gsm-client-xsmp.c' object='_sugarext_la-gsm-client-xsmp.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-gsm-client-xsmp.lo `test -f 'gsm-client-xsmp.c' || echo '$(srcdir)/'`gsm-client-xsmp.c
+
+_sugarext_la-gsm-xsmp.lo: gsm-xsmp.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-gsm-xsmp.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-gsm-xsmp.Tpo -c -o _sugarext_la-gsm-xsmp.lo `test -f 'gsm-xsmp.c' || echo '$(srcdir)/'`gsm-xsmp.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-gsm-xsmp.Tpo $(DEPDIR)/_sugarext_la-gsm-xsmp.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gsm-xsmp.c' object='_sugarext_la-gsm-xsmp.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-gsm-xsmp.lo `test -f 'gsm-xsmp.c' || echo '$(srcdir)/'`gsm-xsmp.c
+
+_sugarext_la-gsm-session.lo: gsm-session.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-gsm-session.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-gsm-session.Tpo -c -o _sugarext_la-gsm-session.lo `test -f 'gsm-session.c' || echo '$(srcdir)/'`gsm-session.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-gsm-session.Tpo $(DEPDIR)/_sugarext_la-gsm-session.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gsm-session.c' object='_sugarext_la-gsm-session.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-gsm-session.lo `test -f 'gsm-session.c' || echo '$(srcdir)/'`gsm-session.c
+
 _sugarext_la-eggaccelerators.lo: eggaccelerators.c
 @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-eggaccelerators.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-eggaccelerators.Tpo -c -o _sugarext_la-eggaccelerators.lo `test -f 'eggaccelerators.c' || echo '$(srcdir)/'`eggaccelerators.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-eggaccelerators.Tpo $(DEPDIR)/_sugarext_la-eggaccelerators.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='eggaccelerators.c' object='_sugarext_la-eggaccelerators.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-eggaccelerators.lo `test -f 'eggaccelerators.c' || echo '$(srcdir)/'`eggaccelerators.c
+
+_sugarext_la-eggdesktopfile.lo: eggdesktopfile.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-eggdesktopfile.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-eggdesktopfile.Tpo -c -o _sugarext_la-eggdesktopfile.lo `test -f 'eggdesktopfile.c' || echo '$(srcdir)/'`eggdesktopfile.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-eggdesktopfile.Tpo $(DEPDIR)/_sugarext_la-eggdesktopfile.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='eggdesktopfile.c' object='_sugarext_la-eggdesktopfile.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-eggdesktopfile.lo `test -f 'eggdesktopfile.c' || echo '$(srcdir)/'`eggdesktopfile.c
+
+_sugarext_la-eggsmclient.lo: eggsmclient.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-eggsmclient.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-eggsmclient.Tpo -c -o _sugarext_la-eggsmclient.lo `test -f 'eggsmclient.c' || echo '$(srcdir)/'`eggsmclient.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-eggsmclient.Tpo $(DEPDIR)/_sugarext_la-eggsmclient.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='eggsmclient.c' object='_sugarext_la-eggsmclient.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-eggsmclient.lo `test -f 'eggsmclient.c' || echo '$(srcdir)/'`eggsmclient.c
+
+_sugarext_la-eggsmclient-xsmp.lo: eggsmclient-xsmp.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-eggsmclient-xsmp.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-eggsmclient-xsmp.Tpo -c -o _sugarext_la-eggsmclient-xsmp.lo `test -f 'eggsmclient-xsmp.c' || echo '$(srcdir)/'`eggsmclient-xsmp.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-eggsmclient-xsmp.Tpo $(DEPDIR)/_sugarext_la-eggsmclient-xsmp.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='eggsmclient-xsmp.c' object='_sugarext_la-eggsmclient-xsmp.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-eggsmclient-xsmp.lo `test -f 'eggsmclient-xsmp.c' || echo '$(srcdir)/'`eggsmclient-xsmp.c
 
 _sugarext_la-sexy-icon-entry.lo: sexy-icon-entry.c
 @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-sexy-icon-entry.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-sexy-icon-entry.Tpo -c -o _sugarext_la-sexy-icon-entry.lo `test -f 'sexy-icon-entry.c' || echo '$(srcdir)/'`sexy-icon-entry.c
@@ -789,6 +873,7 @@ _sugarext.c: _sugarext.defs _sugarext.override
 .defs.c:
 	(cd $(srcdir)\
 	 && $(PYGTK_CODEGEN) \
+	    --register $(PYGTK_DEFSDIR)/gdk-types.defs \
 	    --register $(PYGTK_DEFSDIR)/gdk-types.defs \
 	    --register $(PYGTK_DEFSDIR)/gtk-types.defs \
 	    --override $*.override \
