@@ -15,7 +15,7 @@ diff --git a/src/sugar/activity/activity.py b/src/sugar/activity/activity.py
 index 6204354..65f0428 100644
 --- a/src/sugar/activity/activity.py
 +++ b/src/sugar/activity/activity.py
-@@ -73,7 +73,7 @@ from sugar import wm
+@@ -74,7 +74,7 @@ from sugar import wm
  from sugar import profile
  from sugar import _sugarext
  
