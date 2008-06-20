@@ -13,11 +13,16 @@
 #include "sugar-menu.h"
 #include "sugar-preview.h"
 #include "sexy-icon-entry.h"
+#include "gsm-session.h"
+
+#define EGG_SM_CLIENT_BACKEND_XSMP
+#include "eggsmclient.h"
+#include "eggsmclient-private.h"
 
 #include <pygtk/pygtk.h>
 #include <glib.h>
 
-#line 21 "_sugarext.c"
+#line 26 "_sugarext.c"
 
 
 /* ---------- types from other modules ---------- */
@@ -43,8 +48,11 @@ PyTypeObject G_GNUC_INTERNAL PySugarKeyGrabber_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarMenu_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarPreview_Type;
 PyTypeObject G_GNUC_INTERNAL PySexyIconEntry_Type;
+PyTypeObject G_GNUC_INTERNAL PyEggSMClientXSMP_Type;
+PyTypeObject G_GNUC_INTERNAL PyEggSMClient_Type;
+PyTypeObject G_GNUC_INTERNAL PyGsmSession_Type;
 
-#line 48 "_sugarext.c"
+#line 56 "_sugarext.c"
 
 
 
@@ -156,10 +164,49 @@ _wrap_sugar_key_grabber_get_key(PyGObject *self, PyObject *args, PyObject *kwarg
     return Py_None;
 }
 
+static PyObject *
+_wrap_sugar_key_grabber_is_modifier(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "keycode", "mask", NULL };
+    PyObject *py_keycode = NULL, *py_mask = NULL;
+    int ret;
+    guint keycode = 0, mask = -1;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O|O:SugarKeyGrabber.is_modifier", kwlist, &py_keycode, &py_mask))
+        return NULL;
+    if (py_keycode) {
+        if (PyLong_Check(py_keycode))
+            keycode = PyLong_AsUnsignedLong(py_keycode);
+        else if (PyInt_Check(py_keycode))
+            keycode = PyInt_AsLong(py_keycode);
+        else
+            PyErr_SetString(PyExc_TypeError, "Parameter 'keycode' must be an int or a long");
+        if (PyErr_Occurred())
+            return NULL;
+    }
+    if (py_mask) {
+        if (PyLong_Check(py_mask))
+            mask = PyLong_AsUnsignedLong(py_mask);
+        else if (PyInt_Check(py_mask))
+            mask = PyInt_AsLong(py_mask);
+        else
+            PyErr_SetString(PyExc_TypeError, "Parameter 'mask' must be an int or a long");
+        if (PyErr_Occurred())
+            return NULL;
+    }
+    
+    ret = sugar_key_grabber_is_modifier(SUGAR_KEY_GRABBER(self->obj), keycode, mask);
+    
+    return PyBool_FromLong(ret);
+
+}
+
 static const PyMethodDef _PySugarKeyGrabber_methods[] = {
     { "grab", (PyCFunction)_wrap_sugar_key_grabber_grab, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { "get_key", (PyCFunction)_wrap_sugar_key_grabber_get_key, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "is_modifier", (PyCFunction)_wrap_sugar_key_grabber_is_modifier, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { NULL, NULL, 0, NULL }
 };
@@ -599,9 +646,305 @@ PyTypeObject G_GNUC_INTERNAL PySexyIconEntry_Type = {
 
 
 
+/* ----------- EggSMClient ----------- */
+
+static PyObject *
+_wrap_egg_sm_client_is_resumed(PyGObject *self)
+{
+    int ret;
+
+    
+    ret = egg_sm_client_is_resumed(EGG_SM_CLIENT(self->obj));
+    
+    return PyBool_FromLong(ret);
+
+}
+
+static PyObject *
+_wrap_egg_sm_client_startup(PyGObject *self)
+{
+    
+    egg_sm_client_startup(EGG_SM_CLIENT(self->obj));
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_egg_sm_client_will_quit(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "will_quit", NULL };
+    int will_quit;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:EggSMClient.will_quit", kwlist, &will_quit))
+        return NULL;
+    
+    egg_sm_client_will_quit(EGG_SM_CLIENT(self->obj), will_quit);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static const PyMethodDef _PyEggSMClient_methods[] = {
+    { "is_resumed", (PyCFunction)_wrap_egg_sm_client_is_resumed, METH_NOARGS,
+      NULL },
+    { "startup", (PyCFunction)_wrap_egg_sm_client_startup, METH_NOARGS,
+      NULL },
+    { "will_quit", (PyCFunction)_wrap_egg_sm_client_will_quit, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { NULL, NULL, 0, NULL }
+};
+
+PyTypeObject G_GNUC_INTERNAL PyEggSMClient_Type = {
+    PyObject_HEAD_INIT(NULL)
+    0,                                 /* ob_size */
+    "sugar._sugarext.SMClient",                   /* tp_name */
+    sizeof(PyGObject),          /* tp_basicsize */
+    0,                                 /* tp_itemsize */
+    /* methods */
+    (destructor)0,        /* tp_dealloc */
+    (printfunc)0,                      /* tp_print */
+    (getattrfunc)0,       /* tp_getattr */
+    (setattrfunc)0,       /* tp_setattr */
+    (cmpfunc)0,           /* tp_compare */
+    (reprfunc)0,             /* tp_repr */
+    (PyNumberMethods*)0,     /* tp_as_number */
+    (PySequenceMethods*)0, /* tp_as_sequence */
+    (PyMappingMethods*)0,   /* tp_as_mapping */
+    (hashfunc)0,             /* tp_hash */
+    (ternaryfunc)0,          /* tp_call */
+    (reprfunc)0,              /* tp_str */
+    (getattrofunc)0,     /* tp_getattro */
+    (setattrofunc)0,     /* tp_setattro */
+    (PyBufferProcs*)0,  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,                      /* tp_flags */
+    NULL,                        /* Documentation string */
+    (traverseproc)0,     /* tp_traverse */
+    (inquiry)0,             /* tp_clear */
+    (richcmpfunc)0,   /* tp_richcompare */
+    offsetof(PyGObject, weakreflist),             /* tp_weaklistoffset */
+    (getiterfunc)0,          /* tp_iter */
+    (iternextfunc)0,     /* tp_iternext */
+    (struct PyMethodDef*)_PyEggSMClient_methods, /* tp_methods */
+    (struct PyMemberDef*)0,              /* tp_members */
+    (struct PyGetSetDef*)0,  /* tp_getset */
+    NULL,                              /* tp_base */
+    NULL,                              /* tp_dict */
+    (descrgetfunc)0,    /* tp_descr_get */
+    (descrsetfunc)0,    /* tp_descr_set */
+    offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
+    (initproc)0,             /* tp_init */
+    (allocfunc)0,           /* tp_alloc */
+    (newfunc)0,               /* tp_new */
+    (freefunc)0,             /* tp_free */
+    (inquiry)0              /* tp_is_gc */
+};
+
+
+
+/* ----------- EggSMClientXSMP ----------- */
+
+PyTypeObject G_GNUC_INTERNAL PyEggSMClientXSMP_Type = {
+    PyObject_HEAD_INIT(NULL)
+    0,                                 /* ob_size */
+    "sugar._sugarext.SMClientXSMP",                   /* tp_name */
+    sizeof(PyGObject),          /* tp_basicsize */
+    0,                                 /* tp_itemsize */
+    /* methods */
+    (destructor)0,        /* tp_dealloc */
+    (printfunc)0,                      /* tp_print */
+    (getattrfunc)0,       /* tp_getattr */
+    (setattrfunc)0,       /* tp_setattr */
+    (cmpfunc)0,           /* tp_compare */
+    (reprfunc)0,             /* tp_repr */
+    (PyNumberMethods*)0,     /* tp_as_number */
+    (PySequenceMethods*)0, /* tp_as_sequence */
+    (PyMappingMethods*)0,   /* tp_as_mapping */
+    (hashfunc)0,             /* tp_hash */
+    (ternaryfunc)0,          /* tp_call */
+    (reprfunc)0,              /* tp_str */
+    (getattrofunc)0,     /* tp_getattro */
+    (setattrofunc)0,     /* tp_setattro */
+    (PyBufferProcs*)0,  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,                      /* tp_flags */
+    NULL,                        /* Documentation string */
+    (traverseproc)0,     /* tp_traverse */
+    (inquiry)0,             /* tp_clear */
+    (richcmpfunc)0,   /* tp_richcompare */
+    offsetof(PyGObject, weakreflist),             /* tp_weaklistoffset */
+    (getiterfunc)0,          /* tp_iter */
+    (iternextfunc)0,     /* tp_iternext */
+    (struct PyMethodDef*)NULL, /* tp_methods */
+    (struct PyMemberDef*)0,              /* tp_members */
+    (struct PyGetSetDef*)0,  /* tp_getset */
+    NULL,                              /* tp_base */
+    NULL,                              /* tp_dict */
+    (descrgetfunc)0,    /* tp_descr_get */
+    (descrsetfunc)0,    /* tp_descr_set */
+    offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
+    (initproc)0,             /* tp_init */
+    (allocfunc)0,           /* tp_alloc */
+    (newfunc)0,               /* tp_new */
+    (freefunc)0,             /* tp_free */
+    (inquiry)0              /* tp_is_gc */
+};
+
+
+
+/* ----------- GsmSession ----------- */
+
+static PyObject *
+_wrap_gsm_session_set_name(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "name", NULL };
+    char *name;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"s:GsmSession.set_name", kwlist, &name))
+        return NULL;
+    
+    gsm_session_set_name(GSM_SESSION(self->obj), name);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_gsm_session_start(PyGObject *self)
+{
+    
+    gsm_session_start(GSM_SESSION(self->obj));
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_gsm_session_initiate_shutdown(PyGObject *self)
+{
+    
+    gsm_session_initiate_shutdown(GSM_SESSION(self->obj));
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static const PyMethodDef _PyGsmSession_methods[] = {
+    { "set_name", (PyCFunction)_wrap_gsm_session_set_name, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "start", (PyCFunction)_wrap_gsm_session_start, METH_NOARGS,
+      NULL },
+    { "initiate_shutdown", (PyCFunction)_wrap_gsm_session_initiate_shutdown, METH_NOARGS,
+      NULL },
+    { NULL, NULL, 0, NULL }
+};
+
+PyTypeObject G_GNUC_INTERNAL PyGsmSession_Type = {
+    PyObject_HEAD_INIT(NULL)
+    0,                                 /* ob_size */
+    "sugar._sugarext.Session",                   /* tp_name */
+    sizeof(PyGObject),          /* tp_basicsize */
+    0,                                 /* tp_itemsize */
+    /* methods */
+    (destructor)0,        /* tp_dealloc */
+    (printfunc)0,                      /* tp_print */
+    (getattrfunc)0,       /* tp_getattr */
+    (setattrfunc)0,       /* tp_setattr */
+    (cmpfunc)0,           /* tp_compare */
+    (reprfunc)0,             /* tp_repr */
+    (PyNumberMethods*)0,     /* tp_as_number */
+    (PySequenceMethods*)0, /* tp_as_sequence */
+    (PyMappingMethods*)0,   /* tp_as_mapping */
+    (hashfunc)0,             /* tp_hash */
+    (ternaryfunc)0,          /* tp_call */
+    (reprfunc)0,              /* tp_str */
+    (getattrofunc)0,     /* tp_getattro */
+    (setattrofunc)0,     /* tp_setattro */
+    (PyBufferProcs*)0,  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,                      /* tp_flags */
+    NULL,                        /* Documentation string */
+    (traverseproc)0,     /* tp_traverse */
+    (inquiry)0,             /* tp_clear */
+    (richcmpfunc)0,   /* tp_richcompare */
+    offsetof(PyGObject, weakreflist),             /* tp_weaklistoffset */
+    (getiterfunc)0,          /* tp_iter */
+    (iternextfunc)0,     /* tp_iternext */
+    (struct PyMethodDef*)_PyGsmSession_methods, /* tp_methods */
+    (struct PyMemberDef*)0,              /* tp_members */
+    (struct PyGetSetDef*)0,  /* tp_getset */
+    NULL,                              /* tp_base */
+    NULL,                              /* tp_dict */
+    (descrgetfunc)0,    /* tp_descr_get */
+    (descrsetfunc)0,    /* tp_descr_set */
+    offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
+    (initproc)0,             /* tp_init */
+    (allocfunc)0,           /* tp_alloc */
+    (newfunc)0,               /* tp_new */
+    (freefunc)0,             /* tp_free */
+    (inquiry)0              /* tp_is_gc */
+};
+
+
+
 /* ----------- functions ----------- */
 
+static PyObject *
+_wrap_gsm_xsmp_init(PyObject *self)
+{
+    gchar *ret;
+
+    
+    ret = gsm_xsmp_init();
+    
+    if (ret) {
+        PyObject *py_ret = PyString_FromString(ret);
+        g_free(ret);
+        return py_ret;
+    }
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_gsm_xsmp_run(PyObject *self)
+{
+    
+    gsm_xsmp_run();
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_gsm_xsmp_shutdown(PyObject *self)
+{
+    
+    gsm_xsmp_shutdown();
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_gsm_session_create_global(PyObject *self)
+{
+    GsmSession *ret;
+
+    
+    ret = gsm_session_create_global();
+    
+    /* pygobject_new handles NULL checking */
+    return pygobject_new((GObject *)ret);
+}
+
 const PyMethodDef py_sugarext_functions[] = {
+    { "xsmp_init", (PyCFunction)_wrap_gsm_xsmp_init, METH_NOARGS,
+      NULL },
+    { "xsmp_run", (PyCFunction)_wrap_gsm_xsmp_run, METH_NOARGS,
+      NULL },
+    { "xsmp_shutdown", (PyCFunction)_wrap_gsm_xsmp_shutdown, METH_NOARGS,
+      NULL },
+    { "session_create_global", (PyCFunction)_wrap_gsm_session_create_global, METH_NOARGS,
+      NULL },
     { NULL, NULL, 0, NULL }
 };
 
@@ -688,7 +1031,7 @@ py_sugarext_register_classes(PyObject *d)
     }
 
 
-#line 692 "_sugarext.c"
+#line 1035 "_sugarext.c"
     pygobject_register_class(d, "SugarAddressEntry", SUGAR_TYPE_ADDRESS_ENTRY, &PySugarAddressEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
     pygobject_register_class(d, "SugarKeyGrabber", SUGAR_TYPE_KEY_GRABBER, &PySugarKeyGrabber_Type, Py_BuildValue("(O)", &PyGObject_Type));
     pyg_set_object_has_new_constructor(SUGAR_TYPE_KEY_GRABBER);
@@ -697,4 +1040,10 @@ py_sugarext_register_classes(PyObject *d)
     pyg_set_object_has_new_constructor(SUGAR_TYPE_PREVIEW);
     pygobject_register_class(d, "SexyIconEntry", SEXY_TYPE_ICON_ENTRY, &PySexyIconEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
     pyg_set_object_has_new_constructor(SEXY_TYPE_ICON_ENTRY);
+    pygobject_register_class(d, "EggSMClient", EGG_TYPE_SM_CLIENT, &PyEggSMClient_Type, Py_BuildValue("(O)", &PyGObject_Type));
+    pyg_set_object_has_new_constructor(EGG_TYPE_SM_CLIENT);
+    pygobject_register_class(d, "EggSMClientXSMP", EGG_TYPE_SM_CLIENT_XSMP, &PyEggSMClientXSMP_Type, Py_BuildValue("(O)", &PyEggSMClient_Type));
+    pyg_set_object_has_new_constructor(EGG_TYPE_SM_CLIENT_XSMP);
+    pygobject_register_class(d, "GsmSession", GSM_TYPE_SESSION, &PyGsmSession_Type, Py_BuildValue("(O)", &PyGObject_Type));
+    pyg_set_object_has_new_constructor(GSM_TYPE_SESSION);
 }
