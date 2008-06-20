@@ -5,6 +5,7 @@
 	m4/python.m4
 	po/ChangeLog
 	po/POTFILES.in
+	po/POTFILES.skip
 	src/Makefile.am
 	src/sugar/Makefile.am
 	src/sugar/_sugarext.defs
@@ -65,6 +66,15 @@ GENERATED FILE [1994-2002]: Makefile.in
 	src/sugar/datastore/Makefile.in
 	src/sugar/graphics/Makefile.in
 	src/sugar/presence/Makefile.in
+GPL-2+ [2007 Novell, Inc]: src/sugar/gsm-app.c
+	src/sugar/gsm-client-xsmp.c
+	src/sugar/gsm-client-xsmp.h
+	src/sugar/gsm-client.c
+	src/sugar/gsm-client.h
+	src/sugar/gsm-session.c
+	src/sugar/gsm-session.h
+	src/sugar/gsm-xsmp.c
+	src/sugar/gsm-xsmp.h
 LGPL-2+ [2007, One Laptop Per Child]: src/sugar/clipboard/__init__.py
 	src/sugar/clipboard/clipboardservice.py
 	src/sugar/datastore/__init__.py
@@ -74,6 +84,10 @@ LGPL-2+ [2007, One Laptop Per Child]: src/sugar/clipboard/__init__.py
 	src/sugar/graphics/iconentry.py
 	src/sugar/graphics/objectchooser.py
 	src/sugar/graphics/tray.py
+LGPL-2+ [2007 Novell, Inc]: src/sugar/eggdesktopfile.h
+	src/sugar/eggsmclient-private.h
+	src/sugar/eggsmclient.c
+	src/sugar/eggsmclient.h
 LGPL-2+ [2004-2006 Christian Hammond]: src/sugar/sexy-icon-entry.c
 	src/sugar/sexy-icon-entry.h
 *No copyright* GENERATED FILE []: src/sugar/_sugarext.c
@@ -87,7 +101,9 @@ GPL GENERATED FILE [2000-2003 Free Software Foundation]: intltool-update.in
 GPL-2+ GENERATED FILE [1996-2001, 2003-2006]: ltmain.sh
 GPL-2+ GENERATED FILE [2000-2001, 2003 Free Software Foundation]: intltool-extract.in
 GPL-2+ GENERATED FILE [2001 Eazel, Inc]: m4/intltool.m4
-LGPL-2+ [2002 Red Hat, Inc.; Copyright 1998, 2001 Tim Janik]: src/sugar/eggaccelerators.c
+LGPL-2+ [1998 Carsten Schaar, and twm / 1998 The Open Group / 2007 Novell, Inc]: src/sugar/eggsmclient-xsmp.c
+LGPL-2+ [1999-2000 Red Hat Inc / 2001 George Lebl / 2007 Novell, Inc]: src/sugar/eggdesktopfile.c
+LGPL-2+ [2002 Red Hat, Inc.; 1998, 2001 Tim Janik]: src/sugar/eggaccelerators.c
 LGPL-2+ [2002 Red Hat, Inc]: src/sugar/eggaccelerators.h
 LGPL-2+ [2006-2007 Red Hat, Inc / 2007, One Laptop Per Child]: src/sugar/datastore/dbus_helpers.py
 LGPL-2+ [2006-2007 Red Hat, Inc / 2007-2008 One Laptop Per Child]: src/sugar/activity/activity.py
@@ -99,8 +115,10 @@ LGPL-2+ [2007, Eduardo Silva <edsiper@gmail.com>]: src/sugar/graphics/menuitem.p
 LGPL-2+ [2007, Red Hat, Inc / 2007-2008, One Laptop Per Child]: src/sugar/graphics/radiotoolbutton.py
 LGPL-2+ [2007, Red Hat, Inc / 2008, One Laptop Per Child]: src/sugar/graphics/toolbutton.py
 LGPL-2+ [2008 Red Hat, Inc]: src/sugar/activity/bundlebuilder.py
+LGPL-2+ [2008, Red Hat, Inc]: src/sugar/session.py
 LGPL-2.1+ [2007 Collabora Ltd. <http://www.collabora.co.uk/>]: src/sugar/presence/tubeconn.py
 LGPL-2.1+ [2008 One Laptop Per Child]: src/sugar/presence/sugartubeconn.py
-MIT/X11 (BSD like) [and license / notice and this permission notice shall be included in / 1994 X Consortium]: install-sh
+MIT/X11 (BSD like) [1994 X Consortium]: install-sh
 UNKNOWN [1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu> / 2004-2008 Rodney Dawes <dobey.pwns@gmail.com>]: po/Makefile.in.in
+UNKNOWN [2006 Novell, Inc]: src/sugar/gsm-app.h
 UNKNOWN [the / 1991, 1999 Free Software Foundation, Inc]: COPYING

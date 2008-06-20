@@ -45,7 +45,7 @@ Copyright: © 2007-2008, One Laptop Per Child
 	   © 2007 Red Hat, Inc
 License: LGPL-2+
 
-Files: src/sugar/activity/bundlebuilder.py
+Files: src/sugar/activity/bundlebuilder.py, src/sugar/session.py
 Copyright: © 2008 Red Hat, Inc
 License: LGPL-2+
 
@@ -81,6 +81,22 @@ Copyright: © 2008, One Laptop Per Child
 	   © 2007, Eduardo Silva <edsiper@gmail.com>
 License: LGPL-2+
 
+Files: src/sugar/egg*
+Copyright: © 2007 Novell, Inc.
+License: LGPL-2+
+
+Files: src/sugar/eggdesktopfile.c
+Copyright: © 2007 Novell, Inc.
+	   partly © 1999, 2000 Red Hat Inc.
+	   partly © 2001 George Lebl
+License: LGPL-2+
+
+Files: src/sugar/eggsmclient-xsmp.c
+Copyright: © 2007 Novell, Inc.
+	   partly © 1998 Carsten Schaar
+	   partly © 1998 The Open Group
+License: LGPL-2+
+
 Files: src/sugar/activity/*, src/sugar/env.py,
  src/sugar/graphics/icon.py, src/sugar/graphics/roundbox.py,
  src/sugar/graphics/xocolor.py, src/sugar/network.py,
@@ -90,6 +106,10 @@ Files: src/sugar/activity/*, src/sugar/env.py,
  src/sugar/profile.py, src/sugar/sugar-key-grabber.[ch],
  src/sugar/sugar-menu.[ch]
 Copyright: © 2006-2007, Red Hat, Inc.
+License: GPL-2+
+
+Files: src/sugar/gsm-*
+Copyright: © 2007 Novell, Inc
 License: GPL-2+
 
 Files: po/Makefile.in.in
