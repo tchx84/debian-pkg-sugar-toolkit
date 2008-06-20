@@ -1,3 +1,9 @@
+sugar-toolkit (0.81.5-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 20 Jun 2008 20:43:49 +0200
+
 sugar-toolkit (0.81.4-2) unstable; urgency=medium
 
   * Add patch 2002 to ignore debian subdir and .pc quilt subdir when
