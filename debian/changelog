@@ -1,6 +1,9 @@
 sugar-toolkit (0.81.6-1) unstable; urgency=low
 
   * New upstream release.
+  * Drop patch 1002 and 2992 (gettext rename fixed upstream now).
+  * Update patch 2991 (other translations added now, that danish needs
+    to merge with).
 
  -- Jonas Smedegaard <dr@jones.dk>  Thu, 10 Jul 2008 13:48:53 +0200
 

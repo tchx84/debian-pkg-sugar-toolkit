@@ -1,13 +1,13 @@
 diff --git a/configure b/configure
-index 0a16ecd..2b93998 100755
+index aac8564..c877ffd 100755
 --- a/configure
 +++ b/configure
-@@ -19896,7 +19896,7 @@ PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
+@@ -20308,7 +20308,7 @@ PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
  
  # Setup GETTEXT
  #
--ALL_LINGUAS=""
-+ALL_LINGUAS="da"
- GETTEXT_PACKAGE=sugar
+-ALL_LINGUAS="af am ar ay bg bn bn_IN ca de dz el en es fa fa_AF ff fr gu ha hi ht ig is it ja km ko mk ml mn mr mvo ne nl pa pap pis pl ps pt pt_BR qu ro ru rw sd si te th tpi tr ur vi yo zh_CN zh_TW"
++ALL_LINGUAS="af am ar ay bg bn bn_IN ca da de dz el en es fa fa_AF ff fr gu ha hi ht ig is it ja km ko mk ml mn mr mvo ne nl pa pap pis pl ps pt pt_BR qu ro ru rw sd si te th tpi tr ur vi yo zh_CN zh_TW"
+ GETTEXT_PACKAGE=sugar-toolkit
  
  case "$am__api_version" in
