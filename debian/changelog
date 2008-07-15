@@ -1,7 +1,8 @@
-sugar-toolkit (0.81.6-2) unstable; urgency=low
+sugar-toolkit (0.81.6-2) unstable; urgency=medium
 
   * Add patch 1003 to nest try-except in try-except-finally construct,
     for Python < 2.5 compatibility.
+  * Keep urgency=high to still attempt reaching Lenny before freezing.
 
  -- Jonas Smedegaard <dr@jones.dk>  Tue, 15 Jul 2008 10:13:43 +0200
 
