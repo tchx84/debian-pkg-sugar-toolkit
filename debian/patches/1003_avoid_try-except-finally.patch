@@ -1,0 +1,18 @@
+diff --git a/src/sugar/bundle/bundle.py b/src/sugar/bundle/bundle.py
+index 9e876c2..eb89a53 100644
+--- a/src/sugar/bundle/bundle.py
++++ b/src/sugar/bundle/bundle.py
+@@ -125,9 +125,10 @@ class Bundle:
+             zip_file = zipfile.ZipFile(self._path)
+             path = os.path.join(self._zip_root_dir, filename)
+             try:
+-                zip_file.getinfo(path)
+-            except KeyError:
+-                return False
++                try:
++                    zip_file.getinfo(path)
++                except KeyError:
++                    return False
+             finally:
+                 zip_file.close()
+ 
