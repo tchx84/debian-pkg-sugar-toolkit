@@ -1,4 +1,4 @@
-sugar-toolkit (0.81.6-3) unstable; urgency=low
+sugar-toolkit (0.81.6-3) UNRELEASED; urgency=low
 
   * Update local cdbs snippets:
     + Minor improvements to local makefile* and autotools* snippets.
