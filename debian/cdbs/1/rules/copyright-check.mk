@@ -69,6 +69,8 @@ debian/stamp-copyright-check:
 	'	$$file->{copyright} =~ s/(?<=(\b\d{4}))(?{$$y=$$^N})\s*[,-]\s*((??{$$y+1}))\b/-$$2/g;'\
 	'	$$file->{copyright} =~ s/(?<=\b\d{4})\s*-\s*\d{4}(?=\s*-\s*(\d{4})\b)//g;'\
 	'	$$file->{copyright} =~ s/\b(\d{4})\s+([\S^\d])/$$1, $$2/g;'\
+	'	$$file->{copyright} =~ s/^\W*\s+\/\s+//g;'\
+	'	$$file->{copyright} =~ s/\s+\/\s+\W*$$//;'\
 	'	$$file->{copyright} =~ s/\s+\/\s+/\n\t/g;'\
 	'	$$pattern = "$$file->{license} [$$file->{copyright}]";'\
 	'	push @{ $$patternfiles{"$$pattern"} }, $$file->{name};'\

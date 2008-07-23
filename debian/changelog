@@ -1,3 +1,14 @@
+sugar-toolkit (0.81.6-3) unstable; urgency=low
+
+  * Update local cdbs snippets:
+    + Minor improvements to local makefile* and autotools* snippets.
+    + Minor improvements to copyright-check.mk.
+    + Add new local package-relations.mk to merge duplicate
+      build-dependencies and more.  Drop cleanup in debian/rules.
+    + Update README.cdbs-tweaks.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 23 Jul 2008 23:27:33 +0200
+
 sugar-toolkit (0.81.6-2) unstable; urgency=medium
 
   * Add patch 1003 to nest try-except in try-except-finally construct,
