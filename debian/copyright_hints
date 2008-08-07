@@ -172,11 +172,6 @@ Files: src/sugar/eggdesktopfile.h
 Copyright: 2007, Novell, Inc
 License: LGPL-2+
 
-Files: compile
-	depcomp
-Copyright: 1999-2000, 2003-2005, Free Software Foundation, Inc
-License: GPL (GENERATED FILE)
-
 Files: src/sugar/sexy-icon-entry.c
 	src/sugar/sexy-icon-entry.h
 Copyright: 2004-2006, Christian Hammond
@@ -188,7 +183,11 @@ Copyright: 2008, Red Hat, Inc
 License: LGPL-2+
 
 Files: missing
-Copyright: 1996-1997, 1999-2000, 2002-2005
+Copyright: 1996-1997, 1999-2000, 2002-2006
+License: GPL (GENERATED FILE)
+
+Files: depcomp
+Copyright: 1999-2000, 2003-2007, Free Software
 License: GPL (GENERATED FILE)
 
 Files: py-compile
