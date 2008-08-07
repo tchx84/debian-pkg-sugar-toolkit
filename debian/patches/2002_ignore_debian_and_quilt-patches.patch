@@ -2,7 +2,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
 index 2480b03..01d06f3 100644
 --- a/src/sugar/activity/bundlebuilder.py
 +++ b/src/sugar/activity/bundlebuilder.py
-@@ -126,7 +126,7 @@ class BuildPackager(Packager):
+@@ -130,7 +130,7 @@ class BuildPackager(Packager):
          return files
      
      def _list_useful_files(self):
