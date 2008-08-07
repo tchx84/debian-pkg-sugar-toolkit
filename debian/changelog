@@ -1,6 +1,7 @@
 sugar-toolkit (0.81.8-1) UNRELEASED; urgency=low
 
   * New upstream release.
+  * Drop patch 0001 now included upstream.
   * Update local cdbs snippets:
     + Minor improvements to local makefile* and autotools* snippets.
     + Minor improvements to copyright-check.mk.
