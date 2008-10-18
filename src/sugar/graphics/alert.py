@@ -85,7 +85,7 @@ class Alert(gtk.EventBox):
         self._buttons_box.set_spacing(style.DEFAULT_SPACING)
         self._hbox.pack_start(self._buttons_box)
         
-        gtk.EventBox.__init__(self, **kwargs)        
+        gobject.GObject.__init__(self, **kwargs)
 
         self.set_visible_window(True)        
         self.add(self._hbox)        
@@ -105,6 +105,7 @@ class Alert(gtk.EventBox):
             if self._msg != value:
                 self._msg = value
                 self._msg_label.set_markup(self._msg)
+                self._msg_label.set_line_wrap(True)
         elif pspec.name == 'icon':
             if self._icon != value:
                 self._icon = value
