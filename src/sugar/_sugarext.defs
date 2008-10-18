@@ -22,6 +22,13 @@
   (gtype-id "SUGAR_TYPE_MENU")
 )
 
+(define-object Grid
+  (in-module "Sugar")
+  (parent "GObject")
+  (c-name "SugarGrid")
+  (gtype-id "SUGAR_TYPE_GRID")
+)
+
 (define-object Preview
   (in-module "Sugar")
   (parent "GObject")
@@ -55,6 +62,20 @@
   (parent "GObject")
   (c-name "GsmSession")
   (gtype-id "GSM_TYPE_SESSION")
+)
+
+(define-object Volume
+  (in-module "Acme")
+  (parent "GObject")
+  (c-name "AcmeVolume")
+  (gtype-id "ACME_TYPE_VOLUME")
+)
+
+(define-object VolumeAlsa
+  (in-module "Acme")
+  (parent "AcmeVolume")
+  (c-name "AcmeVolumeAlsa")
+  (gtype-id "ACME_TYPE_VOLUME_ALSA")
 )
 
 ;; Enumerations and flags ...
@@ -93,6 +114,45 @@
   (of-object "SugarMenu")
   (c-name "sugar_menu_unembed")
   (return-type "none")
+)
+
+;; From sugar-grid.h
+
+(define-method setup
+  (of-object "SugarGrid")
+  (c-name "sugar_grid_setup")
+  (return-type "none")
+  (parameters
+    '("gint" "width")
+    '("gint" "height")
+  )
+)
+
+(define-method add_weight
+  (of-object "SugarGrid")
+  (c-name "sugar_grid_add_weight")
+  (return-type "none")
+  (parameters
+    '("GdkRectangle*" "rect")
+  )
+)
+
+(define-method remove_weight
+  (of-object "SugarGrid")
+  (c-name "sugar_grid_remove_weight")
+  (return-type "none")
+  (parameters
+    '("GdkRectangle*" "rect")
+  )
+)
+
+(define-method compute_weight
+  (of-object "SugarGrid")
+  (c-name "sugar_grid_compute_weight")
+  (return-type "guint")
+  (parameters
+    '("GdkRectangle*" "rect")
+  )
 )
 
 ;; From sugar-key-grabber.h
@@ -200,7 +260,7 @@
   (c-name "sugar_preview_take_screenshot")
   (return-type "none")
   (parameters
-    '("GdkDrawable" "drawable")
+    '("GtkWidget" "widget")
   )
 )
 
@@ -345,3 +405,57 @@
   (return-type "GsmSession*")
 )
 
+;; From acme-volume.h
+
+(define-function acme_volume_get_type
+  (c-name "acme_volume_get_type")
+  (return-type "GType")
+)
+
+(define-method get_volume
+  (of-object "AcmeVolume")
+  (c-name "acme_volume_get_volume")
+  (return-type "int")
+)
+
+(define-method set_volume
+  (of-object "AcmeVolume")
+  (c-name "acme_volume_set_volume")
+  (return-type "none")
+  (parameters
+    '("int" "val")
+  )
+)
+
+(define-method get_mute
+  (of-object "AcmeVolume")
+  (c-name "acme_volume_get_mute")
+  (return-type "gboolean")
+)
+
+(define-method set_mute
+  (of-object "AcmeVolume")
+  (c-name "acme_volume_set_mute")
+  (return-type "none")
+  (parameters
+    '("gboolean" "val")
+  )
+)
+
+(define-method mute_toggle
+  (of-object "AcmeVolume")
+  (c-name "acme_volume_mute_toggle")
+  (return-type "none")
+)
+
+(define-method get_threshold
+  (of-object "AcmeVolume")
+  (c-name "acme_volume_get_threshold")
+  (return-type "int")
+)
+
+(define-function acme_volume_new
+  (c-name "acme_volume_new")
+  (is-constructor-of "AcmeVolume")
+  (return-type "AcmeVolume*")
+)
