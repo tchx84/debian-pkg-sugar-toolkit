@@ -74,6 +74,21 @@ Files: Makefile.in, ./aclocal.m4
 Copyright: 1994-2005, Free Software Foundation, Inc.
 License: GAP
 
+Files: src/sugar/activity/bundlebuilder.py
+	src/sugar/activity/main.py
+	src/sugar/session.py
+	src/sugar/sugar-grid.c
+	src/sugar/sugar-grid.h
+Copyright: 2008, Red Hat, Inc
+License: LGPL-2+
+
+Files: src/sugar/acme-volume-alsa.c
+	src/sugar/acme-volume-alsa.h
+	src/sugar/acme-volume.c
+	src/sugar/acme-volume.h
+Copyright: 2002-2003, Bastien Nocera
+License: LGPL-2+
+
 Files: src/sugar/eggdesktopfile.h
 	src/sugar/eggsmclient-private.h
 	src/sugar/eggsmclient.[ch]

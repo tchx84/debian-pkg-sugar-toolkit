@@ -1,6 +1,8 @@
 sugar-toolkit (0.82.11-1) UNRELEASED; urgency=low
 
   * New upstream release.
+  * Update debian/copyright and copyright hints (new copyright holders
+    and years, same licenses).
 
  -- Jonas Smedegaard <dr@jones.dk>  Sun, 19 Oct 2008 11:10:44 +0200
 

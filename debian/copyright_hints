@@ -62,6 +62,31 @@ Files: po/af.po
 Copyright: YEAR THE PACKAGE'S HOLDER
 License: UNKNOWN
 
+Files: AUTHORS
+	Makefile.am
+	README
+	configure.ac
+	m4/gnome-compiler-flags.m4
+	m4/python.m4
+	po/ChangeLog
+	po/POTFILES.in
+	po/POTFILES.skip
+	src/Makefile.am
+	src/sugar/Makefile.am
+	src/sugar/_sugarext.defs
+	src/sugar/_sugarext.override
+	src/sugar/activity/Makefile.am
+	src/sugar/bundle/Makefile.am
+	src/sugar/clipboard/Makefile.am
+	src/sugar/datastore/Makefile.am
+	src/sugar/graphics/Makefile.am
+	src/sugar/presence/Makefile.am
+	src/sugar/sugar-marshal.c
+	src/sugar/sugar-marshal.h
+	src/sugar/sugar-marshal.list
+Copyright: *No copyright*
+License: UNKNOWN
+
 Files: src/sugar/_sugarextmodule.c
 	src/sugar/activity/__init__.py
 	src/sugar/activity/activityfactory.py
@@ -85,30 +110,6 @@ Files: src/sugar/_sugarextmodule.c
 	src/sugar/util.py
 Copyright: 2006-2007, Red Hat, Inc
 License: LGPL-2+
-
-Files: AUTHORS
-	Makefile.am
-	README
-	configure.ac
-	m4/python.m4
-	po/ChangeLog
-	po/POTFILES.in
-	po/POTFILES.skip
-	src/Makefile.am
-	src/sugar/Makefile.am
-	src/sugar/_sugarext.defs
-	src/sugar/_sugarext.override
-	src/sugar/activity/Makefile.am
-	src/sugar/bundle/Makefile.am
-	src/sugar/clipboard/Makefile.am
-	src/sugar/datastore/Makefile.am
-	src/sugar/graphics/Makefile.am
-	src/sugar/presence/Makefile.am
-	src/sugar/sugar-marshal.c
-	src/sugar/sugar-marshal.h
-	src/sugar/sugar-marshal.list
-Copyright: *No copyright*
-License: UNKNOWN
 
 Files: src/sugar/bundle/activitybundle.py
 	src/sugar/bundle/bundle.py
@@ -167,6 +168,21 @@ Files: Makefile.in
 Copyright: 1994-2002
 License: UNKNOWN (GENERATED FILE)
 
+Files: src/sugar/activity/bundlebuilder.py
+	src/sugar/activity/main.py
+	src/sugar/session.py
+	src/sugar/sugar-grid.c
+	src/sugar/sugar-grid.h
+Copyright: 2008, Red Hat, Inc
+License: LGPL-2+
+
+Files: src/sugar/acme-volume-alsa.c
+	src/sugar/acme-volume-alsa.h
+	src/sugar/acme-volume.c
+	src/sugar/acme-volume.h
+Copyright: 2002-2003, Bastien Nocera
+License: LGPL-2+
+
 Files: src/sugar/eggdesktopfile.h
 	src/sugar/eggsmclient-private.h
 	src/sugar/eggsmclient.c
@@ -177,11 +193,6 @@ License: LGPL-2+
 Files: src/sugar/sexy-icon-entry.c
 	src/sugar/sexy-icon-entry.h
 Copyright: 2004-2006, Christian Hammond
-License: LGPL-2+
-
-Files: src/sugar/activity/bundlebuilder.py
-	src/sugar/session.py
-Copyright: 2008, Red Hat, Inc
 License: LGPL-2+
 
 Files: missing
