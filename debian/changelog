@@ -3,6 +3,7 @@ sugar-toolkit (0.82.11-1) UNRELEASED; urgency=low
   * New upstream release.
   * Drop patch 1002 now applied upstream.
   * Drop patch 1003 no longer relevant (upstream routine rewritten).
+  * Update patch 2002.
   * Update debian/copyright and copyright hints (new copyright holders
     and years, same licenses).
 

@@ -1,13 +1,12 @@
 diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuilder.py
-index 2480b03..01d06f3 100644
 --- a/src/sugar/activity/bundlebuilder.py
 +++ b/src/sugar/activity/bundlebuilder.py
-@@ -130,7 +130,7 @@ class BuildPackager(Packager):
-         return files
-     
-     def _list_useful_files(self):
--        ignore_dirs = ['dist', '.git']
-+        ignore_dirs = ['dist', '.git', 'debian', '.pc']
-         ignore_files = ['.gitignore', 'MANIFEST', '*.pyc', '*~', '*.bak']
+@@ -30,7 +30,7 @@ from fnmatch import fnmatch
+ from sugar import env
+ from sugar.bundle.activitybundle import ActivityBundle
+ 
+-IGNORE_DIRS = ['dist', '.git']
++IGNORE_DIRS = ['dist', '.git', 'debian', '.pc']
+ IGNORE_FILES = ['.gitignore', 'MANIFEST', '*.pyc', '*~', '*.bak', 'pseudo.po']
          
-         return list_files(self.config.source_dir, ignore_dirs, ignore_files)
+ def list_files(base_dir, ignore_dirs=None, ignore_files=None):
