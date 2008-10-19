@@ -1,4 +1,4 @@
-sugar-toolkit (0.82.11-1) UNRELEASED; urgency=low
+sugar-toolkit (0.82.11-1) unstable; urgency=low
 
   * New upstream release.
   * Drop patch 1002 now applied upstream.
@@ -7,16 +7,11 @@ sugar-toolkit (0.82.11-1) UNRELEASED; urgency=low
   * Unfuzz patch 2991
   * Update debian/copyright and copyright hints (new copyright holders
     and years, same licenses).
-  * Add build-dependencies on libsm-dev, libice-dev and libasound2-dev
-    (with fallback on virtual libasound-dev).
-
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 19 Oct 2008 11:10:44 +0200
-
-sugar-toolkit (0.82.0-2) UNRELEASED; urgency=low
-
+  * Build-depend on libsm-dev, libice-dev and libasound2-dev (with
+    fallback on virtual libasound-dev).
   * Depend on ${misc:Depends}.
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 07 Oct 2008 11:43:31 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 19 Oct 2008 13:47:21 +0200
 
 sugar-toolkit (0.82.0-1) unstable; urgency=low
 
