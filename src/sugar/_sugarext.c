@@ -9,25 +9,29 @@
 
 #include "pygobject.h"
 #include "sugar-address-entry.h"
+#include "sugar-grid.h"
 #include "sugar-key-grabber.h"
 #include "sugar-menu.h"
 #include "sugar-preview.h"
 #include "sexy-icon-entry.h"
 #include "gsm-session.h"
+#include "gsm-xsmp.h"
+#include "acme-volume-alsa.h"
 
-#define EGG_SM_CLIENT_BACKEND_XSMP
 #include "eggsmclient.h"
 #include "eggsmclient-private.h"
 
 #include <pygtk/pygtk.h>
 #include <glib.h>
 
-#line 26 "_sugarext.c"
+#line 28 "_sugarext.c"
 
 
 /* ---------- types from other modules ---------- */
 static PyTypeObject *_PyGObject_Type;
 #define PyGObject_Type (*_PyGObject_Type)
+static PyTypeObject *_PyGtkWidget_Type;
+#define PyGtkWidget_Type (*_PyGtkWidget_Type)
 static PyTypeObject *_PyGtkEntry_Type;
 #define PyGtkEntry_Type (*_PyGtkEntry_Type)
 static PyTypeObject *_PyGtkMenu_Type;
@@ -36,8 +40,6 @@ static PyTypeObject *_PyGtkContainer_Type;
 #define PyGtkContainer_Type (*_PyGtkContainer_Type)
 static PyTypeObject *_PyGdkWindow_Type;
 #define PyGdkWindow_Type (*_PyGdkWindow_Type)
-static PyTypeObject *_PyGdkDrawable_Type;
-#define PyGdkDrawable_Type (*_PyGdkDrawable_Type)
 static PyTypeObject *_PyGtkImage_Type;
 #define PyGtkImage_Type (*_PyGtkImage_Type)
 
@@ -46,13 +48,16 @@ static PyTypeObject *_PyGtkImage_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarAddressEntry_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarKeyGrabber_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarMenu_Type;
+PyTypeObject G_GNUC_INTERNAL PySugarGrid_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarPreview_Type;
 PyTypeObject G_GNUC_INTERNAL PySexyIconEntry_Type;
 PyTypeObject G_GNUC_INTERNAL PyEggSMClientXSMP_Type;
 PyTypeObject G_GNUC_INTERNAL PyEggSMClient_Type;
 PyTypeObject G_GNUC_INTERNAL PyGsmSession_Type;
+PyTypeObject G_GNUC_INTERNAL PyAcmeVolume_Type;
+PyTypeObject G_GNUC_INTERNAL PyAcmeVolumeAlsa_Type;
 
-#line 56 "_sugarext.c"
+#line 61 "_sugarext.c"
 
 
 
@@ -357,18 +362,148 @@ PyTypeObject G_GNUC_INTERNAL PySugarMenu_Type = {
 
 
 
+/* ----------- SugarGrid ----------- */
+
+static PyObject *
+_wrap_sugar_grid_setup(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "width", "height", NULL };
+    int width, height;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"ii:SugarGrid.setup", kwlist, &width, &height))
+        return NULL;
+    
+    sugar_grid_setup(SUGAR_GRID(self->obj), width, height);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_sugar_grid_add_weight(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "rect", NULL };
+    PyObject *py_rect;
+    GdkRectangle rect = { 0, 0, 0, 0 };
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:SugarGrid.add_weight", kwlist, &py_rect))
+        return NULL;
+    if (!pygdk_rectangle_from_pyobject(py_rect, &rect))
+        return NULL;
+    
+    sugar_grid_add_weight(SUGAR_GRID(self->obj), &rect);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_sugar_grid_remove_weight(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "rect", NULL };
+    PyObject *py_rect;
+    GdkRectangle rect = { 0, 0, 0, 0 };
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:SugarGrid.remove_weight", kwlist, &py_rect))
+        return NULL;
+    if (!pygdk_rectangle_from_pyobject(py_rect, &rect))
+        return NULL;
+    
+    sugar_grid_remove_weight(SUGAR_GRID(self->obj), &rect);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_sugar_grid_compute_weight(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "rect", NULL };
+    PyObject *py_rect;
+    GdkRectangle rect = { 0, 0, 0, 0 };
+    guint ret;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:SugarGrid.compute_weight", kwlist, &py_rect))
+        return NULL;
+    if (!pygdk_rectangle_from_pyobject(py_rect, &rect))
+        return NULL;
+    
+    ret = sugar_grid_compute_weight(SUGAR_GRID(self->obj), &rect);
+    
+    return PyLong_FromUnsignedLong(ret);
+}
+
+static const PyMethodDef _PySugarGrid_methods[] = {
+    { "setup", (PyCFunction)_wrap_sugar_grid_setup, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "add_weight", (PyCFunction)_wrap_sugar_grid_add_weight, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "remove_weight", (PyCFunction)_wrap_sugar_grid_remove_weight, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "compute_weight", (PyCFunction)_wrap_sugar_grid_compute_weight, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { NULL, NULL, 0, NULL }
+};
+
+PyTypeObject G_GNUC_INTERNAL PySugarGrid_Type = {
+    PyObject_HEAD_INIT(NULL)
+    0,                                 /* ob_size */
+    "sugar._sugarext.Grid",                   /* tp_name */
+    sizeof(PyGObject),          /* tp_basicsize */
+    0,                                 /* tp_itemsize */
+    /* methods */
+    (destructor)0,        /* tp_dealloc */
+    (printfunc)0,                      /* tp_print */
+    (getattrfunc)0,       /* tp_getattr */
+    (setattrfunc)0,       /* tp_setattr */
+    (cmpfunc)0,           /* tp_compare */
+    (reprfunc)0,             /* tp_repr */
+    (PyNumberMethods*)0,     /* tp_as_number */
+    (PySequenceMethods*)0, /* tp_as_sequence */
+    (PyMappingMethods*)0,   /* tp_as_mapping */
+    (hashfunc)0,             /* tp_hash */
+    (ternaryfunc)0,          /* tp_call */
+    (reprfunc)0,              /* tp_str */
+    (getattrofunc)0,     /* tp_getattro */
+    (setattrofunc)0,     /* tp_setattro */
+    (PyBufferProcs*)0,  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,                      /* tp_flags */
+    NULL,                        /* Documentation string */
+    (traverseproc)0,     /* tp_traverse */
+    (inquiry)0,             /* tp_clear */
+    (richcmpfunc)0,   /* tp_richcompare */
+    offsetof(PyGObject, weakreflist),             /* tp_weaklistoffset */
+    (getiterfunc)0,          /* tp_iter */
+    (iternextfunc)0,     /* tp_iternext */
+    (struct PyMethodDef*)_PySugarGrid_methods, /* tp_methods */
+    (struct PyMemberDef*)0,              /* tp_members */
+    (struct PyGetSetDef*)0,  /* tp_getset */
+    NULL,                              /* tp_base */
+    NULL,                              /* tp_dict */
+    (descrgetfunc)0,    /* tp_descr_get */
+    (descrsetfunc)0,    /* tp_descr_set */
+    offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
+    (initproc)0,             /* tp_init */
+    (allocfunc)0,           /* tp_alloc */
+    (newfunc)0,               /* tp_new */
+    (freefunc)0,             /* tp_free */
+    (inquiry)0              /* tp_is_gc */
+};
+
+
+
 /* ----------- SugarPreview ----------- */
 
 static PyObject *
 _wrap_sugar_preview_take_screenshot(PyGObject *self, PyObject *args, PyObject *kwargs)
 {
-    static char *kwlist[] = { "drawable", NULL };
-    PyGObject *drawable;
+    static char *kwlist[] = { "widget", NULL };
+    PyGObject *widget;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!:SugarPreview.take_screenshot", kwlist, &PyGdkDrawable_Type, &drawable))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!:SugarPreview.take_screenshot", kwlist, &PyGtkWidget_Type, &widget))
         return NULL;
     
-    sugar_preview_take_screenshot(SUGAR_PREVIEW(self->obj), GDK_DRAWABLE(drawable->obj));
+    sugar_preview_take_screenshot(SUGAR_PREVIEW(self->obj), GTK_WIDGET(widget->obj));
     
     Py_INCREF(Py_None);
     return Py_None;
@@ -885,6 +1020,214 @@ PyTypeObject G_GNUC_INTERNAL PyGsmSession_Type = {
 
 
 
+/* ----------- AcmeVolume ----------- */
+
+static int
+_wrap_acme_volume_new(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char* kwlist[] = { NULL };
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
+                                     ":sugar._sugarext.Volume.__init__",
+                                     kwlist))
+        return -1;
+
+    pygobject_constructv(self, 0, NULL);
+    if (!self->obj) {
+        PyErr_SetString(
+            PyExc_RuntimeError, 
+            "could not create sugar._sugarext.Volume object");
+        return -1;
+    }
+    return 0;
+}
+
+static PyObject *
+_wrap_acme_volume_get_volume(PyGObject *self)
+{
+    int ret;
+
+    
+    ret = acme_volume_get_volume(ACME_VOLUME(self->obj));
+    
+    return PyInt_FromLong(ret);
+}
+
+static PyObject *
+_wrap_acme_volume_set_volume(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "val", NULL };
+    int val;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:AcmeVolume.set_volume", kwlist, &val))
+        return NULL;
+    
+    acme_volume_set_volume(ACME_VOLUME(self->obj), val);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_acme_volume_get_mute(PyGObject *self)
+{
+    int ret;
+
+    
+    ret = acme_volume_get_mute(ACME_VOLUME(self->obj));
+    
+    return PyBool_FromLong(ret);
+
+}
+
+static PyObject *
+_wrap_acme_volume_set_mute(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "val", NULL };
+    int val;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:AcmeVolume.set_mute", kwlist, &val))
+        return NULL;
+    
+    acme_volume_set_mute(ACME_VOLUME(self->obj), val);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_acme_volume_mute_toggle(PyGObject *self)
+{
+    
+    acme_volume_mute_toggle(ACME_VOLUME(self->obj));
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_acme_volume_get_threshold(PyGObject *self)
+{
+    int ret;
+
+    
+    ret = acme_volume_get_threshold(ACME_VOLUME(self->obj));
+    
+    return PyInt_FromLong(ret);
+}
+
+static const PyMethodDef _PyAcmeVolume_methods[] = {
+    { "get_volume", (PyCFunction)_wrap_acme_volume_get_volume, METH_NOARGS,
+      NULL },
+    { "set_volume", (PyCFunction)_wrap_acme_volume_set_volume, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "get_mute", (PyCFunction)_wrap_acme_volume_get_mute, METH_NOARGS,
+      NULL },
+    { "set_mute", (PyCFunction)_wrap_acme_volume_set_mute, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "mute_toggle", (PyCFunction)_wrap_acme_volume_mute_toggle, METH_NOARGS,
+      NULL },
+    { "get_threshold", (PyCFunction)_wrap_acme_volume_get_threshold, METH_NOARGS,
+      NULL },
+    { NULL, NULL, 0, NULL }
+};
+
+PyTypeObject G_GNUC_INTERNAL PyAcmeVolume_Type = {
+    PyObject_HEAD_INIT(NULL)
+    0,                                 /* ob_size */
+    "sugar._sugarext.Volume",                   /* tp_name */
+    sizeof(PyGObject),          /* tp_basicsize */
+    0,                                 /* tp_itemsize */
+    /* methods */
+    (destructor)0,        /* tp_dealloc */
+    (printfunc)0,                      /* tp_print */
+    (getattrfunc)0,       /* tp_getattr */
+    (setattrfunc)0,       /* tp_setattr */
+    (cmpfunc)0,           /* tp_compare */
+    (reprfunc)0,             /* tp_repr */
+    (PyNumberMethods*)0,     /* tp_as_number */
+    (PySequenceMethods*)0, /* tp_as_sequence */
+    (PyMappingMethods*)0,   /* tp_as_mapping */
+    (hashfunc)0,             /* tp_hash */
+    (ternaryfunc)0,          /* tp_call */
+    (reprfunc)0,              /* tp_str */
+    (getattrofunc)0,     /* tp_getattro */
+    (setattrofunc)0,     /* tp_setattro */
+    (PyBufferProcs*)0,  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,                      /* tp_flags */
+    NULL,                        /* Documentation string */
+    (traverseproc)0,     /* tp_traverse */
+    (inquiry)0,             /* tp_clear */
+    (richcmpfunc)0,   /* tp_richcompare */
+    offsetof(PyGObject, weakreflist),             /* tp_weaklistoffset */
+    (getiterfunc)0,          /* tp_iter */
+    (iternextfunc)0,     /* tp_iternext */
+    (struct PyMethodDef*)_PyAcmeVolume_methods, /* tp_methods */
+    (struct PyMemberDef*)0,              /* tp_members */
+    (struct PyGetSetDef*)0,  /* tp_getset */
+    NULL,                              /* tp_base */
+    NULL,                              /* tp_dict */
+    (descrgetfunc)0,    /* tp_descr_get */
+    (descrsetfunc)0,    /* tp_descr_set */
+    offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
+    (initproc)_wrap_acme_volume_new,             /* tp_init */
+    (allocfunc)0,           /* tp_alloc */
+    (newfunc)0,               /* tp_new */
+    (freefunc)0,             /* tp_free */
+    (inquiry)0              /* tp_is_gc */
+};
+
+
+
+/* ----------- AcmeVolumeAlsa ----------- */
+
+PyTypeObject G_GNUC_INTERNAL PyAcmeVolumeAlsa_Type = {
+    PyObject_HEAD_INIT(NULL)
+    0,                                 /* ob_size */
+    "sugar._sugarext.VolumeAlsa",                   /* tp_name */
+    sizeof(PyGObject),          /* tp_basicsize */
+    0,                                 /* tp_itemsize */
+    /* methods */
+    (destructor)0,        /* tp_dealloc */
+    (printfunc)0,                      /* tp_print */
+    (getattrfunc)0,       /* tp_getattr */
+    (setattrfunc)0,       /* tp_setattr */
+    (cmpfunc)0,           /* tp_compare */
+    (reprfunc)0,             /* tp_repr */
+    (PyNumberMethods*)0,     /* tp_as_number */
+    (PySequenceMethods*)0, /* tp_as_sequence */
+    (PyMappingMethods*)0,   /* tp_as_mapping */
+    (hashfunc)0,             /* tp_hash */
+    (ternaryfunc)0,          /* tp_call */
+    (reprfunc)0,              /* tp_str */
+    (getattrofunc)0,     /* tp_getattro */
+    (setattrofunc)0,     /* tp_setattro */
+    (PyBufferProcs*)0,  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,                      /* tp_flags */
+    NULL,                        /* Documentation string */
+    (traverseproc)0,     /* tp_traverse */
+    (inquiry)0,             /* tp_clear */
+    (richcmpfunc)0,   /* tp_richcompare */
+    offsetof(PyGObject, weakreflist),             /* tp_weaklistoffset */
+    (getiterfunc)0,          /* tp_iter */
+    (iternextfunc)0,     /* tp_iternext */
+    (struct PyMethodDef*)NULL, /* tp_methods */
+    (struct PyMemberDef*)0,              /* tp_members */
+    (struct PyGetSetDef*)0,  /* tp_getset */
+    NULL,                              /* tp_base */
+    NULL,                              /* tp_dict */
+    (descrgetfunc)0,    /* tp_descr_get */
+    (descrsetfunc)0,    /* tp_descr_set */
+    offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
+    (initproc)0,             /* tp_init */
+    (allocfunc)0,           /* tp_alloc */
+    (newfunc)0,               /* tp_new */
+    (freefunc)0,             /* tp_free */
+    (inquiry)0              /* tp_is_gc */
+};
+
+
+
 /* ----------- functions ----------- */
 
 static PyObject *
@@ -982,6 +1325,12 @@ py_sugarext_register_classes(PyObject *d)
         return ;
     }
     if ((module = PyImport_ImportModule("gtk")) != NULL) {
+        _PyGtkWidget_Type = (PyTypeObject *)PyObject_GetAttrString(module, "Widget");
+        if (_PyGtkWidget_Type == NULL) {
+            PyErr_SetString(PyExc_ImportError,
+                "cannot import name Widget from gtk");
+            return ;
+        }
         _PyGtkEntry_Type = (PyTypeObject *)PyObject_GetAttrString(module, "Entry");
         if (_PyGtkEntry_Type == NULL) {
             PyErr_SetString(PyExc_ImportError,
@@ -1018,12 +1367,6 @@ py_sugarext_register_classes(PyObject *d)
                 "cannot import name Window from gtk.gdk");
             return ;
         }
-        _PyGdkDrawable_Type = (PyTypeObject *)PyObject_GetAttrString(module, "Drawable");
-        if (_PyGdkDrawable_Type == NULL) {
-            PyErr_SetString(PyExc_ImportError,
-                "cannot import name Drawable from gtk.gdk");
-            return ;
-        }
     } else {
         PyErr_SetString(PyExc_ImportError,
             "could not import gtk.gdk");
@@ -1031,11 +1374,13 @@ py_sugarext_register_classes(PyObject *d)
     }
 
 
-#line 1035 "_sugarext.c"
+#line 1378 "_sugarext.c"
     pygobject_register_class(d, "SugarAddressEntry", SUGAR_TYPE_ADDRESS_ENTRY, &PySugarAddressEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
     pygobject_register_class(d, "SugarKeyGrabber", SUGAR_TYPE_KEY_GRABBER, &PySugarKeyGrabber_Type, Py_BuildValue("(O)", &PyGObject_Type));
     pyg_set_object_has_new_constructor(SUGAR_TYPE_KEY_GRABBER);
     pygobject_register_class(d, "SugarMenu", SUGAR_TYPE_MENU, &PySugarMenu_Type, Py_BuildValue("(O)", &PyGtkMenu_Type));
+    pygobject_register_class(d, "SugarGrid", SUGAR_TYPE_GRID, &PySugarGrid_Type, Py_BuildValue("(O)", &PyGObject_Type));
+    pyg_set_object_has_new_constructor(SUGAR_TYPE_GRID);
     pygobject_register_class(d, "SugarPreview", SUGAR_TYPE_PREVIEW, &PySugarPreview_Type, Py_BuildValue("(O)", &PyGObject_Type));
     pyg_set_object_has_new_constructor(SUGAR_TYPE_PREVIEW);
     pygobject_register_class(d, "SexyIconEntry", SEXY_TYPE_ICON_ENTRY, &PySexyIconEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
@@ -1046,4 +1391,8 @@ py_sugarext_register_classes(PyObject *d)
     pyg_set_object_has_new_constructor(EGG_TYPE_SM_CLIENT_XSMP);
     pygobject_register_class(d, "GsmSession", GSM_TYPE_SESSION, &PyGsmSession_Type, Py_BuildValue("(O)", &PyGObject_Type));
     pyg_set_object_has_new_constructor(GSM_TYPE_SESSION);
+    pygobject_register_class(d, "AcmeVolume", ACME_TYPE_VOLUME, &PyAcmeVolume_Type, Py_BuildValue("(O)", &PyGObject_Type));
+    pyg_set_object_has_new_constructor(ACME_TYPE_VOLUME);
+    pygobject_register_class(d, "AcmeVolumeAlsa", ACME_TYPE_VOLUME_ALSA, &PyAcmeVolumeAlsa_Type, Py_BuildValue("(O)", &PyAcmeVolume_Type));
+    pyg_set_object_has_new_constructor(ACME_TYPE_VOLUME_ALSA);
 }

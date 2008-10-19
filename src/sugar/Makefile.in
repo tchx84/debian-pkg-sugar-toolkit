@@ -36,8 +36,9 @@ subdir = src/sugar
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(sugar_PYTHON)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/intltool.m4 \
-	$(top_srcdir)/m4/python.m4 $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/gnome-compiler-flags.m4 \
+	$(top_srcdir)/m4/intltool.m4 $(top_srcdir)/m4/python.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -56,13 +57,14 @@ _sugarext_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__objects_1 = _sugarext_la-_sugarext.lo \
 	_sugarext_la-sugar-marshal.lo
 am__sugarext_la_OBJECTS = $(am__objects_1) \
-	_sugarext_la-_sugarextmodule.lo _sugarext_la-gsm-app.lo \
+	_sugarext_la-_sugarextmodule.lo _sugarext_la-acme-volume.lo \
+	_sugarext_la-acme-volume-alsa.lo _sugarext_la-gsm-app.lo \
 	_sugarext_la-gsm-client.lo _sugarext_la-gsm-client-xsmp.lo \
 	_sugarext_la-gsm-xsmp.lo _sugarext_la-gsm-session.lo \
 	_sugarext_la-eggaccelerators.lo _sugarext_la-eggdesktopfile.lo \
 	_sugarext_la-eggsmclient.lo _sugarext_la-eggsmclient-xsmp.lo \
 	_sugarext_la-sexy-icon-entry.lo \
-	_sugarext_la-sugar-address-entry.lo \
+	_sugarext_la-sugar-address-entry.lo _sugarext_la-sugar-grid.lo \
 	_sugarext_la-sugar-key-grabber.lo _sugarext_la-sugar-menu.lo \
 	_sugarext_la-sugar-preview.lo
 _sugarext_la_OBJECTS = $(am__sugarext_la_OBJECTS)
@@ -206,6 +208,7 @@ SHELL = @SHELL@
 STRIP = @STRIP@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+WARN_CFLAGS = @WARN_CFLAGS@
 XGETTEXT = @XGETTEXT@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -274,6 +277,8 @@ sugar_PYTHON = \
 
 pkgpyexec_LTLIBRARIES = _sugarext.la
 _sugarext_la_CFLAGS = \
+	-DHAVE_ALSA		\
+        $(WARN_CFLAGS)		\
 	$(EXT_CFLAGS)		\
 	$(PYTHON_INCLUDES)
 
@@ -282,6 +287,10 @@ _sugarext_la_LIBADD = $(EXT_LIBS) -lSM -lICE
 _sugarext_la_SOURCES = \
 	$(BUILT_SOURCES)		\
 	_sugarextmodule.c		\
+	acme-volume.h			\
+	acme-volume.c			\
+	acme-volume-alsa.h		\
+	acme-volume-alsa.c		\
         gsm-app.h			\
 	gsm-app.c			\
 	gsm-client.h			\
@@ -304,6 +313,8 @@ _sugarext_la_SOURCES = \
 	sexy-icon-entry.c		\
 	sugar-address-entry.c		\
 	sugar-address-entry.h		\
+	sugar-grid.c			\
+	sugar-grid.h			\
 	sugar-key-grabber.c		\
 	sugar-key-grabber.h		\
 	sugar-menu.h			\
@@ -390,6 +401,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-_sugarext.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-_sugarextmodule.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-acme-volume-alsa.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-acme-volume.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-eggaccelerators.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-eggdesktopfile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-eggsmclient-xsmp.Plo@am__quote@
@@ -401,6 +414,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-gsm-xsmp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sexy-icon-entry.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-address-entry.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-grid.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-key-grabber.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-marshal.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-menu.Plo@am__quote@
@@ -447,6 +461,20 @@ _sugarext_la-_sugarextmodule.lo: _sugarextmodule.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='_sugarextmodule.c' object='_sugarext_la-_sugarextmodule.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-_sugarextmodule.lo `test -f '_sugarextmodule.c' || echo '$(srcdir)/'`_sugarextmodule.c
+
+_sugarext_la-acme-volume.lo: acme-volume.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-acme-volume.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-acme-volume.Tpo -c -o _sugarext_la-acme-volume.lo `test -f 'acme-volume.c' || echo '$(srcdir)/'`acme-volume.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-acme-volume.Tpo $(DEPDIR)/_sugarext_la-acme-volume.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='acme-volume.c' object='_sugarext_la-acme-volume.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-acme-volume.lo `test -f 'acme-volume.c' || echo '$(srcdir)/'`acme-volume.c
+
+_sugarext_la-acme-volume-alsa.lo: acme-volume-alsa.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-acme-volume-alsa.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-acme-volume-alsa.Tpo -c -o _sugarext_la-acme-volume-alsa.lo `test -f 'acme-volume-alsa.c' || echo '$(srcdir)/'`acme-volume-alsa.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-acme-volume-alsa.Tpo $(DEPDIR)/_sugarext_la-acme-volume-alsa.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='acme-volume-alsa.c' object='_sugarext_la-acme-volume-alsa.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-acme-volume-alsa.lo `test -f 'acme-volume-alsa.c' || echo '$(srcdir)/'`acme-volume-alsa.c
 
 _sugarext_la-gsm-app.lo: gsm-app.c
 @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-gsm-app.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-gsm-app.Tpo -c -o _sugarext_la-gsm-app.lo `test -f 'gsm-app.c' || echo '$(srcdir)/'`gsm-app.c
@@ -524,6 +552,13 @@ _sugarext_la-sugar-address-entry.lo: sugar-address-entry.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sugar-address-entry.c' object='_sugarext_la-sugar-address-entry.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-sugar-address-entry.lo `test -f 'sugar-address-entry.c' || echo '$(srcdir)/'`sugar-address-entry.c
+
+_sugarext_la-sugar-grid.lo: sugar-grid.c
+@am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-sugar-grid.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-sugar-grid.Tpo -c -o _sugarext_la-sugar-grid.lo `test -f 'sugar-grid.c' || echo '$(srcdir)/'`sugar-grid.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/_sugarext_la-sugar-grid.Tpo $(DEPDIR)/_sugarext_la-sugar-grid.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sugar-grid.c' object='_sugarext_la-sugar-grid.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-sugar-grid.lo `test -f 'sugar-grid.c' || echo '$(srcdir)/'`sugar-grid.c
 
 _sugarext_la-sugar-key-grabber.lo: sugar-key-grabber.c
 @am__fastdepCC_TRUE@	$(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-sugar-key-grabber.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-sugar-key-grabber.Tpo -c -o _sugarext_la-sugar-key-grabber.lo `test -f 'sugar-key-grabber.c' || echo '$(srcdir)/'`sugar-key-grabber.c
@@ -873,7 +908,6 @@ _sugarext.c: _sugarext.defs _sugarext.override
 .defs.c:
 	(cd $(srcdir)\
 	 && $(PYGTK_CODEGEN) \
-	    --register $(PYGTK_DEFSDIR)/gdk-types.defs \
 	    --register $(PYGTK_DEFSDIR)/gdk-types.defs \
 	    --register $(PYGTK_DEFSDIR)/gtk-types.defs \
 	    --override $*.override \
