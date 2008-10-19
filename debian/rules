@@ -32,7 +32,7 @@ binary-strip/$(pkg)::
 	find $(DEB_DESTDIR)/usr/lib -type f -name '*.so' -exec chrpath -d '{}' ';'
 
 # Needed by upstream build process
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, gettext, intltool, libxml-parser-perl
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, libsm-dev, libice-dev, libasound2-dev | libasound-dev, gettext, intltool, libxml-parser-perl
 
 # Needed for our packaging
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), chrpath
