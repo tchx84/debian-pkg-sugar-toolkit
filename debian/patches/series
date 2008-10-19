@@ -1,5 +1,4 @@
 1001_danish_l10n.patch
-1003_avoid_try-except-finally.patch
 2001_sha1_on_older_python.patch
 2002_ignore_debian_and_quilt-patches.patch
 2991_enable_danish_l10n.patch
