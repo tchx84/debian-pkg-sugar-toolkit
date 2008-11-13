@@ -1,3 +1,9 @@
+sugar-toolkit (0.82.11-5) unstable; urgency=low
+
+  * Extend patch 2003 to also exit nonzero on fallback help messages.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 13 Nov 2008 16:20:40 +0100
+
 sugar-toolkit (0.82.11-4) unstable; urgency=low
 
   * Add Patch 2003 to make bundlebuilder exit nonzero on error.
