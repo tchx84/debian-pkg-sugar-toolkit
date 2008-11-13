@@ -18,7 +18,18 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
              self.fix_manifest()
              files = self.config.bundle.get_files()
  
-@@ -272,6 +273,7 @@ def cmd_dev(config, args):
+@@ -258,8 +259,9 @@ def cmd_dev(config, args):
+     '''Setup for development'''
+ 
+     if args:
++        print 'ERROR - Wrong argument.'
+         print 'Usage: %prog dev'
+-        return
++        exit (1)
+ 
+     bundle_path = env.get_user_activities_path()
+     if not os.path.isdir(bundle_path):
+@@ -272,13 +274,15 @@ def cmd_dev(config, args):
              print 'ERROR - The bundle has been already setup for development.'
          else:
              print 'ERROR - A bundle with the same name is already installed.'
@@ -26,7 +37,60 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
  def cmd_dist_xo(config, args):
      '''Create a xo bundle package'''
-@@ -354,6 +356,7 @@ def cmd_genpot(config, args):
+ 
+     if args:
++        print 'ERROR - Wrong argument.'
+         print 'Usage: %prog dist_xo'
+-        return
++        exit (1)
+    
+     packager = XOPackager(Builder(config))
+     packager.package()
+@@ -287,8 +291,9 @@ def cmd_fix_manifest(config, args):
+     '''Add missing files to the manifest'''
+ 
+     if args:
++        print 'ERROR - Wrong argument.'
+         print 'Usage: %prog fix_manifest'
+-        return
++        exit (1)
+ 
+     builder = Builder(config)
+     builder.fix_manifest()
+@@ -297,8 +302,9 @@ def cmd_dist_source(config, args):
+     '''Create a tar source package'''
+ 
+     if args:
++        print 'ERROR - Wrong argument.'
+         print 'Usage: %prog dist_source'
+-        return
++        exit (1)
+ 
+     packager = SourcePackager(config)
+     packager.package()
+@@ -311,8 +317,9 @@ def cmd_install(config, args):
+                       help='Prefix to install files to')
+     (suboptions, subargs) = parser.parse_args(args)
+     if subargs:
++        print 'ERROR - Wrong argument.'
+         parser.print_help()
+-        return
++        exit (1)
+ 
+     installer = Installer(Builder(config))
+     installer.install(suboptions.prefix)
+@@ -321,8 +328,9 @@ def cmd_genpot(config, args):
+     '''Generate the gettext pot file'''
+ 
+     if args:
++        print 'ERROR - Wrong argument.'
+         print 'Usage: %prog genpot'
+-        return
++        exit (1)
+ 
+     po_path = os.path.join(config.source_dir, 'po')
+     if not os.path.isdir(po_path):
+@@ -354,22 +362,24 @@ def cmd_genpot(config, args):
      retcode = subprocess.call(args)
      if retcode:
          print 'ERROR - xgettext failed with return code %i.' % retcode
@@ -34,7 +98,12 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
  def cmd_release(config, args):
      '''Do a new release of the bundle'''
-@@ -364,12 +367,12 @@ def cmd_release(config, args):
+ 
+     if args:
++        print 'ERROR - Wrong argument.'
+         print 'Usage: %prog release'
+-        return
++        exit (1)
  
      if not os.path.isdir('.git'):
          print 'ERROR - this command works only for git repositories'
@@ -49,7 +118,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      print 'Bumping activity version...'
  
-@@ -440,22 +443,22 @@ def cmd_release(config, args):
+@@ -440,22 +450,22 @@ def cmd_release(config, args):
      retcode = subprocess.call(['git', 'commit', '-a', '-m % s' % changelog])
      if retcode:
          print 'ERROR - cannot commit to git'
@@ -76,9 +145,22 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      print 'Done.'
  
-@@ -493,6 +496,7 @@ def start(bundle_name=None):
+@@ -463,8 +473,9 @@ def cmd_build(config, args):
+     '''Build generated files'''
+ 
+     if args:
++        print 'ERROR - Wrong argument.'
+         print 'Usage: %prog build'
+-        return
++        exit (1)
+ 
+     builder = Builder(config)
+     builder.build()
+@@ -492,7 +503,9 @@ def start(bundle_name=None):
+     try:
          globals()['cmd_' + args[0]](config, args[1:])
      except (KeyError, IndexError):
++        print 'ERROR - Wrong command or argument.'
          print_commands()
 +        exit (1)
  
