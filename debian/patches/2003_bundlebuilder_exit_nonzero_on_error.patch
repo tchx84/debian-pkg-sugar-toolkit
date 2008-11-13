@@ -1,0 +1,86 @@
+diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuilder.py
+--- a/src/sugar/activity/bundlebuilder.py
++++ b/src/sugar/activity/bundlebuilder.py
+@@ -120,6 +120,7 @@ class Builder(object):
+             retcode = subprocess.call(args)
+             if retcode:
+                 print 'ERROR - msgfmt failed with return code %i.' % retcode
++                exit (1)
+ 
+             cat = gettext.GNUTranslations(open(mo_file, 'r'))
+             translated_name = cat.gettext(self.config.activity_name)
+@@ -132,7 +133,7 @@ class Builder(object):
+         files = self.config.bundle.get_files()
+ 
+         if not files:
+-            logging.error('No files found, fixing the MANIFEST.')
++            logging.warn('No files found, fixing the MANIFEST.')
+             self.fix_manifest()
+             files = self.config.bundle.get_files()
+ 
+@@ -272,6 +273,7 @@ def cmd_dev(config, args):
+             print 'ERROR - The bundle has been already setup for development.'
+         else:
+             print 'ERROR - A bundle with the same name is already installed.'
++        exit (1)
+ 
+ def cmd_dist_xo(config, args):
+     '''Create a xo bundle package'''
+@@ -354,6 +356,7 @@ def cmd_genpot(config, args):
+     retcode = subprocess.call(args)
+     if retcode:
+         print 'ERROR - xgettext failed with return code %i.' % retcode
++	exit (1)
+ 
+ def cmd_release(config, args):
+     '''Do a new release of the bundle'''
+@@ -364,12 +367,12 @@ def cmd_release(config, args):
+ 
+     if not os.path.isdir('.git'):
+         print 'ERROR - this command works only for git repositories'
+-        return
++        exit (1)
+ 
+     retcode = subprocess.call(['git', 'pull'])
+     if retcode:
+         print 'ERROR - cannot pull from git'
+-        return
++        exit (1)
+ 
+     print 'Bumping activity version...'
+ 
+@@ -440,22 +443,22 @@ def cmd_release(config, args):
+     retcode = subprocess.call(['git', 'commit', '-a', '-m % s' % changelog])
+     if retcode:
+         print 'ERROR - cannot commit to git'
+-        return
++        exit (1)
+ 
+     retcode = subprocess.call(['git', 'tag', 'v%s' % version])
+     if retcode:
+         print 'ERROR - cannot tag the commit'
+-        return
++        exit (1)
+ 
+     retcode = subprocess.call(['git', 'push'])
+     if retcode:
+         print 'ERROR - cannot push to git'
+-        return
++        exit (1)
+     
+     retcode = subprocess.call(['git', 'push', '--tags'])
+     if retcode:
+         print 'ERROR - cannot push tags to git'
+-        return
++        exit (1)
+ 
+     print 'Done.'
+ 
+@@ -493,6 +496,7 @@ def start(bundle_name=None):
+         globals()['cmd_' + args[0]](config, args[1:])
+     except (KeyError, IndexError):
+         print_commands()
++        exit (1)
+ 
+ if __name__ == '__main__':
+     start()
