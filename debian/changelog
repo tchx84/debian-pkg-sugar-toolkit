@@ -1,3 +1,9 @@
+sugar-toolkit (0.82.11-4) unstable; urgency=low
+
+  * Add Patch 2003 to make bundlebuilder exit nonzero on error.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 13 Nov 2008 14:28:34 +0100
+
 sugar-toolkit (0.82.11-3) unstable; urgency=low
 
   * Update cdbs snippets:
