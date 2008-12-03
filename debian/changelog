@@ -1,3 +1,10 @@
+sugar-toolkit (0.82.11-6) unstable; urgency=low
+
+  * Add patch 0001 to fix locale path for system activities. Closes:
+    bug#507719.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 03 Dec 2008 23:48:42 +0100
+
 sugar-toolkit (0.82.11-5) unstable; urgency=low
 
   * Extend patch 2003 to also exit nonzero on fallback help messages.
