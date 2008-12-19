@@ -1,6 +1,6 @@
 # -*- mode: makefile; coding: utf-8 -*-
 # Copyright © 2002,2003 Colin Walters <walters@debian.org>
-# Copyright © 2008 Jonas Smedegaard <dr@jones.dk>
+# Copyright © 2003,2008 Jonas Smedegaard <dr@jones.dk>
 # Description: Common variables for GNU autoconf+automake packages
 #
 # This program is free software; you can redistribute it and/or
@@ -22,8 +22,8 @@ _cdbs_scripts_path ?= /usr/lib/cdbs
 _cdbs_rules_path ?= /usr/share/cdbs/1/rules
 _cdbs_class_path ?= /usr/share/cdbs/1/class
 
-ifndef _cdbs_class_autotools_vars
-_cdbs_class_autotools_vars = 1
+ifndef _cdbs_class_autotools-vars
+_cdbs_class_autotools-vars = 1
 
 #include $(_cdbs_class_path)/makefile.mk$(_cdbs_makefile_suffix)
 include debian/cdbs/1/class/makefile.mk
