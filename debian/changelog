@@ -1,3 +1,25 @@
+sugar-toolkit (0.82.11-7) unstable; urgency=low
+
+  * Add patch 0000 (and drop patch 0001) to sync with upstream stable
+    head:
+    + Update urdu (ur), russian (ru) and tyrkish (tr) translations
+    + sanity-check bundle root; don't delete install_root on failure
+    + Set the correct locale path for system activities
+  * Limit watch file to track stable 0.82 branch.
+  * Update CDBS snippets:
+    + Simplify internal variables
+    + Ignore no files by default in copyright-check.mk
+    + Correct and update copyright hints of the snippets themselves
+  * Update debian/copyright and copyright hints:
+    + Add info on CDBS snippets (new owners, no new licenses)
+    + Bump to version 420 of new format (no structural changes)
+    + Add sugar-devel mailinglist as upstream maintainer.
+    + Update upstream source URLs.
+    + Refer to LGPL as "GNU Library..." (not Lesser).
+    + Refer to "Debian GNU systems" (not only GNU/Linux).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 19 Dec 2008 15:29:57 +0100
+
 sugar-toolkit (0.82.11-6) unstable; urgency=low
 
   * Add patch 0001 to fix locale path for system activities. Closes:
