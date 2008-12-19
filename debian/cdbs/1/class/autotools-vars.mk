@@ -22,8 +22,8 @@ _cdbs_scripts_path ?= /usr/lib/cdbs
 _cdbs_rules_path ?= /usr/share/cdbs/1/rules
 _cdbs_class_path ?= /usr/share/cdbs/1/class
 
-ifndef _cdbs_class_autotools-vars
-_cdbs_class_autotools-vars = 1
+ifndef _cdbs_class_autotools_vars
+_cdbs_class_autotools_vars = 1
 
 #include $(_cdbs_class_path)/makefile.mk$(_cdbs_makefile_suffix)
 include debian/cdbs/1/class/makefile.mk
