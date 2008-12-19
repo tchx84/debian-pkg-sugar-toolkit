@@ -1,7 +1,8 @@
 Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=XXX
 Upstream-Name: Untrusted draft - double-check copyrights yourself!
 
-Files: po/af.po
+Files: debian/patches/0000_upstream_stable_head.patch
+	po/af.po
 	po/am.po
 	po/ar.po
 	po/ay.po
@@ -66,6 +67,19 @@ Files: AUTHORS
 	Makefile.am
 	README
 	configure.ac
+	debian/README.cdbs-tweaks
+	debian/README.packaging
+	debian/compat
+	debian/control
+	debian/control.in
+	debian/patches/2001_sha1_on_older_python.patch
+	debian/patches/2002_ignore_debian_and_quilt-patches.patch
+	debian/patches/2003_bundlebuilder_exit_nonzero_on_error.patch
+	debian/patches/2991_enable_danish_l10n.patch
+	debian/patches/README
+	debian/patches/series
+	debian/pycompat
+	debian/watch
 	m4/gnome-compiler-flags.m4
 	m4/python.m4
 	po/ChangeLog
@@ -190,10 +204,32 @@ Files: src/sugar/eggdesktopfile.h
 Copyright: 2007, Novell, Inc
 License: LGPL-2+
 
+Files: debian/cdbs/1/class/autotools-vars.mk
+	debian/cdbs/1/class/makefile.mk
+Copyright: 2002-2003, Colin Walters <walters@debian.org>
+	2003,2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
+Files: debian/cdbs/1/class/autotools.mk
+	debian/cdbs/1/class/makefile-vars.mk
+Copyright: 2002-2003, Colin Walters <walters@debian.org>
+	2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
+Files: debian/cdbs/1/class/python-autotools.mk
+	debian/cdbs/1/rules/package-relations.mk
+Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
 Files: src/sugar/sexy-icon-entry.c
 	src/sugar/sexy-icon-entry.h
 Copyright: 2004-2006, Christian Hammond
 License: LGPL-2+
+
+Files: debian/patches/1001_danish_l10n.patch
+	debian/rules
+Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
+License: UNKNOWN
 
 Files: missing
 Copyright: 1996-1997, 1999-2000, 2002-2006
@@ -215,6 +251,31 @@ License: GPL (GENERATED FILE)
 Files: intltool-update.in
 Copyright: 2000-2003, Free Software Foundation
 License: GPL (GENERATED FILE)
+
+Files: debian/cdbs/1/class/python-vars.mk
+Copyright: 2003,2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
+Files: debian/cdbs/1/rules/buildinfo.mk
+Copyright: 2004-2007, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
+Files: debian/cdbs/1/rules/upstream-tarball.mk
+Copyright: 2007-2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
+Files: debian/cdbs/1/rules/copyright-check.mk
+Copyright: \s*(\S.*?)\s*\
+License: GPL
+
+Files: config.guess
+Copyright: 1992-1999,
+	1992-2005
+License: GPL-2+ (GENERATED FILE)
+
+Files: config.sub
+Copyright: 1992-1999
+License: GPL-2+ (GENERATED FILE)
 
 Files: ltmain.sh
 Copyright: 1996-2001, 2003-2006

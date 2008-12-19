@@ -1,13 +1,9 @@
-Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=184
-Upstream-Name: sugar toolkit
-Upstream-Maintainer: sugar@lists.laptop.org
-                     irc://irc.freenode.net/sugar
-Upstream-Source: http://dev.laptop.org/pub/sugar/sources/sugar-toolkit/
-                 git://dev.laptop.org/sugar-toolkit
-
-Files: debian/*
-Copyright: 2008 Jonas Smedegaard <dr@jones.dk>
-License: GPL-2+
+Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=420
+Upstream-Name: sugar-toolkit
+Upstream-Maintainer: sugar-devel@lists.sugarlabs.org
+	irc://irc.freenode.net/sugar
+Upstream-Source: http://download.sugarlabs.org/sources/sucrose/glucose/sugar-toolkit/
+	git://git.sugarlabs.org/sugar-toolkit/mainline
 
 Files: src/sugar/_sugarextmodule.c
 	src/sugar/activity/__init__.py
@@ -50,13 +46,13 @@ Files: src/sugar/bundle/activitybundle.py
 Copyright: 2007, Red Hat, Inc
 License: LGPL-2+
 
-Files: src/sugar/gsm-app.c
-	src/sugar/gsm-client-xsmp.[ch]
-	src/sugar/gsm-client.[ch]
-	src/sugar/gsm-session.[ch]
-	src/sugar/gsm-xsmp.[ch]
+Files: src/sugar/gsm-*
 Copyright: 2007, Novell, Inc
 License: GPL-2+
+
+Files: src/sugar/gsm-app.h
+Copyright: 2006, Novell, Inc
+License: UNKNOWN
 
 Files: src/sugar/clipboard/__init__.py
 	src/sugar/clipboard/clipboardservice.py
@@ -70,47 +66,37 @@ Files: src/sugar/clipboard/__init__.py
 Copyright: 2007, One Laptop Per Child
 License: LGPL-2+
 
-Files: Makefile.in, ./aclocal.m4
-Copyright: 1994-2005, Free Software Foundation, Inc.
+Files: Makefile.in
+Copyright: 1994-2008, Free Software Foundation, Inc.
 License: GAP
 
 Files: src/sugar/activity/bundlebuilder.py
 	src/sugar/activity/main.py
 	src/sugar/session.py
-	src/sugar/sugar-grid.c
-	src/sugar/sugar-grid.h
+	src/sugar/sugar-grid.[ch]
 Copyright: 2008, Red Hat, Inc
 License: LGPL-2+
 
-Files: src/sugar/acme-volume-alsa.c
-	src/sugar/acme-volume-alsa.h
-	src/sugar/acme-volume.c
-	src/sugar/acme-volume.h
+Files: src/sugar/acme-*
 Copyright: 2002-2003, Bastien Nocera
 License: LGPL-2+
 
 Files: src/sugar/eggdesktopfile.h
-	src/sugar/eggsmclient-private.h
-	src/sugar/eggsmclient.[ch]
+	src/sugar/eggsmclient*
 Copyright: 2007, Novell, Inc
 License: LGPL-2+
-
-Files: ./depcomp
-Copyright: 1999-2000, 2003-2007, Free Software Foundation, Inc.
-License: GPL-2+ | other-Autoconf
 
 Files: src/sugar/sexy-icon-entry.[ch]
 Copyright: 2004-2006, Christian Hammond
 License: LGPL-2+
 
-Files: src/sugar/activity/bundlebuilder.py
-	src/sugar/session.py
-Copyright: 2008, Red Hat, Inc
-License: LGPL-2+
-
 Files: ./missing
-Copyright: 1996-1997, 1999-2000, 2002-2007, Free Software Foundation, Inc.
+Copyright: 1996-1997, 1999-2000, 2002-2006, Free Software Foundation, Inc.
 	1996, Fran,cois Pinard <pinard@iro.umontreal.ca>
+License: GPL-2+ | other-Autoconf
+
+Files: ./depcomp
+Copyright: 1999-2000, 2003-2007, Free Software Foundation, Inc.
 License: GPL-2+ | other-Autoconf
 
 Files: ./py-compile
@@ -126,8 +112,17 @@ Files: ./intltool-update.in
 Copyright: 2000-2003, Free Software Foundation
 License: GPL-2+ | other-Autoconf
 
+Files: config.guess
+Copyright: 1992-1999,
+	1992-2005
+License: GPL-2+ (GENERATED FILE)
+
+Files: config.sub
+Copyright: 1992-1999
+License: GPL-2+ (GENERATED FILE)
+
 Files: ./ltmain.sh
-Copyright: 1996-2001, 2003-2008, Free Software Foundation, Inc.
+Copyright: 1996-2001, 2003-2007, Free Software Foundation, Inc.
 License: GPL-2+ | other-Autoconf
 
 Files: ./intltool-extract.in
@@ -235,9 +230,16 @@ Files: ./configure
 Copyright: 1992-1996, 1998-2006, Free Software Foundation, Inc.
 License: GAP
 
-Files: ./aclocal.m4
-Copyright: 1994-2005, Free Software Foundation, Inc.
-License: GAP
+Files: aclocal.m4
+Copyright: 1994-2008, Free Software Foundation, Inc.
+	1995-2002, Free Software Foundation, Inc
+	2001-2004, Red Hat, Inc
+	1996-2004, Free Software Foundation, Inc
+License: GPL-2+ | other-Autoconf
+ Some parts of the file is not copyright protected, some parts are
+ licensed as Public Domain (PD), but one part has the more restrictive
+ licensing terms of GPLv2+ or the license of a surrounding
+ autoconf-using project.
 
 Files: po/Makefile.in.in
 Copyright: 1995-1997, Ulrich Drepper <drepper@gnu.ai.mit.edu>
@@ -247,44 +249,60 @@ License: PD
  be used in projects which are not available under a GNU Public License,
  but which still want to provide support for the GNU gettext functionality.
 
-Files: src/sugar/gsm-app.h
-Copyright: 2006, Novell, Inc
-License: UNKNOWN
+Files: debian/*
+Copyright: © 2008 Jonas Smedegaard <dr@jones.dk>
+License: GPL-2+
+ The Debian packaging information is under the GPL, version 2 or later.
+
+Files: debian/cdbs/1/class/autotools-vars.mk
+	debian/cdbs/1/class/makefile.mk
+Copyright: 2002-2003, Colin Walters <walters@debian.org>
+	2003,2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL-2+
+
+Files: debian/cdbs/1/class/autotools.mk
+	debian/cdbs/1/class/makefile-vars.mk
+Copyright: 2002-2003, Colin Walters <walters@debian.org>
+	2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL-2+
+
+Files: debian/cdbs/1/class/python-vars.mk
+Copyright: 2003,2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL-2+
+
+Files: debian/cdbs/1/rules/buildinfo.mk
+Copyright: 2004-2007, Jonas Smedegaard <dr@jones.dk>
+License: GPL-2+
+
+Files: debian/cdbs/1/rules/upstream-tarball.mk
+Copyright: 2007-2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL-2+
+
+Files: debian/cdbs/1/rules/copyright-check.mk
+Copyright: 2005-2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL-2+
 
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
- .
- On Debian systems, the complete text of the GNU General Public License
- can be found in file "/usr/share/common-licenses/GPL".
+ On Debian GNU systems, the complete text of GNU General Public License
+ (GPL) version 2 can be found at "/usr/share/common-licenses/GPL-2".
 
 License: LGPL-2+
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
- .
- On Debian systems, the complete text of the GNU Lesser General Public
- License can be found in file "/usr/share/common-licenses/LGPL".
+ On Debian GNU systems, the complete text of GNU Library General Public
+ License (LGPL) version 2 can be found at
+ "/usr/share/common-licenses/LGPL-2".
 
 License: LGPL-2.1+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU Lesser General Public License as published
- by the Free Software Foundation; either version 2.1 of the License, or
- (at your option) any later version.
- .
- On Debian systems, the complete text of the GNU Lesser General Public
- License can be found in file "/usr/share/common-licenses/LGPL".
+ On Debian GNU systems, the complete text of GNU Library General Public
+ License (LGPL) version 2.1 can be found at
+ "/usr/share/common-licenses/LGPL".
+
+License: GAP
+ This file is free software; the Free Software Foundation
+ gives unlimited permission to copy and/or distribute it,
+ with or without modifications, as long as this notice is preserved.
 
 License: other-Autoconf
  As a special exception to the GNU General Public License, if you
  distribute this file as part of a program that contains a
  configuration script generated by Autoconf, you may include it under
  the same distribution terms that you use for the rest of that program.
-
-License: GAP
- This file is free software; the Free Software Foundation
- gives unlimited permission to copy and/or distribute it,
- with or without modifications, as long as this notice is preserved.
