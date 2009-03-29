@@ -5,45 +5,8 @@ Upstream-Maintainer: sugar-devel@lists.sugarlabs.org
 Upstream-Source: http://download.sugarlabs.org/sources/sucrose/glucose/sugar-toolkit/
 	git://git.sugarlabs.org/sugar-toolkit/mainline
 
-Files: src/sugar/_sugarextmodule.c
-	src/sugar/activity/__init__.py
-	src/sugar/activity/activityfactory.py
-	src/sugar/activity/activityhandle.py
-	src/sugar/activity/activityservice.py
-	src/sugar/bundle/__init__.py
-	src/sugar/env.py
-	src/sugar/graphics/__init__.py
-	src/sugar/graphics/icon.py
-	src/sugar/graphics/roundbox.py
-	src/sugar/graphics/xocolor.py
-	src/sugar/network.py
-	src/sugar/presence/__init__.py
-	src/sugar/profile.py
-	src/sugar/sugar-address-entry.[ch]
-	src/sugar/sugar-key-grabber.[ch]
-	src/sugar/sugar-menu.[ch]
-	src/sugar/util.py
-Copyright: 2006-2007, Red Hat, Inc
-License: LGPL-2+
-
-Files: src/sugar/bundle/activitybundle.py
-	src/sugar/bundle/bundle.py
-	src/sugar/bundle/contentbundle.py
-	src/sugar/graphics/animator.py
-	src/sugar/graphics/entry.py
-	src/sugar/graphics/palettegroup.py
-	src/sugar/graphics/panel.py
-	src/sugar/graphics/style.py
-	src/sugar/graphics/toggletoolbutton.py
-	src/sugar/graphics/toolbox.py
-	src/sugar/graphics/toolcombobox.py
-	src/sugar/graphics/window.py
-	src/sugar/presence/activity.py
-	src/sugar/presence/buddy.py
-	src/sugar/presence/presenceservice.py
-	src/sugar/sugar-preview.[ch]
-	src/sugar/wm.py
-Copyright: 2007, Red Hat, Inc
+Files: *
+Copyright: 2002, 2006-2008, Red Hat, Inc
 License: LGPL-2+
 
 Files: src/sugar/gsm-*
@@ -70,13 +33,6 @@ Files: Makefile.in
 Copyright: 1994-2008, Free Software Foundation, Inc.
 License: GAP
 
-Files: src/sugar/activity/bundlebuilder.py
-	src/sugar/activity/main.py
-	src/sugar/session.py
-	src/sugar/sugar-grid.[ch]
-Copyright: 2008, Red Hat, Inc
-License: LGPL-2+
-
 Files: src/sugar/acme-*
 Copyright: 2002-2003, Bastien Nocera
 License: LGPL-2+
@@ -96,37 +52,18 @@ Copyright: 1996-1997, 1999-2000, 2002-2006, Free Software Foundation, Inc.
 License: GPL-2+ | other-Autoconf
 
 Files: ./depcomp
-Copyright: 1999-2000, 2003-2007, Free Software Foundation, Inc.
-License: GPL-2+ | other-Autoconf
-
-Files: ./py-compile
-Copyright: 2000-2001, 2003-2005, Free Software Foundation, Inc
+	./config.guess
+	./config.sub
+	./intltool-extract.in
+	./intltool-update.in
+	./ltmain.sh
+	./py-compile
+Copyright: 1999-2007, Free Software Foundation, Inc.
 License: GPL-2+ | other-Autoconf
 
 Files: ./intltool-merge.in
 Copyright: 2000-2001, Eazel, Inc
 	2000, 2003, Free Software Foundation
-License: GPL-2+ | other-Autoconf
-
-Files: ./intltool-update.in
-Copyright: 2000-2003, Free Software Foundation
-License: GPL-2+ | other-Autoconf
-
-Files: config.guess
-Copyright: 1992-1999,
-	1992-2005
-License: GPL-2+ (GENERATED FILE)
-
-Files: config.sub
-Copyright: 1992-1999
-License: GPL-2+ (GENERATED FILE)
-
-Files: ./ltmain.sh
-Copyright: 1996-2001, 2003-2007, Free Software Foundation, Inc.
-License: GPL-2+ | other-Autoconf
-
-Files: ./intltool-extract.in
-Copyright: 2000-2001, 2003, Free Software Foundation
 License: GPL-2+ | other-Autoconf
 
 Files: m4/intltool.m4
@@ -146,48 +83,26 @@ Copyright: 1999-2000, Red Hat Inc
 License: LGPL-2+
 
 Files: src/sugar/eggaccelerators.c
-Copyright: 2002, Red Hat, Inc.; 1998, 2001, Tim Janik
-License: LGPL-2+
-
-Files: src/sugar/eggaccelerators.h
-Copyright: 2002, Red Hat, Inc
+Copyright: 2002, Red Hat, Inc.
+	1998, 2001, Tim Janik
 License: LGPL-2+
 
 Files: src/sugar/datastore/dbus_helpers.py
+	src/sugar/activity/activity.py
+	src/sugar/activity/registry.py
+	src/sugar/graphics/radiotoolbutton.py
+	src/sugar/graphics/toolbutton.py
 Copyright: 2006-2007, Red Hat, Inc
-	2007, One Laptop Per Child
-License: LGPL-2+
-
-Files: src/sugar/activity/activity.py
-Copyright: 2006-2007, Red Hat, Inc
-	2007-2008, One Laptop Per Child
+	2006-2008, One Laptop Per Child
 License: LGPL-2+
 
 Files: src/sugar/graphics/notebook.py
+	src/sugar/graphics/menuitem.py
 Copyright: 2007, Eduardo Silva (edsiper@gmail.com)
 License: LGPL-2+
 
 Files: src/sugar/graphics/palette.py
 Copyright: 2007, Eduardo Silva <edsiper@gmail.com>
-	2008, One Laptop Per Child
-License: LGPL-2+
-
-Files: src/sugar/graphics/menuitem.py
-Copyright: 2007, Eduardo Silva <edsiper@gmail.com>
-License: LGPL-2+
-
-Files: src/sugar/activity/registry.py
-Copyright: 2007, One Laptop Per Child
-	2006-2007, Red Hat, Inc
-License: LGPL-2+
-
-Files: src/sugar/graphics/radiotoolbutton.py
-Copyright: 2007, Red Hat, Inc
-	2007-2008, One Laptop Per Child
-License: LGPL-2+
-
-Files: src/sugar/graphics/toolbutton.py
-Copyright: 2007, Red Hat, Inc
 	2008, One Laptop Per Child
 License: LGPL-2+
 
@@ -250,36 +165,14 @@ License: PD
  but which still want to provide support for the GNU gettext functionality.
 
 Files: debian/*
-Copyright: © 2008 Jonas Smedegaard <dr@jones.dk>
+Copyright: 2003-2008 Jonas Smedegaard <dr@jones.dk>
 License: GPL-2+
  The Debian packaging information is under the GPL, version 2 or later.
 
-Files: debian/cdbs/1/class/autotools-vars.mk
-	debian/cdbs/1/class/makefile.mk
+Files: debian/cdbs/1/class/autotools*
+	debian/cdbs/1/class/makefile*
 Copyright: 2002-2003, Colin Walters <walters@debian.org>
 	2003,2008, Jonas Smedegaard <dr@jones.dk>
-License: GPL-2+
-
-Files: debian/cdbs/1/class/autotools.mk
-	debian/cdbs/1/class/makefile-vars.mk
-Copyright: 2002-2003, Colin Walters <walters@debian.org>
-	2008, Jonas Smedegaard <dr@jones.dk>
-License: GPL-2+
-
-Files: debian/cdbs/1/class/python-vars.mk
-Copyright: 2003,2008, Jonas Smedegaard <dr@jones.dk>
-License: GPL-2+
-
-Files: debian/cdbs/1/rules/buildinfo.mk
-Copyright: 2004-2007, Jonas Smedegaard <dr@jones.dk>
-License: GPL-2+
-
-Files: debian/cdbs/1/rules/upstream-tarball.mk
-Copyright: 2007-2008, Jonas Smedegaard <dr@jones.dk>
-License: GPL-2+
-
-Files: debian/cdbs/1/rules/copyright-check.mk
-Copyright: 2005-2008, Jonas Smedegaard <dr@jones.dk>
 License: GPL-2+
 
 License: GPL-2+
