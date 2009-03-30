@@ -20,7 +20,7 @@ pkg = python-sugar-toolkit
 
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
-DEB_UPSTREAM_TARBALL_MD5 = c3a2c45d6444efcd3fa59c50198f9483
+DEB_UPSTREAM_TARBALL_MD5 = 31a215e195c83ef7d5ce2c8353bfa8b3
 
 # Drop created dir if empty to please lintian
 binary-post-install/$(pkg)::

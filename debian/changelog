@@ -1,3 +1,9 @@
+sugar-toolkit (0.84.1-1) UNRELEASED; urgency=low
+
+  * New upstream release.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 30 Mar 2009 13:12:12 +0200
+
 sugar-toolkit (0.82.11-7) unstable; urgency=medium
 
   * Add patch 0000 (and drop patch 0001) to sync with upstream stable
