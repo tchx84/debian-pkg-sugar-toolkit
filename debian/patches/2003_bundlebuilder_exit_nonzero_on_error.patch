@@ -1,7 +1,7 @@
 diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuilder.py
 --- a/src/sugar/activity/bundlebuilder.py
 +++ b/src/sugar/activity/bundlebuilder.py
-@@ -120,6 +120,7 @@ class Builder(object):
+@@ -124,6 +124,7 @@ class Builder(object):
              retcode = subprocess.call(args)
              if retcode:
                  print 'ERROR - msgfmt failed with return code %i.' % retcode
@@ -9,7 +9,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
              cat = gettext.GNUTranslations(open(mo_file, 'r'))
              translated_name = cat.gettext(self.config.activity_name)
-@@ -132,7 +133,7 @@ class Builder(object):
+@@ -136,7 +137,7 @@ class Builder(object):
          files = self.config.bundle.get_files()
  
          if not files:
@@ -18,7 +18,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
              self.fix_manifest()
              files = self.config.bundle.get_files()
  
-@@ -258,8 +259,9 @@ def cmd_dev(config, args):
+@@ -263,8 +264,9 @@ def cmd_dev(config, args):
      '''Setup for development'''
  
      if args:
@@ -29,7 +29,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      bundle_path = env.get_user_activities_path()
      if not os.path.isdir(bundle_path):
-@@ -272,13 +274,15 @@ def cmd_dev(config, args):
+@@ -277,13 +279,15 @@ def cmd_dev(config, args):
              print 'ERROR - The bundle has been already setup for development.'
          else:
              print 'ERROR - A bundle with the same name is already installed.'
@@ -46,7 +46,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
     
      packager = XOPackager(Builder(config))
      packager.package()
-@@ -287,8 +291,9 @@ def cmd_fix_manifest(config, args):
+@@ -292,8 +296,9 @@ def cmd_fix_manifest(config, args):
      '''Add missing files to the manifest'''
  
      if args:
@@ -57,7 +57,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      builder = Builder(config)
      builder.fix_manifest()
-@@ -297,8 +302,9 @@ def cmd_dist_source(config, args):
+@@ -302,8 +307,9 @@ def cmd_dist_source(config, args):
      '''Create a tar source package'''
  
      if args:
@@ -68,7 +68,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      packager = SourcePackager(config)
      packager.package()
-@@ -311,8 +317,9 @@ def cmd_install(config, args):
+@@ -316,8 +322,9 @@ def cmd_install(config, args):
                        help='Prefix to install files to')
      (suboptions, subargs) = parser.parse_args(args)
      if subargs:
@@ -79,7 +79,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      installer = Installer(Builder(config))
      installer.install(suboptions.prefix)
-@@ -321,8 +328,9 @@ def cmd_genpot(config, args):
+@@ -326,8 +333,9 @@ def cmd_genpot(config, args):
      '''Generate the gettext pot file'''
  
      if args:
@@ -90,62 +90,13 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      po_path = os.path.join(config.source_dir, 'po')
      if not os.path.isdir(po_path):
-@@ -354,22 +362,24 @@ def cmd_genpot(config, args):
+@@ -359,13 +367,15 @@ def cmd_genpot(config, args):
      retcode = subprocess.call(args)
      if retcode:
          print 'ERROR - xgettext failed with return code %i.' % retcode
-+	exit (1)
- 
- def cmd_release(config, args):
-     '''Do a new release of the bundle'''
- 
-     if args:
-+        print 'ERROR - Wrong argument.'
-         print 'Usage: %prog release'
--        return
 +        exit (1)
  
-     if not os.path.isdir('.git'):
-         print 'ERROR - this command works only for git repositories'
--        return
-+        exit (1)
- 
-     retcode = subprocess.call(['git', 'pull'])
-     if retcode:
-         print 'ERROR - cannot pull from git'
--        return
-+        exit (1)
- 
-     print 'Bumping activity version...'
- 
-@@ -440,22 +450,22 @@ def cmd_release(config, args):
-     retcode = subprocess.call(['git', 'commit', '-a', '-m % s' % changelog])
-     if retcode:
-         print 'ERROR - cannot commit to git'
--        return
-+        exit (1)
- 
-     retcode = subprocess.call(['git', 'tag', 'v%s' % version])
-     if retcode:
-         print 'ERROR - cannot tag the commit'
--        return
-+        exit (1)
- 
-     retcode = subprocess.call(['git', 'push'])
-     if retcode:
-         print 'ERROR - cannot push to git'
--        return
-+        exit (1)
-     
-     retcode = subprocess.call(['git', 'push', '--tags'])
-     if retcode:
-         print 'ERROR - cannot push tags to git'
--        return
-+        exit (1)
- 
-     print 'Done.'
- 
-@@ -463,8 +473,9 @@ def cmd_build(config, args):
+ def cmd_build(config, args):
      '''Build generated files'''
  
      if args:
@@ -156,7 +107,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      builder = Builder(config)
      builder.build()
-@@ -492,7 +503,9 @@ def start(bundle_name=None):
+@@ -393,7 +403,9 @@ def start(bundle_name=None):
      try:
          globals()['cmd_' + args[0]](config, args[1:])
      except (KeyError, IndexError):

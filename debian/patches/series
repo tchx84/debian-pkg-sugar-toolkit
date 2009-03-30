@@ -1,6 +1,4 @@
-0000_upstream_stable_head.patch
 1001_danish_l10n.patch
-2001_sha1_on_older_python.patch
 2002_ignore_debian_and_quilt-patches.patch
 2003_bundlebuilder_exit_nonzero_on_error.patch
 2991_enable_danish_l10n.patch

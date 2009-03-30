@@ -1,7 +1,7 @@
 diff --git a/configure b/configure
 --- a/configure
 +++ b/configure
-@@ -20033,7 +20033,7 @@ PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
+@@ -11489,7 +11489,7 @@ PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
  
  # Setup GETTEXT
  #
@@ -9,4 +9,4 @@ diff --git a/configure b/configure
 +ALL_LINGUAS="af am ar ay bg bn bn_IN ca da de dz el en es fa fa_AF ff fr gu ha hi ht ig is it ja km ko mk ml mn mr mvo nb ne nl pa pap pis pl ps pt pt_BR qu ro ru rw sd si sl te th tpi tr ur vi yo zh_CN zh_TW"
  GETTEXT_PACKAGE=sugar-toolkit
  
- case "$am__api_version" in
+   { echo "$as_me:$LINENO: checking whether NLS is requested" >&5
