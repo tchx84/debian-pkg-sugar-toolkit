@@ -1,3 +1,32 @@
+"""
+Alerts appear at the top of the body of your activity.
+
+At a high level, Alert and its different variations (TimeoutAlert,
+ConfirmationAlert, etc.) have a title, an alert message and then several
+buttons that the user can click. The Alert class will pass "response" events
+to your activity when any of these buttons are clicked, along with a
+response_id to help you identify what button was clicked.
+
+
+Examples
+--------
+create a simple alert message.
+
+.. code-block:: python
+  from sugar.graphics.alert import Alert
+  ...
+       # Create a new simple alert
+        alert = Alert()
+        # Populate the title and text body of the alert.
+        alert.props.title=_('Title of Alert Goes Here')
+        alert.props.msg = _('Text message of alert goes here')
+        # Call the add_alert() method (inherited via the sugar.graphics.Window
+        # superclass of Activity) to add this alert to the activity window.
+        self.add_alert(alert)
+        alert.show()
+
+STABLE.
+"""
 # Copyright (C) 2007, One Laptop Per Child
 #
 # This library is free software; you can redistribute it and/or
@@ -28,7 +57,8 @@ from sugar.graphics.icon import Icon
 _ = lambda msg: gettext.dgettext('sugar-toolkit', msg)
 
 class Alert(gtk.EventBox):
-    """UI interface for Alerts
+    """
+    UI interface for Alerts
 
     Alerts are used inside the activity window instead of being a
     separate popup window. They do not hide canvas content. You can
@@ -40,7 +70,9 @@ class Alert(gtk.EventBox):
         'title': the title of the alert,
         'message': the message of the alert,
         'icon': the icon that appears at the far left
+
     See __gproperties__
+
     """
 
     __gtype_name__ = 'SugarAlert'
@@ -97,6 +129,20 @@ class Alert(gtk.EventBox):
         self.show()
         
     def do_set_property(self, pspec, value):        
+        """
+        Set alert property
+
+        Parameters
+        ----------
+        pspec :
+
+        value :
+
+        Returns
+        -------
+        None
+
+        """
         if pspec.name == 'title':
             if self._title != value:
                 self._title = value
@@ -113,20 +159,46 @@ class Alert(gtk.EventBox):
                 self._hbox.reorder_child(self._icon, 0)
 
     def do_get_property(self, pspec):
+        """
+        Get alert property
+
+        Parameters
+        ----------
+        pspec :
+            property for which the value will be returned
+
+        Returns
+        -------
+        value of the property specified
+
+        """
         if pspec.name == 'title':
             return self._title
         elif pspec.name == 'msg':
             return self._msg
 
     def add_button(self, response_id, label, icon=None, position=-1):
-        """Add a button to the alert
+        """
+        Add a button to the alert
 
-        response_id: will be emitted with the response signal
-                     a response ID should one of the pre-defined
-                     GTK Response Type Constants or a positive number
-        label: that will occure right to the buttom
-        icon: this can be a SugarIcon or a gtk.Image
-        position: the position of the button in the box (optional)
+        Parameters
+        ----------
+        response_id :
+            will be emitted with the response signal a response ID should one
+            of the pre-defined GTK Response Type Constants or a positive number
+        label :
+            that will occure right to the buttom
+
+        icon :
+            this can be a SugarIcon or a gtk.Image
+
+        postion :
+            the position of the button in the box (optional)
+
+        Returns
+        -------
+        button :gtk.Button
+
         """
         button = gtk.Button()
         self._buttons[response_id] = button
@@ -141,7 +213,18 @@ class Alert(gtk.EventBox):
         return button
 
     def remove_button(self, response_id):
-        """Remove a button from the alert by the given response id"""
+        """
+        Remove a button from the alert by the given response id
+
+        Parameters
+        ----------
+        response_id :
+
+        Returns
+        -------
+        None
+
+        """
         self._buttons_box.remove(self._buttons[response_id])
 
     def _response(self, response_id):
@@ -158,7 +241,45 @@ class Alert(gtk.EventBox):
 
 
 class ConfirmationAlert(Alert):
-    """This is a ready-made two button (Cancel,Ok) alert"""
+    """
+    This is a ready-made two button (Cancel,Ok) alert.
+
+    A confirmation alert is a nice shortcut from a standard Alert because it
+    comes with 'OK' and 'Cancel' buttons already built-in. When clicked, the
+    'OK' button will emit a response with a response_id of gtk.RESPONSE_OK,
+    while the 'Cancel' button will emit gtk.RESPONSE_CANCEL.
+
+    Examples
+    --------
+
+    .. code-block:: python
+      from sugar.graphics.alert import ConfirmationAlert
+      ...
+        #### Method: _alert_confirmation, create a Confirmation alert (with ok
+                     and cancel buttons standard)
+        # and add it to the UI.
+        def _alert_confirmation(self):
+            alert = ConfirmationAlert()
+            alert.props.title=_('Title of Alert Goes Here')
+            alert.props.msg = _('Text message of alert goes here')
+            alert.connect('response', self._alert_response_cb)
+            self.add_alert(alert)
+
+
+        #### Method: _alert_response_cb, called when an alert object throws a
+                     response event.
+        def _alert_response_cb(self, alert, response_id):
+            #remove the alert from the screen, since either a response button
+            #was clicked or there was a timeout
+            self.remove_alert(alert)
+
+            #Do any work that is specific to the type of button clicked.
+            if response_id is gtk.RESPONSE_OK:
+                print 'Ok Button was clicked. Do any work upon ok here ...'
+            elif response_id is gtk.RESPONSE_CANCEL:
+                print 'Cancel Button was clicked.'
+
+    """
 
     def __init__(self, **kwargs):
         Alert.__init__(self, **kwargs)
@@ -196,9 +317,45 @@ class _TimeoutIcon(hippo.CanvasText, hippo.CanvasItem):
 
 
 class TimeoutAlert(Alert):
-    """This is a ready-made two button (Cancel,Continue) alert
+    """
+    This is a ready-made two button (Cancel,Continue) alert
 
-    It times out with a positive reponse after the given amount of seconds.
+    It times out with a positive response after the given amount of seconds.
+
+
+    Examples
+    --------
+
+    .. code-block:: python
+      from sugar.graphics.alert import TimeoutAlert
+      ...
+        #### Method: _alert_timeout, create a Timeout alert (with ok and cancel
+                     buttons standard)
+        # and add it to the UI.
+        def _alert_timeout(self):
+            #Notice that for a TimeoutAlert, you pass the number of seconds in
+            #which to timeout. By default, this is 5.
+            alert = TimeoutAlert(10)
+            alert.props.title=_('Title of Alert Goes Here')
+            alert.props.msg = _('Text message of timeout alert goes here')
+            alert.connect('response', self._alert_response_cb)
+            self.add_alert(alert)
+
+        #### Method: _alert_response_cb, called when an alert object throws a
+                     response event.
+        def _alert_response_cb(self, alert, response_id):
+            #remove the alert from the screen, since either a response button
+            #was clicked or there was a timeout
+            self.remove_alert(alert)
+
+            #Do any work that is specific to the type of button clicked.
+            if response_id is gtk.RESPONSE_OK:
+                print 'Ok Button was clicked. Do any work upon ok here ...'
+            elif response_id is gtk.RESPONSE_CANCEL:
+                print 'Cancel Button was clicked.'
+            elif response_id == -1:
+                print 'Timout occurred'
+
     """
 
     def __init__(self, timeout=5, **kwargs):
@@ -219,7 +376,7 @@ class TimeoutAlert(Alert):
         canvas.show()                       
         self.add_button(gtk.RESPONSE_OK, _('Continue'), canvas)
 
-        gobject.timeout_add(1000, self.__timeout)
+        gobject.timeout_add_seconds(1, self.__timeout)
         
     def __timeout(self):
         self._timeout -= 1
@@ -231,7 +388,28 @@ class TimeoutAlert(Alert):
 
 
 class NotifyAlert(Alert):
-    """Timeout alert with only an "OK" button - just for notifications"""
+    """
+    Timeout alert with only an "OK" button - just for notifications
+
+    Examples
+    --------
+
+    .. code-block:: python
+      from sugar.graphics.alert import NotifyAlert
+      ...
+        #### Method: _alert_notify, create a Notify alert (with only an 'OK'
+                     button)
+        # and add it to the UI.
+        def _alert_notify(self):
+            #Notice that for a NotifyAlert, you pass the number of seconds in
+            #which to notify. By default, this is 5.
+            alert = NotifyAlert(10)
+            alert.props.title=_('Title of Alert Goes Here')
+            alert.props.msg = _('Text message of notify alert goes here')
+            alert.connect('response', self._alert_response_cb)
+            self.add_alert(alert)
+
+    """
 
     def __init__(self, timeout=5, **kwargs):
         Alert.__init__(self, **kwargs)

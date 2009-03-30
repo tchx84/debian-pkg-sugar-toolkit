@@ -15,6 +15,12 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+A small fixed size picture, typically used to decorate components.
+
+STABLE.
+"""
+
 import re
 import math
 import logging
@@ -77,6 +83,7 @@ class _IconBuffer(object):
         self.icon_size = None
         self.file_name = None
         self.fill_color = None
+        self.background_color = None
         self.stroke_color = None
         self.badge_name = None
         self.width = None
@@ -85,9 +92,14 @@ class _IconBuffer(object):
         self.scale = 1.0
 
     def _get_cache_key(self, sensitive):
+        if self.background_color is None:
+            color = None
+        else:
+            color = (self.background_color.red, self.background_color.green,
+                     self.background_color.blue)
         return (self.icon_name, self.file_name, self.fill_color,
                 self.stroke_color, self.badge_name, self.width, self.height,
-                sensitive)
+                color, sensitive)
 
     def _load_svg(self, file_name):
         entities = {}
@@ -254,9 +266,16 @@ class _IconBuffer(object):
 
         padding = badge_info.icon_padding
         width, height = self._get_size(icon_width, icon_height, padding)
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+        if self.background_color is None:
+            surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+            context = cairo.Context(surface)
+        else:
+            surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
+            context = cairo.Context(surface)
+            context = gtk.gdk.CairoContext(context)
+            context.set_source_color(self.background_color)
+            context.paint()
 
-        context = cairo.Context(surface)
         context.scale(float(width) / (icon_width + padding * 2),
                       float(height) / (icon_height + padding * 2))
         context.save()
@@ -293,17 +312,6 @@ class _IconBuffer(object):
 class Icon(gtk.Image):
     __gtype_name__ = 'SugarIcon'
 
-    __gproperties__ = {
-        'xo-color'      : (object, None, None,
-                           gobject.PARAM_WRITABLE),
-        'fill-color'    : (object, None, None,
-                           gobject.PARAM_READWRITE),
-        'stroke-color'  : (object, None, None,
-                           gobject.PARAM_READWRITE),
-        'badge-name'    : (str, None, None, None,
-                           gobject.PARAM_READWRITE)
-    }
-
     def __init__(self, **kwargs):
         self._buffer = _IconBuffer()
 
@@ -334,6 +342,16 @@ class Icon(gtk.Image):
         self._buffer.file_name = self.props.file
 
     def do_size_request(self, requisition):
+        """
+        Parameters
+        ----------
+        requisition :
+
+        Returns
+        -------
+        None
+
+        """
         self._sync_image_properties()
         surface = self._buffer.get_surface()
         if surface:
@@ -346,6 +364,16 @@ class Icon(gtk.Image):
             requisition[0] = requisition[1] = 0
 
     def do_expose_event(self, event):
+        """
+        Parameters
+        ----------
+        event :
+
+        Returns:
+        --------
+        None
+
+        """
         self._sync_image_properties()
         sensitive = (self.state != gtk.STATE_INSENSITIVE)
         surface = self._buffer.get_surface(sensitive, self)
@@ -368,35 +396,106 @@ class Icon(gtk.Image):
         cr.set_source_surface(surface, x, y)
         cr.paint()
 
-    def do_set_property(self, pspec, value):
-        if pspec.name == 'xo-color':
-            if self._buffer.xo_color != value:
-                self._buffer.xo_color = value
-                self.queue_draw()
-        elif pspec.name == 'fill-color':
-            if self._buffer.fill_color != value:
-                self._buffer.fill_color = value
-                self.queue_draw()
-        elif pspec.name == 'stroke-color':
-            if self._buffer.stroke_color != value:
-                self._buffer.stroke_color = value
-                self.queue_draw()
-        elif pspec.name == 'badge-name':
-            if self._buffer.badge_name != value:
-                self._buffer.badge_name = value
-                self.queue_resize()
-        else:
-            gtk.Image.do_set_property(self, pspec, value)
+    def set_xo_color(self, value):
+        """
+        Parameters
+        ----------
+        value :
 
-    def do_get_property(self, pspec):
-        if pspec.name == 'fill-color':
-            return self._buffer.fill_color
-        elif pspec.name == 'stroke-color':
-            return self._buffer.stroke_color
-        elif pspec.name == 'badge-name':
-            return self._buffer.badge_name
-        else:
-            return gtk.Image.do_get_property(self, pspec)
+        Returns
+        -------
+        None
+
+        """
+        if self._buffer.xo_color != value:
+            self._buffer.xo_color = value
+            self.queue_draw()
+
+    xo_color = gobject.property(
+        type=object, getter=None, setter=set_xo_color)
+
+    def set_fill_color(self, value):
+        """
+        Parameters
+        ----------
+        value :
+
+        Returns
+        -------
+        None
+
+        """
+        if self._buffer.fill_color != value:
+            self._buffer.fill_color = value
+            self.queue_draw()
+
+    def get_fill_color(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        fill_color :
+
+        """
+        return self._buffer.fill_color
+
+    fill_color = gobject.property(
+        type=object, getter=get_fill_color, setter=set_fill_color)
+
+    def set_stroke_color(self, value):
+        """
+        Parameters
+        ----------
+        value :
+
+        Returns
+        -------
+        None
+
+        """
+        if self._buffer.stroke_color != value:
+            self._buffer.stroke_color = value
+            self.queue_draw()
+
+    def get_stroke_color(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        stroke_color :
+
+        """
+        return self._buffer.stroke_color
+
+    stroke_color = gobject.property(
+        type=object, getter=get_stroke_color, setter=set_stroke_color)
+
+    def set_badge_name(self, value):
+        """
+        Parameters
+        ----------
+        value:
+
+        Returns
+        -------
+        None
+
+        """
+        if self._buffer.badge_name != value:
+            self._buffer.badge_name = value
+            self.queue_resize()
+
+    def get_badge_name(self):
+        return self._buffer.badge_name
+
+    badge_name = gobject.property(
+        type=str, getter=get_badge_name, setter=set_badge_name)
 
 class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'CanvasIcon'
@@ -413,75 +512,240 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
         self.connect('destroy', self.__destroy_cb)
 
+    def _emit_paint_needed_icon_area(self):
+        surface = self._buffer.get_surface()
+        if surface:
+            width, height = self.get_allocation()
+            s_width = surface.get_width()
+            s_height = surface.get_height()
+
+            x = (width - s_width) / 2
+            y = (height - s_height) / 2
+
+            self.emit_paint_needed(x, y, s_width, s_height)
+
     def __destroy_cb(self, icon):
         if self._palette_invoker is not None:
             self._palette_invoker.detach()
 
     def set_file_name(self, value):
+        """
+        Parameters
+        ----------
+        value:
+
+        Returns
+        -------
+        None
+
+        \"\"\"
+
+        """
         if self._buffer.file_name != value:
             self._buffer.file_name = value
             self.emit_paint_needed(0, 0, -1, -1)
 
     def get_file_name(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        file name :
+
+        """
         return self._buffer.file_name
 
     file_name = gobject.property(
-        type=str, getter=get_file_name, setter=set_file_name)
+        type=object, getter=get_file_name, setter=set_file_name)
 
     def set_icon_name(self, value):
+        """
+        Parameters
+        ----------
+        value:
+
+        Returns
+        -------
+        None
+
+        """
         if self._buffer.icon_name != value:
             self._buffer.icon_name = value
             self.emit_paint_needed(0, 0, -1, -1)
 
     def get_icon_name(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        icon name :
+
+        """
         return self._buffer.icon_name
 
     icon_name = gobject.property(
-        type=str, getter=get_icon_name, setter=set_icon_name)
+        type=object, getter=get_icon_name, setter=set_icon_name)
 
     def set_xo_color(self, value):
+        """
+        Parameters
+        ----------
+        value:
+
+        Returns
+        -------
+        None
+
+        """
         if self._buffer.xo_color != value:
             self._buffer.xo_color = value
-            self.emit_paint_needed(0, 0, -1, -1)
+            self._emit_paint_needed_icon_area()
 
     xo_color = gobject.property(
         type=object, getter=None, setter=set_xo_color)
 
     def set_fill_color(self, value):
+        """
+        Parameters
+        ----------
+        value:
+
+        Returns
+        -------
+        None
+
+        """
         if self._buffer.fill_color != value:
             self._buffer.fill_color = value
-            self.emit_paint_needed(0, 0, -1, -1)
+            self._emit_paint_needed_icon_area()
 
     def get_fill_color(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        fill color :
+
+        """
         return self._buffer.fill_color
 
     fill_color = gobject.property(
         type=object, getter=get_fill_color, setter=set_fill_color)
 
     def set_stroke_color(self, value):
+        """
+        Parameters
+        ----------
+        value:
+
+        Returns
+        -------
+        None
+
+        """
         if self._buffer.stroke_color != value:
             self._buffer.stroke_color = value
-            self.emit_paint_needed(0, 0, -1, -1)
+            self._emit_paint_needed_icon_area()
 
     def get_stroke_color(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        stroke color :
+
+        """
         return self._buffer.stroke_color
 
     stroke_color = gobject.property(
         type=object, getter=get_stroke_color, setter=set_stroke_color)
 
+    def set_background_color(self, value):
+        """
+        Parameters
+        ----------
+        value:
+
+        Returns
+        -------
+        None
+
+        """
+        if self._buffer.background_color != value:
+            self._buffer.background_color = value
+            self.emit_paint_needed(0, 0, -1, -1)
+
+    def get_background_color(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        fill color :
+
+        """
+        return self._buffer.background_color
+
+    background_color = gobject.property(
+        type=object, getter=get_background_color, setter=set_background_color)
+
     def set_size(self, value):
+        """
+        Parameters
+        ----------
+        value:
+
+        Returns
+        -------
+        None
+
+        """
         if self._buffer.width != value:
             self._buffer.width = value
             self._buffer.height = value
             self.emit_request_changed()
 
     def get_size(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        size :
+
+        """
         return self._buffer.width
 
     size = gobject.property(
-        type=int, getter=get_size, setter=set_size)
+        type=object, getter=get_size, setter=set_size)
 
     def set_scale(self, value):
+        """
+        Parameters
+        ----------
+        value:
+
+        Returns
+        -------
+        None
+
+        """
         logging.warning(
             'CanvasIcon: the scale parameter is currently unsupported')
         if self._buffer.scale != value:
@@ -489,32 +753,94 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self.emit_request_changed()
 
     def get_scale(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        scale :
+
+        """
         return self._buffer.scale
 
     scale = gobject.property(
         type=float, getter=get_scale, setter=set_scale)
 
     def set_cache(self, value):
+        """
+        Parameters
+        ----------
+        cache
+
+        Returns
+        -------
+        None
+
+        """
         self._buffer.cache = value
 
     def get_cache(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        cache :
+
+        """
         return self._buffer.cache
 
     cache = gobject.property(
         type=bool, default=False, getter=get_cache, setter=set_cache)
 
     def set_badge_name(self, value):
+        """
+        Parameters
+        ----------
+        value :
+
+        Returns
+        -------
+        None
+
+        """
         if self._buffer.badge_name != value:
             self._buffer.badge_name = value
             self.emit_paint_needed(0, 0, -1, -1)
 
     def get_badge_name(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        badge name :
+
+        """
         return self._buffer.badge_name
 
     badge_name = gobject.property(
-        type=str, getter=get_badge_name, setter=set_badge_name)
+        type=object, getter=get_badge_name, setter=set_badge_name)
 
     def do_paint_below_children(self, cr, damaged_box):
+        """
+        Parameters
+        ----------
+        cr :
+
+        damaged_box :
+
+        Returns
+        -------
+        None
+
+        """
         surface = self._buffer.get_surface()
         if surface:
             width, height = self.get_allocation()
@@ -526,6 +852,16 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             cr.paint()
 
     def do_get_content_width_request(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        width :
+
+        """
         surface = self._buffer.get_surface()
         if surface:
             size = surface.get_width()
@@ -548,8 +884,11 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         return size, size
 
     def do_button_press_event(self, event):
-        self.emit_activated()
-        return True
+        if event.button == 1:
+            self.emit_activated()
+            return True
+        else:
+            return False
 
     def create_palette(self):
         return None
@@ -590,3 +929,13 @@ def get_icon_state(base_name, perc, step=5):
             return icon_name
 
         strength = strength + step
+
+def get_icon_file_name(icon_name):
+    icon_theme = gtk.icon_theme_get_default()
+    info = icon_theme.lookup_icon(icon_name, gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
+    if not info:
+        return None
+    filename = info.get_filename()
+    del info
+    return filename
+

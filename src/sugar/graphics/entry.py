@@ -15,11 +15,25 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+STABLE.
+"""
+
 import gtk
 import hippo
 
 class CanvasEntry(hippo.CanvasEntry):
     def set_background(self, color_spec):
+        """
+        Parameters
+        ----------
+        color_spec :
+
+        Returns
+        -------
+        None
+
+        """
         color = gtk.gdk.color_parse(color_spec)
         self.props.widget.modify_bg(gtk.STATE_INSENSITIVE, color)
         self.props.widget.modify_base(gtk.STATE_INSENSITIVE, color)

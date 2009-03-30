@@ -15,20 +15,21 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-"""Sugar activity bundles"""
+"""Sugar activity bundles
+
+UNSTABLE.
+"""
 
 from ConfigParser import ConfigParser
 import locale
 import os
 import tempfile
-
-from sugar.bundle.bundle import Bundle, MalformedBundleException, \
-    AlreadyInstalledException, RegistrationException, NotInstalledException
-
-from sugar import activity
-from sugar import env
-
 import logging
+
+from sugar import env
+from sugar import util
+from sugar.bundle.bundle import Bundle, \
+    MalformedBundleException, NotInstalledException
 
 class ActivityBundle(Bundle):
     """A Sugar activity bundle
@@ -55,6 +56,7 @@ class ActivityBundle(Bundle):
         self._show_launcher = True
         self._activity_version = 0
         self._installation_time = os.stat(path).st_mtime
+        self._manifest = None
 
         info_file = self.get_file('activity/activity.info')
         if info_file is None:
@@ -65,8 +67,15 @@ class ActivityBundle(Bundle):
         if linfo_file:
             self._parse_linfo(linfo_file)
 
-        self.manifest = None # This should be replaced by following function
-        self.read_manifest()
+    def _get_manifest(self):
+        if self._manifest is None:
+            self._manifest = self._read_manifest()
+        return self._manifest
+
+    manifest = property(_get_manifest, None, None,
+        "NOTICE: this property is potentially quite slow, so better make sure "
+        "that it's not called at performance-critical points like shell or "
+        "activity startup.")
 
     def _raw_manifest(self):
         f = self.get_file("MANIFEST")
@@ -78,14 +87,15 @@ class ActivityBundle(Bundle):
         f.close()
         return ret
         
-    def read_manifest(self):
-        """read_manifest: sets self.manifest to list of lines in MANIFEST, 
-        with invalid lines replaced by empty lines.
+    def _read_manifest(self):
+        """return a list with the lines in MANIFEST, with invalid lines replaced
+        by empty lines.
         
         Since absolute order carries information on file history, it should 
         be preserved. For instance, when renaming a file, you should leave
         the new name on the same line as the old one.
         """
+        logging.debug('STARTUP: Reading manifest')
         lines = self._raw_manifest()
 
         # Remove trailing newlines, they do not help keep absolute position.
@@ -115,7 +125,7 @@ class ActivityBundle(Bundle):
                 logging.warning("Bundle %s: invalid entry in MANIFEST: %s"
                                 % (self._name,line))
 
-        self.manifest = lines
+        return lines
     
     def get_files(self, manifest = None):
         files = [line for line in (manifest or self.manifest) if line]
@@ -241,10 +251,10 @@ class ActivityBundle(Bundle):
             return os.path.join(self._path, icon_path)
         else:
             icon_data = self.get_file(icon_path).read()
-            temp_file, temp_file_path = tempfile.mkstemp(self._icon)
+            temp_file, temp_file_path = tempfile.mkstemp(prefix=self._icon, suffix='.svg')
             os.write(temp_file, icon_data)
             os.close(temp_file)
-            return temp_file_path
+            return util.TempFilePath(temp_file_path)
 
     def get_activity_version(self):
         """Get the activity version"""
@@ -259,7 +269,6 @@ class ActivityBundle(Bundle):
 
         return command
 
-
     def get_mime_types(self):
         """Get the MIME types supported by the activity"""
         return self._mime_types
@@ -268,22 +277,10 @@ class ActivityBundle(Bundle):
         """Get whether there should be a visible launcher for the activity"""
         return self._show_launcher
 
-    def is_installed(self):
-        if activity.get_registry().get_activity(self._bundle_id):
-            return True
-        else:
-            return False
+    def install(self, install_dir=None, strict_manifest=False):
+        if install_dir is None:
+            install_dir = env.get_user_activities_path()
 
-    def need_upgrade(self):
-        """Returns True if installing this activity bundle is meaningful -
-        that is, if an identical version of this activity is not
-        already installed.
-
-        Until we have cryptographic hashes to check identity, returns
-        True always. See http://dev.laptop.org/ticket/7534."""
-        return True
-    
-    def unpack(self, install_dir, strict_manifest=False):
         self._unzip(install_dir)
 
         install_path = os.path.join(install_dir, self._zip_root_dir)
@@ -291,7 +288,7 @@ class ActivityBundle(Bundle):
         # List installed files
         manifestfiles = self.get_files(self._raw_manifest())
         paths  = []
-        for root, dirs, files in os.walk(install_path):
+        for root, dirs_, files in os.walk(install_path):
             rel_path = root[len(install_path) + 1:]
             for f in files:
                 paths.append(os.path.join(rel_path, f))
@@ -352,34 +349,12 @@ class ActivityBundle(Bundle):
                                             os.path.basename(info_file)))
         return install_path
 
-    def install(self):
-        activities_path = env.get_user_activities_path()
-        act = activity.get_registry().get_activity(self._bundle_id)
-        if act is not None and act.path.startswith(activities_path):
-            raise AlreadyInstalledException
-
-        install_dir = env.get_user_activities_path()
-        install_path = self.unpack(install_dir)
-        
-        if not activity.get_registry().add_bundle(install_path):
-            raise RegistrationException
-
-    def uninstall(self, force=False):        
-        if self._zip_file is None:
-            install_path = self._path
-        else:
-            if not self.is_installed():
-                raise NotInstalledException
-
-            act = activity.get_registry().get_activity(self._bundle_id)
-            if not force and act.version != self._activity_version:
-                logging.warning('Not uninstalling, different bundle present')
-                return
-            elif not act.path.startswith(env.get_user_activities_path()):
-                logging.warning('Not uninstalling system activity')
-                return
-
-            install_path = act.path
+    def uninstall(self, install_path, force=False):
+        if os.path.islink(install_path):
+            # Don't remove the actual activity dir if it's a symbolic link
+            # because we may be removing user data.
+            os.unlink(install_path)
+            return
 
         xdg_data_home = os.getenv('XDG_DATA_HOME',
                                   os.path.expanduser('~/.local/share'))
@@ -404,23 +379,3 @@ class ActivityBundle(Bundle):
                         os.remove(path)
 
         self._uninstall(install_path)
-        
-        if not activity.get_registry().remove_bundle(install_path):
-            raise RegistrationException
-
-    def upgrade(self):
-        act = activity.get_registry().get_activity(self._bundle_id)
-        if act is None:
-            logging.warning('Activity not installed')
-        elif act.path.startswith(env.get_user_activities_path()):
-            try:
-                self.uninstall(force=True)
-            except Exception, e:
-                logging.warning('Uninstall failed (%s), still trying ' \
-                                'to install newer bundle', e)
-        else:
-            logging.warning('Unable to uninstall system activity, ' \
-                            'installing upgraded version in user activities')
-
-        self.install()
-

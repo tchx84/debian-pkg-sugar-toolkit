@@ -155,21 +155,15 @@ sugar_key_grabber_init(SugarKeyGrabber *grabber)
  * gnome-control-center/gnome-settings-daemon/gnome-settings-multimedia-keys.c
  */
 
-static gboolean
+static void
 grab_key_real (Key *key, GdkWindow *root, gboolean grab, int result)
 {
-        gdk_error_trap_push ();
         if (grab)
                 XGrabKey (GDK_DISPLAY(), key->keycode, (result | key->state),
                                 GDK_WINDOW_XID (root), True, GrabModeAsync, GrabModeAsync);
         else
                 XUngrabKey(GDK_DISPLAY(), key->keycode, (result | key->state),
                                 GDK_WINDOW_XID (root));
-        gdk_flush ();
-
-        gdk_error_trap_pop ();
-
-        return TRUE;
 }
 
 #define N_BITS 32
@@ -179,7 +173,7 @@ grab_key (SugarKeyGrabber *grabber, Key *key, gboolean grab)
         int indexes[N_BITS];/*indexes of bits we need to flip*/
         int i, bit, bits_set_cnt;
         int uppervalue;
-        guint mask_to_traverse = IGNORED_MODS & ~ key->state;
+        guint mask_to_traverse = IGNORED_MODS & ~key->state & GDK_MODIFIER_MASK;
 
         bit = 0;
         for (i = 0; i < N_BITS; i++) {
@@ -198,24 +192,57 @@ grab_key (SugarKeyGrabber *grabber, Key *key, gboolean grab)
                                 result |= (1<<indexes[j]);
                 }
 
-                if (grab_key_real (key, grabber->root, grab, result) == FALSE)
-                        return;
+                grab_key_real (key, grabber->root, grab, result);
         }
 }
 
+
 void
-sugar_key_grabber_grab(SugarKeyGrabber *grabber, const char *key)
+sugar_key_grabber_grab_keys(SugarKeyGrabber *grabber, const char **keys)
 {
-	Key *keyinfo;
+    const char **cur = keys;
+    const char *key;
+    Key *keyinfo = NULL;
+    int min_keycodes, max_keycodes;
 
-	keyinfo = g_new0 (Key, 1);
-	keyinfo->key = g_strdup(key);
-	egg_accelerator_parse_virtual (key, &keyinfo->keysym,
-								   &keyinfo->keycode, &keyinfo->state);
+    XDisplayKeycodes(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()),
+                     &min_keycodes, &max_keycodes);
 
-	grab_key(grabber, keyinfo, TRUE);
+    while (*cur != NULL) {
+        key = *cur;
+        cur += 1;
+        
+        keyinfo = g_new0 (Key, 1);
+        keyinfo->key = g_strdup(key);
 
-	grabber->keys = g_list_append(grabber->keys, keyinfo);	
+        if (!egg_accelerator_parse_virtual (key, &keyinfo->keysym,
+                                            &keyinfo->keycode,
+                                            &keyinfo->state)) {
+            g_warning ("Invalid key specified: %s", key);
+            continue;
+        }
+
+        if (keyinfo->keycode < min_keycodes || keyinfo->keycode > max_keycodes) {
+            g_warning ("Keycode out of bounds: %d for key %s", keyinfo->keycode, key);
+            continue;
+        }
+
+        gdk_error_trap_push();
+
+        grab_key(grabber, keyinfo, TRUE);
+
+        gdk_flush();
+        gint error_code = gdk_error_trap_pop ();
+        if(!error_code)
+            grabber->keys = g_list_append(grabber->keys, keyinfo);
+        else if(error_code == BadAccess)
+            g_warning ("Grab failed, another application may already have access to key '%s'", key);
+        else if(error_code == BadValue)
+            g_warning ("Grab failed, invalid key %s specified. keysym: %u keycode: %u state: %u",
+                       key, keyinfo->keysym, keyinfo->keycode, keyinfo->state);
+        else
+            g_warning ("Grab failed for key '%s' for unknown reason '%d'", key, error_code);
+    }
 }
 
 gboolean

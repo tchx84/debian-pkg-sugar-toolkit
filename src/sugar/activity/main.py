@@ -25,6 +25,7 @@ import dbus
 import dbus.service
 import dbus.glib
 
+import sugar
 from sugar.activity import activityhandle
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar import logger
@@ -89,8 +90,12 @@ def main():
 
     gtk.icon_theme_get_default().append_search_path(bundle.get_icons_path())
 
-    gettext.bindtextdomain(bundle.get_bundle_id(),
-                           bundle.get_locale_path())
+    locale_path = None
+    if 'SUGAR_LOCALEDIR' in os.environ:
+        locale_path = os.environ['SUGAR_LOCALEDIR']
+
+    gettext.bindtextdomain(bundle.get_bundle_id(), locale_path)
+    gettext.bindtextdomain('sugar-toolkit', sugar.locale_path)
     gettext.textdomain(bundle.get_bundle_id())
 
     splitted_module = args[0].rsplit('.', 1)
@@ -121,7 +126,7 @@ def main():
             name = None
 
         if not name:
-            service = SingleProcess(service_name, activity_constructor)
+            SingleProcess(service_name, activity_constructor)
         else:
             single_process = sessionbus.get_object(service_name, service_path)
             single_process.create(activity_handle.get_dict())

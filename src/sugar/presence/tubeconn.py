@@ -16,6 +16,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+"""
+STABLE.
+"""
 
 __all__ = ('TubeConnection',)
 __docformat__ = 'reStructuredText'
@@ -31,6 +34,8 @@ logger = logging.getLogger('telepathy.tubeconn')
 
 class TubeConnection(Connection):
 
+    # pylint: disable-msg=W0212
+    # Confused by __new__
     def __new__(cls, conn, tubes_iface, tube_id, address=None,
                 group_iface=None, mainloop=None):
         if address is None:
@@ -53,6 +58,8 @@ class TubeConnection(Connection):
 
         return self
 
+    # pylint: disable-msg=W0201
+    # Confused by __new__
     def _on_get_self_handle_reply(self, handle):
         self.self_handle = handle
         match = self._tubes_iface.connect_to_signal('DBusNamesChanged',

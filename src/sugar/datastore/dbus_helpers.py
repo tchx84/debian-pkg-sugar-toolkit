@@ -16,6 +16,10 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+UNSTABLE. Should be internal to the datastore module.
+"""
+
 import logging
 
 import dbus
@@ -77,9 +81,10 @@ def find(query, properties, reply_handler, error_handler):
     logging.debug('dbus_helpers.find: %r %r' % (query, properties))
     if reply_handler and error_handler:
         return _get_data_store().find(query, properties,
-                reply_handler=reply_handler, error_handler=error_handler)
+                reply_handler=reply_handler, error_handler=error_handler,
+                byte_arrays=True)
     else:
-        return _get_data_store().find(query, properties)
+        return _get_data_store().find(query, properties, byte_arrays=True)
 
 def mount(uri, options, timeout=-1):
     return _get_data_store().mount(uri, options, timeout=timeout)

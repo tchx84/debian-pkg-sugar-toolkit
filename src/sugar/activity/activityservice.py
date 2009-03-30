@@ -15,6 +15,10 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+UNSTABLE. It should really be internal to the Activity class.
+"""
+
 import logging
 
 import dbus
@@ -65,6 +69,14 @@ class ActivityService(dbus.service.Object):
         self._activity.invite(buddy_key)
 
     @dbus.service.method(_ACTIVITY_INTERFACE)
-    def TakeScreenshot(self):
-        self._activity.take_screenshot()
+    def HandleViewSource(self):
+        self._activity.handle_view_source()
+
+    @dbus.service.method(_ACTIVITY_INTERFACE,
+                         async_callbacks=('async_cb', 'async_err_cb'))
+    def GetDocumentPath(self, async_cb, async_err_cb):
+        try:
+            self._activity.get_document_path(async_cb, async_err_cb)
+        except Exception, e:
+            async_err_cb(e)
 

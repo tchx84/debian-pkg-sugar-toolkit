@@ -16,15 +16,22 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+UNSTABLE. We have been adding helpers randomly to this module.
+"""
+
+import os
 import time
 import sha
 import random
 import binascii
-import string
 import gettext
+import tempfile
+import logging
+import atexit
+import traceback
 
 _ = lambda msg: gettext.dgettext('sugar-toolkit', msg)
-_ngettext = lambda msg1, msg2, n: gettext.dngettext('sugar-toolkit', msg1, msg2, n)
 
 def printable_hash(in_hash):
     """Convert binary hash data into printable characters."""
@@ -33,7 +40,7 @@ def printable_hash(in_hash):
         printable = printable + binascii.b2a_hex(char)
     return printable
 
-def _sha_data(data):
+def sha_data(data):
     """sha1 hash some bytes."""
     sha_hash = sha.new()
     sha_hash.update(data)
@@ -54,13 +61,18 @@ def unique_id(data = ''):
         perfectly unique values.
     """
     data_string = "%s%s%s" % (time.time(), random.randint(10000, 100000), data)
-    return printable_hash(_sha_data(data_string))
+    return printable_hash(sha_data(data_string))
 
 
 ACTIVITY_ID_LEN = 40
 
 def is_hex(s):
-    return s.strip(string.hexdigits) == ''    
+    try:
+        int(s, 16)
+    except ValueError:
+        return False
+
+    return True 
 
 def validate_activity_id(actid):
     """Validate an activity ID."""
@@ -108,6 +120,7 @@ class LRU:
     http://pype.sourceforge.net
     Copyright 2003 Josiah Carlson.
     """
+    # pylint: disable-msg=W0102,W0612
     def __init__(self, count, pairs=[]):
         self.count = max(count, 1)
         self.d = {}
@@ -212,6 +225,9 @@ del ngettext
 
 # End of plurals hack
 
+# gettext perfs hack (#7959)
+_i18n_timestamps_cache = LRU(60)
+
 def timestamp_to_elapsed_string(timestamp, max_levels=2):
     levels = 0
     time_period = ''
@@ -224,8 +240,17 @@ def timestamp_to_elapsed_string(timestamp, max_levels=2):
             if levels > 0:
                 time_period += COMMA
 
-            time_period += _ngettext(name_singular, name_plural,
-                                     elapsed_units) % elapsed_units
+            key = ''.join((os.environ['LANG'], name_singular,
+                           str(elapsed_units)))
+            if key in _i18n_timestamps_cache:
+                time_period += _i18n_timestamps_cache[key]
+            else:
+                translation = gettext.dngettext('sugar-toolkit',
+                                                name_singular,
+                                                name_plural,
+                                                elapsed_units) % elapsed_units
+                _i18n_timestamps_cache[key] = translation
+                time_period += translation
 
             elapsed_seconds -= elapsed_units * factor
 
@@ -239,4 +264,42 @@ def timestamp_to_elapsed_string(timestamp, max_levels=2):
         return NOW
 
     return ELAPSED % time_period
+
+_tracked_paths = {}
+
+class TempFilePath(str):
+    def __new__(cls, path=None):
+        if path is None:
+            fd, path = tempfile.mkstemp()
+            os.close(fd)
+        logging.debug('TempFilePath created %r' % path)
+
+        if path in _tracked_paths:
+            _tracked_paths[path] += 1
+        else:
+            _tracked_paths[path] = 1
+
+        return str.__new__(cls, path)
+
+    def __del__(self):
+        if _tracked_paths[self] == 1:
+            del _tracked_paths[self]
+            
+            if os.path.exists(self):
+                os.unlink(self)
+                logging.debug('TempFilePath deleted %r' % self)
+            else:
+                logging.warning('TempFilePath already deleted %r' % self)
+        else:
+            _tracked_paths[self] -= 1
+
+def _cleanup_temp_files():
+    logging.debug('_cleanup_temp_files')
+    for path in _tracked_paths.keys():
+        try:
+            os.unlink(path)
+        except:
+            logging.error(traceback.format_exc())
+
+atexit.register(_cleanup_temp_files)
 

@@ -1,10 +1,3 @@
-"""Notebook class
-
-This class create a gtk.Notebook() widget supporting 
-a close button in every tab when the 'can-close-tabs' gproperty
-is enabled (True)
-"""
-
 # Copyright (C) 2007, Eduardo Silva (edsiper@gmail.com)
 #
 # This library is free software; you can redistribute it and/or
@@ -21,6 +14,15 @@ is enabled (True)
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
+
+"""Notebook class
+
+This class create a gtk.Notebook() widget supporting 
+a close button in every tab when the 'can-close-tabs' gproperty
+is enabled (True)
+
+STABLE.
+"""
 
 import gtk
 import gobject
@@ -49,6 +51,23 @@ class Notebook(gtk.Notebook):
         self.show()
 
     def do_set_property(self, pspec, value):
+        """
+        Set notebook property
+
+        Parameters
+        ----------
+        pspec :
+            property for which the value will be set
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        AssertionError
+
+        """
         if pspec.name == 'can-close-tabs':
             self._can_close_tabs = value
         else:
@@ -93,6 +112,21 @@ class Notebook(gtk.Notebook):
         return event_box
 
     def add_page(self, text_label, widget):
+        """
+        Adds a page to the notebook.
+
+        Parameters
+        ----------
+        text_label :
+
+        widget :
+
+        Returns
+        -------
+        Boolean
+          Returns TRUE if the page is successfully added to th notebook.
+
+        """
         # Add a new page to the notebook
         if self._can_close_tabs:
             eventbox = self._create_custom_tab(text_label, widget)

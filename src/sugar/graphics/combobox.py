@@ -15,16 +15,16 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+STABLE.
+"""
+
 import gobject
 import gtk
 
 class ComboBox(gtk.ComboBox):
     __gtype_name__ = 'SugarComboBox'    
 
-    __gproperties__ = {
-        'value'    : (object, None, None,
-                      gobject.PARAM_READABLE)
-    }
     def __init__(self):
         gtk.ComboBox.__init__(self)
 
@@ -39,14 +39,24 @@ class ComboBox(gtk.ComboBox):
 
         self.set_row_separator_func(self._is_separator)
 
-    def do_get_property(self, pspec):
-        if pspec.name == 'value':
-            row = self.get_active_item()
-            if not row:
-                return None
-            return row[0]
-        else:
-            return gtk.ComboBox.do_get_property(self, pspec)
+    def get_value(self):
+        """
+        Parameters
+        ----------
+        None :
+
+        Returns:
+        --------
+        value :
+
+        """
+        row = self.get_active_item()
+        if not row:
+            return None
+        return row[0]
+
+    value = gobject.property(
+        type=object, getter=get_value, setter=None)
 
     def _get_real_name_from_theme(self, name, size):
         icon_theme = gtk.icon_theme_get_default()
@@ -59,6 +69,22 @@ class ComboBox(gtk.ComboBox):
         return fname
 
     def append_item(self, action_id, text, icon_name=None, file_name=None):
+        """
+        Parameters
+        ----------
+        action_id :
+
+        text :
+
+        icon_name=None :
+
+        file_name=None :
+
+        Returns
+        -------
+        None
+
+        """
         if not self._icon_renderer and (icon_name or file_name):
             self._icon_renderer = gtk.CellRendererPixbuf()
 
@@ -93,9 +119,29 @@ class ComboBox(gtk.ComboBox):
         self._model.append([action_id, text, pixbuf, False])
 
     def append_separator(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+
+        """
         self._model.append([0, None, None, True])    
 
     def get_active_item(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        Active_item :
+
+        """
         index = self.get_active()
         if index == -1:
             index = 0
@@ -106,6 +152,16 @@ class ComboBox(gtk.ComboBox):
         return self._model[row]
 
     def remove_all(self):
+        """
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+
+        """
         self._model.clear()
 
     def _is_separator(self, model, row):

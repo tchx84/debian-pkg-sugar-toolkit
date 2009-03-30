@@ -3,7 +3,9 @@ sugar_PYTHON =			\
 	__init__.py		\
         alert.py                \
 	animator.py		\
+	canvastextview.py	\
 	combobox.py		\
+	colorbutton.py		\
 	entry.py		\
 	icon.py			\
 	iconentry.py          	\

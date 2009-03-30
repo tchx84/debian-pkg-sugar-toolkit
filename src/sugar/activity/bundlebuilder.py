@@ -15,6 +15,10 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+STABLE.
+"""
+
 import os
 import sys
 import zipfile
@@ -203,12 +207,13 @@ class SourcePackager(Packager):
     def get_files(self):
         git_ls = subprocess.Popen('git-ls-files', stdout=subprocess.PIPE, 
                                   cwd=self.config.source_dir)
-        if git_ls.wait():
+        stdout, _ = git_ls.communicate()
+        if git_ls.returncode :
             # Fall back to filtered list
             return list_files(self.config.source_dir,
                               IGNORE_DIRS, IGNORE_FILES)
         
-        return [path.strip() for path in git_ls.stdout.readlines()]
+        return [path.strip() for path in '\n'.split(stdout)]
 
     def package(self):
         tar = tarfile.open(self.package_path, 'w:bz2')
@@ -329,10 +334,10 @@ def cmd_genpot(config, args):
         os.mkdir(po_path)
 
     python_files = []
-    for root_dummy, dirs_dummy, files in os.walk(config.source_dir):
+    for root, dirs_dummy, files in os.walk(config.source_dir):
         for file_name in files:
             if file_name.endswith('.py'):
-                python_files.append(file_name)
+                python_files.append(os.path.join(root, file_name))
 
     # First write out a stub .pot file containing just the translated
     # activity name, then have xgettext merge the rest of the
@@ -354,110 +359,6 @@ def cmd_genpot(config, args):
     retcode = subprocess.call(args)
     if retcode:
         print 'ERROR - xgettext failed with return code %i.' % retcode
-
-def cmd_release(config, args):
-    '''Do a new release of the bundle'''
-
-    if args:
-        print 'Usage: %prog release'
-        return
-
-    if not os.path.isdir('.git'):
-        print 'ERROR - this command works only for git repositories'
-        return
-
-    retcode = subprocess.call(['git', 'pull'])
-    if retcode:
-        print 'ERROR - cannot pull from git'
-        return
-
-    print 'Bumping activity version...'
-
-    info_path = os.path.join(config.source_dir, 'activity', 'activity.info')
-    f = open(info_path,'r')
-    info = f.read()
-    f.close()
-
-    exp = re.compile('activity_version\s?=\s?([0-9]*)')
-    match = re.search(exp, info)
-    version = int(match.group(1)) + 1
-    info = re.sub(exp, 'activity_version = %d' % version, info)
-
-    f = open(info_path, 'w')
-    f.write(info)
-    f.close()
-
-    config.update()
-
-    news_path = os.path.join(config.source_dir, 'NEWS')
-
-    if os.environ.has_key('SUGAR_NEWS'):
-        print 'Update NEWS.sugar...'
-
-        sugar_news_path = os.environ['SUGAR_NEWS']
-        if os.path.isfile(sugar_news_path):
-            f = open(sugar_news_path,'r')
-            sugar_news = f.read()
-            f.close()
-        else:
-            sugar_news = ''
-
-        sugar_news += '%s - %d\n\n' % (config.bundle_name, version)
-
-        f = open(news_path,'r')
-        for line in f.readlines():
-            if len(line.strip()) > 0:
-                sugar_news += line
-            else:
-                break
-        f.close()
-
-        sugar_news += '\n'
-
-        f = open(sugar_news_path, 'w')
-        f.write(sugar_news)
-        f.close()
-
-    print 'Update NEWS...'
-
-    f = open(news_path,'r')
-    news = f.read()
-    f.close()
-
-    news = '%d\n\n' % version + news
-
-    f = open(news_path, 'w')
-    f.write(news)
-    f.close()
-
-    print 'Creating the bundle...'
-    packager = XOPackager(Builder(config))
-    packager.package()
-
-    print 'Committing to git...'
-
-    changelog = 'Release version %d.' % version
-    retcode = subprocess.call(['git', 'commit', '-a', '-m % s' % changelog])
-    if retcode:
-        print 'ERROR - cannot commit to git'
-        return
-
-    retcode = subprocess.call(['git', 'tag', 'v%s' % version])
-    if retcode:
-        print 'ERROR - cannot tag the commit'
-        return
-
-    retcode = subprocess.call(['git', 'push'])
-    if retcode:
-        print 'ERROR - cannot push to git'
-        return
-    
-    retcode = subprocess.call(['git', 'push', '--tags'])
-    if retcode:
-        print 'ERROR - cannot push tags to git'
-        return
-
-    print 'Done.'
 
 def cmd_build(config, args):
     '''Build generated files'''

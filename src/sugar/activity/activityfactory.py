@@ -1,4 +1,3 @@
-"""Shell side object which manages request to start activity"""
 # Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
@@ -16,29 +15,25 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""Shell side object which manages request to start activity
+
+UNSTABLE. Activities are currently not allowed to run other activities so at
+the moment there is no reason to stabilize this API.
+"""
+
 import logging
-import subprocess
-import signal
 
 import dbus
 import gobject
 
 from sugar.presence import presenceservice
 from sugar.activity.activityhandle import ActivityHandle
-from sugar.activity import registry
 from sugar import util
 from sugar import env
 
 from errno import EEXIST, ENOSPC
 
 import os
-
-# #3903 - this constant can be removed and assumed to be 1 when dbus-python
-# 0.82.3 is the only version used
-if dbus.version >= (0, 82, 3):
-    DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND = 1
-else:
-    DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND = 1000
 
 _SHELL_SERVICE = "org.laptop.Shell"
 _SHELL_PATH = "/org/laptop/Shell"
@@ -58,13 +53,14 @@ _RAINBOW_ACTIVITY_FACTORY_INTERFACE = "org.laptop.security.Rainbow"
 # borrowed from subprocess.py
 try:
     MAXFD = os.sysconf("SC_OPEN_MAX")
-except:
+except ValueError:
     MAXFD = 256
 def _close_fds():
     for i in xrange(3, MAXFD):
         try:
             os.close(i)
-        except:
+        # pylint: disable-msg=W0704
+        except Exception:
             pass
 
 def create_activity_id():
@@ -92,9 +88,9 @@ def create_activity_id():
 def get_environment(activity):
     environ = os.environ.copy()
 
-    bin_path = os.path.join(activity.path, 'bin')
+    bin_path = os.path.join(activity.get_path(), 'bin')
 
-    activity_root = env.get_profile_path(activity.bundle_id)
+    activity_root = env.get_profile_path(activity.get_bundle_id())
     if not os.path.exists(activity_root):
         os.mkdir(activity_root)
 
@@ -110,16 +106,19 @@ def get_environment(activity):
     if not os.path.exists(tmp_dir):
         os.mkdir(tmp_dir)
 
-    environ['SUGAR_BUNDLE_PATH'] = activity.path
-    environ['SUGAR_BUNDLE_ID']   = activity.bundle_id
+    environ['SUGAR_BUNDLE_PATH'] = activity.get_path()
+    environ['SUGAR_BUNDLE_ID']   = activity.get_bundle_id()
     environ['SUGAR_ACTIVITY_ROOT'] = activity_root
     environ['PATH'] = bin_path + ':' + environ['PATH']
     #environ['RAINBOW_STRACE_LOG'] = '1'
 
-    if activity.bundle_id in [ 'org.laptop.WebActivity', 
-                               'org.laptop.GmailActivity',
-                               'org.laptop.WikiBrowseActivity'
-                               ]:
+    if activity.get_path().startswith(env.get_user_activities_path()):
+        environ['SUGAR_LOCALEDIR'] = os.path.join(activity.get_path(), 'locale')
+
+    if activity.get_bundle_id() in [ 'org.laptop.WebActivity', 
+                                     'org.laptop.GmailActivity',
+                                     'org.laptop.WikiBrowseActivity'
+                                   ]:
         environ['RAINBOW_CONSTANT_UID'] = 'yes'
 
     return environ
@@ -128,8 +127,8 @@ def get_command(activity, activity_id=None, object_id=None, uri=None):
     if not activity_id:
         activity_id = create_activity_id()
 
-    command = activity.command.split(' ')
-    command.extend(['-b', activity.bundle_id])
+    command = activity.get_command().split(' ')
+    command.extend(['-b', activity.get_bundle_id()])
     command.extend(['-a', activity_id])
 
     if object_id is not None:
@@ -137,14 +136,22 @@ def get_command(activity, activity_id=None, object_id=None, uri=None):
     if uri is not None:
         command.extend(['-u', uri])
 
-    print command
+    # if the command is in $BUNDLE_ROOT/bin, execute the absolute path so there
+    # is no need to mangle with the shell's PATH
+    if '/' not in command[0]:
+        bin_path = os.path.join(activity.get_path(), 'bin')
+        absolute_path = os.path.join(bin_path, command[0])
+        if os.path.exists(absolute_path):
+            command[0] = absolute_path
+
+    logging.debug('launching: %r' % command)
 
     return command
 
 def open_log_file(activity):
     i = 1
     while True:
-        path = env.get_logs_path('%s-%s.log' % (activity.bundle_id, i))
+        path = env.get_logs_path('%s-%s.log' % (activity.get_bundle_id(), i))
         try:
             fd = os.open(path, os.O_EXCL | os.O_CREAT \
                              | os.O_SYNC | os.O_WRONLY, 0644)
@@ -169,10 +176,10 @@ class ActivityCreationHandler(gobject.GObject):
     create call.
     """
 
-    def __init__(self, service_name, handle):
+    def __init__(self, bundle, handle):
         """Initialise the handler
 
-        service_name -- the service name of the bundle factory
+        bundle -- the ActivityBundle to launch
         activity_handle -- stores the values which are to
             be passed to the service to uniquely identify
             the activity to be created and the sharing
@@ -195,15 +202,16 @@ class ActivityCreationHandler(gobject.GObject):
         """
         gobject.GObject.__init__(self)
 
-        self._service_name = service_name
+        self._bundle = bundle
+        self._service_name = bundle.get_bundle_id()
         self._handle = handle
 
         self._use_rainbow = os.path.exists('/etc/olpc-security')
-        if service_name in [ 'org.laptop.JournalActivity',
-                             'org.laptop.Terminal',
-                             'org.laptop.Log',
-                             'org.laptop.Analyze'
-                             ]:
+        if self._service_name in [ 'org.laptop.JournalActivity',
+                                   'org.laptop.Terminal',
+                                   'org.laptop.Log',
+                                   'org.laptop.Analyze'
+                                 ]:
             self._use_rainbow = False                    
     
         bus = dbus.SessionBus()
@@ -217,7 +225,8 @@ class ActivityCreationHandler(gobject.GObject):
                     bus.get_object(_DS_SERVICE, _DS_PATH), _DS_INTERFACE)
             datastore.find({ 'activity_id': self._handle.activity_id }, [],
                            reply_handler=self._find_object_reply_handler,
-                           error_handler=self._find_object_error_handler)
+                           error_handler=self._find_object_error_handler,
+                           byte_arrays=True)
         else:
             self._launch_activity()
 
@@ -238,49 +247,46 @@ class ActivityCreationHandler(gobject.GObject):
                     reply_handler=self._no_reply_handler,
                     error_handler=self._notify_launch_error_handler)
 
-        activity_registry = registry.get_registry()
-        activity = activity_registry.get_activity(self._service_name)
-        if activity:
-            environ = get_environment(activity)
-            (log_path, log_file) = open_log_file(activity)
-            command = get_command(activity, self._handle.activity_id,
-                                  self._handle.object_id,
-                                  self._handle.uri)
+        environ = get_environment(self._bundle)
+        (log_path, log_file) = open_log_file(self._bundle)
+        command = get_command(self._bundle, self._handle.activity_id,
+                              self._handle.object_id,
+                              self._handle.uri)
 
-            if not self._use_rainbow:
-                # use gobject spawn functionality, so that zombies are
-                # automatically reaped by the gobject event loop.
-                def child_setup():
-                    # clone logfile.fileno() onto stdout/stderr
-                    os.dup2(log_file.fileno(), 1)
-                    os.dup2(log_file.fileno(), 2)
-                    # close all other fds
-                    _close_fds()
-                # we need to sanitize and str-ize the various bits which
-                # dbus gives us.
-                gobject.spawn_async([str(s) for s in command],
-                                    envp=['%s=%s' % (k, str(v))
-                                          for k, v in environ.items()],
-                                    working_directory=str(activity.path),
-                                    child_setup=child_setup,
-                                    flags=(gobject.SPAWN_SEARCH_PATH |
-                                          gobject.SPAWN_LEAVE_DESCRIPTORS_OPEN))
-                log_file.close()
-            else:
-                log_file.close()
-                system_bus = dbus.SystemBus()
-                factory = system_bus.get_object(_RAINBOW_SERVICE_NAME,
-                                                _RAINBOW_ACTIVITY_FACTORY_PATH)
-                factory.CreateActivity(
-                        log_path,
-                        environ,
-                        command,
-                        environ['SUGAR_BUNDLE_PATH'],
-                        environ['SUGAR_BUNDLE_ID'],
-                        timeout=30 * DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND,
-                        reply_handler=self._create_reply_handler,
-                        error_handler=self._create_error_handler,
-                        dbus_interface=_RAINBOW_ACTIVITY_FACTORY_INTERFACE)
+        if not self._use_rainbow:
+            # use gobject spawn functionality, so that zombies are
+            # automatically reaped by the gobject event loop.
+            def child_setup():
+                # clone logfile.fileno() onto stdout/stderr
+                os.dup2(log_file.fileno(), 1)
+                os.dup2(log_file.fileno(), 2)
+                # close all other fds
+                _close_fds()
+            # we need to sanitize and str-ize the various bits which
+            # dbus gives us.
+            gobject.spawn_async([str(s) for s in command],
+                                envp=['%s=%s' % (k, str(v))
+                                        for k, v in environ.items()],
+                                working_directory=str(self._bundle.get_path()),
+                                child_setup=child_setup,
+                                flags=(gobject.SPAWN_SEARCH_PATH |
+                                        gobject.SPAWN_LEAVE_DESCRIPTORS_OPEN))
+            log_file.close()
+        else:
+            log_file.close()
+            system_bus = dbus.SystemBus()
+            factory = system_bus.get_object(_RAINBOW_SERVICE_NAME,
+                                            _RAINBOW_ACTIVITY_FACTORY_PATH)
+            factory.CreateActivity(
+                    log_path,
+                    environ,
+                    command,
+                    environ['SUGAR_BUNDLE_PATH'],
+                    environ['SUGAR_BUNDLE_ID'],
+                    timeout=30,
+                    reply_handler=self._create_reply_handler,
+                    error_handler=self._create_error_handler,
+                    dbus_interface=_RAINBOW_ACTIVITY_FACTORY_INTERFACE)
 
     def _no_reply_handler(self, *args):
         pass
@@ -314,24 +320,24 @@ class ActivityCreationHandler(gobject.GObject):
             if count > 1:
                 logging.debug("Multiple objects has the same activity_id.")
             self._handle.object_id = jobjects[0]['uid']
-        self._create_activity()
+        self._launch_activity()
 
     def _find_object_error_handler(self, err):
         logging.error("Datastore find failed %s" % err)
-        self._create_activity()
+        self._launch_activity()
 
-def create(service_name, activity_handle=None):
+def create(bundle, activity_handle=None):
     """Create a new activity from its name."""
     if not activity_handle:
         activity_handle = ActivityHandle()
-    return ActivityCreationHandler(service_name, activity_handle)
+    return ActivityCreationHandler(bundle, activity_handle)
 
-def create_with_uri(service_name, uri):
+def create_with_uri(bundle, uri):
     """Create a new activity and pass the uri as handle."""
     activity_handle = ActivityHandle(uri=uri)
-    return ActivityCreationHandler(service_name, activity_handle)
+    return ActivityCreationHandler(bundle, activity_handle)
 
-def create_with_object_id(service_name, object_id):
+def create_with_object_id(bundle, object_id):
     """Create a new activity and pass the object id as handle."""
     activity_handle = ActivityHandle(object_id=object_id)
-    return ActivityCreationHandler(service_name, activity_handle)
+    return ActivityCreationHandler(bundle, activity_handle)

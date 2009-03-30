@@ -1,4 +1,4 @@
-AC_INIT([sugar-toolkit],[0.82.11],[],[sugar-toolkit])
+AC_INIT([sugar-toolkit],[0.84.1],[],[sugar-toolkit])
 
 AC_PREREQ([2.59])
 
@@ -39,7 +39,6 @@ src/Makefile
 src/sugar/Makefile
 src/sugar/activity/Makefile
 src/sugar/bundle/Makefile
-src/sugar/clipboard/Makefile
 src/sugar/graphics/Makefile
 src/sugar/presence/Makefile
 src/sugar/datastore/Makefile

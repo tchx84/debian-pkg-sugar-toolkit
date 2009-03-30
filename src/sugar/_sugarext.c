@@ -12,7 +12,6 @@
 #include "sugar-grid.h"
 #include "sugar-key-grabber.h"
 #include "sugar-menu.h"
-#include "sugar-preview.h"
 #include "sexy-icon-entry.h"
 #include "gsm-session.h"
 #include "gsm-xsmp.h"
@@ -24,7 +23,7 @@
 #include <pygtk/pygtk.h>
 #include <glib.h>
 
-#line 28 "_sugarext.c"
+#line 27 "_sugarext.c"
 
 
 /* ---------- types from other modules ---------- */
@@ -49,7 +48,6 @@ PyTypeObject G_GNUC_INTERNAL PySugarAddressEntry_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarKeyGrabber_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarMenu_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarGrid_Type;
-PyTypeObject G_GNUC_INTERNAL PySugarPreview_Type;
 PyTypeObject G_GNUC_INTERNAL PySexyIconEntry_Type;
 PyTypeObject G_GNUC_INTERNAL PyEggSMClientXSMP_Type;
 PyTypeObject G_GNUC_INTERNAL PyEggSMClient_Type;
@@ -57,7 +55,7 @@ PyTypeObject G_GNUC_INTERNAL PyGsmSession_Type;
 PyTypeObject G_GNUC_INTERNAL PyAcmeVolume_Type;
 PyTypeObject G_GNUC_INTERNAL PyAcmeVolumeAlsa_Type;
 
-#line 61 "_sugarext.c"
+#line 59 "_sugarext.c"
 
 
 
@@ -112,20 +110,52 @@ PyTypeObject G_GNUC_INTERNAL PySugarAddressEntry_Type = {
 
 /* ----------- SugarKeyGrabber ----------- */
 
+#line 38 "_sugarext.override"
 static PyObject *
-_wrap_sugar_key_grabber_grab(PyGObject *self, PyObject *args, PyObject *kwargs)
+_wrap_sugar_key_grabber_grab_keys(PyGObject *self, PyObject *args, PyObject *kwargs)
 {
     static char *kwlist[] = { "key", NULL };
-    char *key;
+	PyObject *py_keys;
+	char **keys;
+	int i, len;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"s:SugarKeyGrabber.grab", kwlist, &key))
+    if (!PyArg_ParseTupleAndKeywords(args,kwargs,
+                                     "O:SugarKeyGrabber.grab_keys",
+                                     kwlist, &py_keys))
         return NULL;
-    
-    sugar_key_grabber_grab(SUGAR_KEY_GRABBER(self->obj), key);
-    
+
+    if (!PySequence_Check(py_keys) || (len = PySequence_Size(py_keys)) < 0) {
+        PyErr_SetString(PyExc_ValueError,
+                        "keys should be a sequence of strings");
+        return NULL;
+    }
+
+    keys = g_new(char*, len + 1);
+    for (i = 0; i < len; i++) {
+        PyObject *item = PySequence_GetItem(py_keys, i);
+        if (!item) {
+            g_free(keys);
+            return NULL;
+        }
+        if (!PyString_Check(item)) {
+            PyErr_SetString(PyExc_TypeError, "key must be a string");
+            g_free(keys);
+            Py_DECREF(item);
+            return NULL;
+        }
+        keys[i] = PyString_AsString(item);
+        Py_DECREF(item);
+    }
+    keys[len] = NULL;
+
+    sugar_key_grabber_grab_keys (SUGAR_KEY_GRABBER(self->obj), (const char**) keys);
+
     Py_INCREF(Py_None);
     return Py_None;
 }
+
+#line 158 "_sugarext.c"
+
 
 static PyObject *
 _wrap_sugar_key_grabber_get_key(PyGObject *self, PyObject *args, PyObject *kwargs)
@@ -207,7 +237,7 @@ _wrap_sugar_key_grabber_is_modifier(PyGObject *self, PyObject *args, PyObject *k
 }
 
 static const PyMethodDef _PySugarKeyGrabber_methods[] = {
-    { "grab", (PyCFunction)_wrap_sugar_key_grabber_grab, METH_VARARGS|METH_KEYWORDS,
+    { "grab_keys", (PyCFunction)_wrap_sugar_key_grabber_grab_keys, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { "get_key", (PyCFunction)_wrap_sugar_key_grabber_get_key, METH_VARARGS|METH_KEYWORDS,
       NULL },
@@ -476,119 +506,6 @@ PyTypeObject G_GNUC_INTERNAL PySugarGrid_Type = {
     (getiterfunc)0,          /* tp_iter */
     (iternextfunc)0,     /* tp_iternext */
     (struct PyMethodDef*)_PySugarGrid_methods, /* tp_methods */
-    (struct PyMemberDef*)0,              /* tp_members */
-    (struct PyGetSetDef*)0,  /* tp_getset */
-    NULL,                              /* tp_base */
-    NULL,                              /* tp_dict */
-    (descrgetfunc)0,    /* tp_descr_get */
-    (descrsetfunc)0,    /* tp_descr_set */
-    offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
-    (initproc)0,             /* tp_init */
-    (allocfunc)0,           /* tp_alloc */
-    (newfunc)0,               /* tp_new */
-    (freefunc)0,             /* tp_free */
-    (inquiry)0              /* tp_is_gc */
-};
-
-
-
-/* ----------- SugarPreview ----------- */
-
-static PyObject *
-_wrap_sugar_preview_take_screenshot(PyGObject *self, PyObject *args, PyObject *kwargs)
-{
-    static char *kwlist[] = { "widget", NULL };
-    PyGObject *widget;
-
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!:SugarPreview.take_screenshot", kwlist, &PyGtkWidget_Type, &widget))
-        return NULL;
-    
-    sugar_preview_take_screenshot(SUGAR_PREVIEW(self->obj), GTK_WIDGET(widget->obj));
-    
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-static PyObject *
-_wrap_sugar_preview_set_size(PyGObject *self, PyObject *args, PyObject *kwargs)
-{
-    static char *kwlist[] = { "width", "height", NULL };
-    int width, height;
-
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"ii:SugarPreview.set_size", kwlist, &width, &height))
-        return NULL;
-    
-    sugar_preview_set_size(SUGAR_PREVIEW(self->obj), width, height);
-    
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-static PyObject *
-_wrap_sugar_preview_clear(PyGObject *self)
-{
-    
-    sugar_preview_clear(SUGAR_PREVIEW(self->obj));
-    
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-static PyObject *
-_wrap_sugar_preview_get_pixbuf(PyGObject *self)
-{
-    GdkPixbuf *ret;
-
-    
-    ret = sugar_preview_get_pixbuf(SUGAR_PREVIEW(self->obj));
-    
-    /* pygobject_new handles NULL checking */
-    return pygobject_new((GObject *)ret);
-}
-
-static const PyMethodDef _PySugarPreview_methods[] = {
-    { "take_screenshot", (PyCFunction)_wrap_sugar_preview_take_screenshot, METH_VARARGS|METH_KEYWORDS,
-      NULL },
-    { "set_size", (PyCFunction)_wrap_sugar_preview_set_size, METH_VARARGS|METH_KEYWORDS,
-      NULL },
-    { "clear", (PyCFunction)_wrap_sugar_preview_clear, METH_NOARGS,
-      NULL },
-    { "get_pixbuf", (PyCFunction)_wrap_sugar_preview_get_pixbuf, METH_NOARGS,
-      NULL },
-    { NULL, NULL, 0, NULL }
-};
-
-PyTypeObject G_GNUC_INTERNAL PySugarPreview_Type = {
-    PyObject_HEAD_INIT(NULL)
-    0,                                 /* ob_size */
-    "sugar._sugarext.Preview",                   /* tp_name */
-    sizeof(PyGObject),          /* tp_basicsize */
-    0,                                 /* tp_itemsize */
-    /* methods */
-    (destructor)0,        /* tp_dealloc */
-    (printfunc)0,                      /* tp_print */
-    (getattrfunc)0,       /* tp_getattr */
-    (setattrfunc)0,       /* tp_setattr */
-    (cmpfunc)0,           /* tp_compare */
-    (reprfunc)0,             /* tp_repr */
-    (PyNumberMethods*)0,     /* tp_as_number */
-    (PySequenceMethods*)0, /* tp_as_sequence */
-    (PyMappingMethods*)0,   /* tp_as_mapping */
-    (hashfunc)0,             /* tp_hash */
-    (ternaryfunc)0,          /* tp_call */
-    (reprfunc)0,              /* tp_str */
-    (getattrofunc)0,     /* tp_getattro */
-    (setattrofunc)0,     /* tp_setattro */
-    (PyBufferProcs*)0,  /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,                      /* tp_flags */
-    NULL,                        /* Documentation string */
-    (traverseproc)0,     /* tp_traverse */
-    (inquiry)0,             /* tp_clear */
-    (richcmpfunc)0,   /* tp_richcompare */
-    offsetof(PyGObject, weakreflist),             /* tp_weaklistoffset */
-    (getiterfunc)0,          /* tp_iter */
-    (iternextfunc)0,     /* tp_iternext */
-    (struct PyMethodDef*)_PySugarPreview_methods, /* tp_methods */
     (struct PyMemberDef*)0,              /* tp_members */
     (struct PyGetSetDef*)0,  /* tp_getset */
     NULL,                              /* tp_base */
@@ -1374,15 +1291,13 @@ py_sugarext_register_classes(PyObject *d)
     }
 
 
-#line 1378 "_sugarext.c"
+#line 1295 "_sugarext.c"
     pygobject_register_class(d, "SugarAddressEntry", SUGAR_TYPE_ADDRESS_ENTRY, &PySugarAddressEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
     pygobject_register_class(d, "SugarKeyGrabber", SUGAR_TYPE_KEY_GRABBER, &PySugarKeyGrabber_Type, Py_BuildValue("(O)", &PyGObject_Type));
     pyg_set_object_has_new_constructor(SUGAR_TYPE_KEY_GRABBER);
     pygobject_register_class(d, "SugarMenu", SUGAR_TYPE_MENU, &PySugarMenu_Type, Py_BuildValue("(O)", &PyGtkMenu_Type));
     pygobject_register_class(d, "SugarGrid", SUGAR_TYPE_GRID, &PySugarGrid_Type, Py_BuildValue("(O)", &PyGObject_Type));
     pyg_set_object_has_new_constructor(SUGAR_TYPE_GRID);
-    pygobject_register_class(d, "SugarPreview", SUGAR_TYPE_PREVIEW, &PySugarPreview_Type, Py_BuildValue("(O)", &PyGObject_Type));
-    pyg_set_object_has_new_constructor(SUGAR_TYPE_PREVIEW);
     pygobject_register_class(d, "SexyIconEntry", SEXY_TYPE_ICON_ENTRY, &PySexyIconEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
     pyg_set_object_has_new_constructor(SEXY_TYPE_ICON_ENTRY);
     pygobject_register_class(d, "EggSMClient", EGG_TYPE_SM_CLIENT, &PyEggSMClient_Type, Py_BuildValue("(O)", &PyGObject_Type));

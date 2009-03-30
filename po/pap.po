@@ -2,112 +2,112 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-24 00:07+0530\n"
-"PO-Revision-Date: 2008-06-28 09:54-0400\n"
-"Last-Translator: Urso Wieske <uwieske@gmail.com>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"X-Generator: Translate Toolkit 1.1.1rc4\n"
 
 #: ../src/sugar/activity/activity.py:120
 msgid "Share with:"
-msgstr "Komparti ku:"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:122
 msgid "Private"
-msgstr "Privá"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:123
 msgid "My Neighborhood"
-msgstr "Mi Besindario"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:130
 msgid "Keep"
-msgstr "Warda"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:136
 msgid "Stop"
-msgstr "Para"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:251
 msgid "Undo"
-msgstr "Deshasí"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:256
 msgid "Redo"
-msgstr "Rehasí"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:266
 msgid "Copy"
-msgstr "Kopia"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:271
 msgid "Paste"
-msgstr "Pega"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:297
 msgid "Activity"
-msgstr "Aktividad"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:469
 #, python-format
 msgid "%s Activity"
-msgstr "%s Aktividad"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:856
 msgid "Keep error"
-msgstr "Warda eror"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:857
 msgid "Keep error: all changes will be lost"
-msgstr "Warda eror: tur kambionan lo bai perdí"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:860
 msgid "Don't stop"
-msgstr "No para"
+msgstr ""
 
 #: ../src/sugar/activity/activity.py:863
 msgid "Stop anyway"
-msgstr "Stop kon ku para"
+msgstr ""
 
 #: ../src/sugar/graphics/alert.py:166 ../src/sugar/graphics/alert.py:209
 msgid "Cancel"
-msgstr "Kanselá"
+msgstr ""
 
 #: ../src/sugar/graphics/alert.py:170 ../src/sugar/graphics/alert.py:247
 msgid "Ok"
-msgstr "Ok"
+msgstr ""
 
 #: ../src/sugar/graphics/alert.py:219
 msgid "Continue"
-msgstr "Kontinua"
+msgstr ""
 
 #: ../src/sugar/util.py:181
 msgid " and "
-msgstr "i "
+msgstr ""
 
 #: ../src/sugar/util.py:182
 msgid ", "
-msgstr ", "
+msgstr ""
 
 #. TRANS: Indicating something that just happened, eg. "just now", "moments ago"
 #: ../src/sugar/util.py:185
 msgid "Seconds ago"
-msgstr "Algun seconde pasá"
+msgstr ""
 
 #. TRANS: Indicating time passed, eg. "[10 day, 5 hours] ago",
 #. "[2 minutes] in the past", or "[3 years, 1 month] earlier"
 #: ../src/sugar/util.py:189
 #, python-format
 msgid "%s ago"
-msgstr "%s pasá"
+msgstr ""
 
 #. TRANS: Relative dates (eg. 1 month and 5 days).
 #: ../src/sugar/util.py:202

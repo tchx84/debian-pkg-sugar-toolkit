@@ -15,7 +15,10 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-"""Sugar bundle file handler"""
+"""Sugar bundle file handler
+
+UNSTABLE.
+"""
 
 import os
 import logging
@@ -41,7 +44,7 @@ class RegistrationException(Exception):
 class MalformedBundleException(Exception):
     pass
 
-class Bundle:
+class Bundle(object):
     """A Sugar activity, content module, etc.
     
     The bundle itself may be either a zip file or a directory
@@ -86,6 +89,9 @@ class Bundle:
             del file_names[0]
 
         self._zip_root_dir = file_names[0].split('/')[0]
+        if self._zip_root_dir.startswith('.'):
+            raise MalformedBundleException(
+                'root directory starts with .')
         if self._unzipped_extension is not None:
             (name_, ext) = os.path.splitext(self._zip_root_dir)
             if ext != self._unzipped_extension:
@@ -162,7 +168,8 @@ class Bundle:
         if os.spawnlp(os.P_WAIT, 'unzip', 'unzip', '-o', self._path,
                       '-x', 'mimetype', '-d', install_dir):
             # clean up install dir after failure
-            shutil.rmtree(install_dir, ignore_errors=True)
+            shutil.rmtree(os.path.join(install_dir, self._zip_root_dir),
+                          ignore_errors=True)
             # indicate failure.
             raise ZipExtractException
 
@@ -184,5 +191,9 @@ class Bundle:
             for name in files:
                 os.remove(os.path.join(root, name))
             for name in dirs:
-                os.rmdir(os.path.join(root, name))
+                path = os.path.join(root, name)
+                if os.path.islink(path):
+                    os.remove(path)
+                else:
+                    os.rmdir(path)
         os.rmdir(install_path)

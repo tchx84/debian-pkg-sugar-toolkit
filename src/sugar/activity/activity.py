@@ -26,9 +26,11 @@ interesting buttons for the user, like for example 'exit activity'
 
 See the methods of the Activity class below for more information on what you
 will need for a real activity.
+
+STABLE.
 """
 # Copyright (C) 2006-2007 Red Hat, Inc.
-# Copyright (C) 2007-2008 One Laptop Per Child
+# Copyright (C) 2007-2009 One Laptop Per Child
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -49,18 +51,20 @@ import gettext
 import logging
 import os
 import time
-import tempfile
 from hashlib import sha1
 import traceback
+import gconf
 
-import gtk, gobject
+import gtk
+import gobject
 import dbus
 import dbus.service
-import json
+import cjson
 
 from sugar import util        
 from sugar.presence import presenceservice
 from sugar.activity.activityservice import ActivityService
+from sugar.activity.namingalert import NamingAlert
 from sugar.graphics import style
 from sugar.graphics.window import Window
 from sugar.graphics.toolbox import Toolbox
@@ -68,11 +72,10 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.alert import Alert
 from sugar.graphics.icon import Icon
+from sugar.graphics.xocolor import XoColor
 from sugar.datastore import datastore
 from sugar.session import XSMPClient
 from sugar import wm
-from sugar import profile
-from sugar import _sugarext
 
 _ = lambda msg: gettext.dgettext('sugar-toolkit', msg)
 
@@ -128,8 +131,9 @@ class ActivityToolbar(gtk.Toolbar):
         self._update_share()
 
         self.keep = ToolButton(tooltip=_('Keep'))
-        keep_icon = Icon(icon_name='document-save', 
-                         xo_color=profile.get_color())
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        keep_icon = Icon(icon_name='document-save', xo_color=color)
         self.keep.set_icon_widget(keep_icon)
         keep_icon.show()
         self.keep.props.accelerator = '<Ctrl>S'
@@ -181,8 +185,8 @@ class ActivityToolbar(gtk.Toolbar):
 
     def __title_changed_cb(self, entry):
         if not self._update_title_sid:
-            self._update_title_sid = gobject.timeout_add(
-                                                1000, self.__update_title_cb)
+            self._update_title_sid = gobject.timeout_add_seconds(
+                                                1, self.__update_title_cb)
 
     def __update_title_cb(self):
         title = self.title.get_text()
@@ -191,7 +195,7 @@ class ActivityToolbar(gtk.Toolbar):
         self._activity.metadata['title_set_by_user'] = '1'
         self._activity.save()
 
-        shared_activity = self._activity._shared_activity
+        shared_activity = self._activity.get_shared_activity()
         if shared_activity:
             shared_activity.props.name = title
 
@@ -424,13 +428,6 @@ class Activity(Window, gtk.Container):
         'joined': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
     }
 
-    __gproperties__ = {
-        'active'          : (bool, None, None, False,
-                             gobject.PARAM_READWRITE),
-        'max-participants': (int, None, None, 0, 1000, 0,
-                             gobject.PARAM_READWRITE)
-    }
-
     def __init__(self, handle, create_jobject=True):
         """Initialise the Activity 
         
@@ -473,19 +470,12 @@ class Activity(Window, gtk.Container):
         self.connect('realize', self.__realize_cb)
         self.connect('delete-event', self.__delete_event_cb)
 
-        # watch visibility-notify-events to know when we can safely
-        # take a screenshot of the activity
-        self.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
-        self.connect('visibility-notify-event', self.__visibility_notify_event_cb)
-        self._fully_obscured = True
-
         self._active = False
         self._activity_id = handle.activity_id
         self._pservice = presenceservice.get_instance()
-        self._shared_activity = None
+        self.shared_activity = None
         self._share_id = None
         self._join_id = None
-        self._preview = _sugarext.Preview()
         self._updating_jobject = False
         self._closing = False
         self._quit_requested = False
@@ -510,13 +500,7 @@ class Activity(Window, gtk.Container):
         share_scope = SCOPE_PRIVATE
 
         if handle.object_id:
-            self._jobject = datastore.get(handle.object_id)
-            # TODO: Don't create so many objects until we have versioning
-            # support in the datastore
-            #self._jobject.object_id = ''
-            #del self._jobject.metadata['ctime']
-            del self._jobject.metadata['mtime']
-            
+            self._jobject = datastore.get(handle.object_id)            
             self.set_title(self._jobject.metadata['title'])
                 
             if self._jobject.metadata.has_key('share-scope'):
@@ -531,15 +515,15 @@ class Activity(Window, gtk.Container):
             # There's already an instance on the mesh, join it
             logging.debug("*** Act %s joining existing mesh instance %r",
                           self._activity_id, mesh_instance)
-            self._shared_activity = mesh_instance
-            self._shared_activity.connect('notify::private',
-                    self.__privacy_changed_cb)
-            self._join_id = self._shared_activity.connect(
-                                                    "joined", self.__joined_cb)
-            if not self._shared_activity.props.joined:
-                self._shared_activity.join()
+            self.shared_activity = mesh_instance
+            self.shared_activity.connect('notify::private',
+                                         self.__privacy_changed_cb)
+            self._join_id = self.shared_activity.connect("joined",
+                                                         self.__joined_cb)
+            if not self.shared_activity.props.joined:
+                self.shared_activity.join()
             else:
-                self.__joined_cb(self._shared_activity, True, None)
+                self.__joined_cb(self.shared_activity, True, None)
         elif share_scope != SCOPE_PRIVATE:
             logging.debug("*** Act %s no existing mesh instance, but used to " \
                           "be shared, will share" % self._activity_id)
@@ -564,10 +548,11 @@ class Activity(Window, gtk.Container):
             self._jobject.metadata['keep'] = '0'
             self._jobject.metadata['preview'] = ''
             self._jobject.metadata['share-scope'] = SCOPE_PRIVATE
-            if self._shared_activity is not None:
-                icon_color = self._shared_activity.props.color
+            if self.shared_activity is not None:
+                icon_color = self.shared_activity.props.color
             else:
-                icon_color = profile.get_color().to_string()
+                client = gconf.client_get_default()
+                icon_color = client.get_string('/desktop/sugar/user/color')
             self._jobject.metadata['icon-color'] = icon_color
 
             self._jobject.file_path = ''
@@ -575,24 +560,29 @@ class Activity(Window, gtk.Container):
             # https://dev.laptop.org/ticket/3071
             datastore.write(self._jobject)
 
-    def do_set_property(self, pspec, value):
-        if pspec.name == 'active':
-            if self._active != value:
-                self._active = value
-                if not self._active and self._jobject:
-                    self.save()
-        elif pspec.name == 'max-participants':
-            self._max_participants = value
-        else:
-            Window.do_set_property(self, pspec, value)
+        self.connect('map', self.__map_cb)
 
-    def do_get_property(self, pspec):
-        if pspec.name == 'active':
-            return self._active
-        elif pspec.name == 'max-participants':
-            return self._max_participants
-        else:
-            return Window.do_get_property(self, pspec)
+    def get_active(self):
+        return self._active
+
+    def set_active(self, active):
+        if self._active != active:
+            self._active = active
+            if not self._active and self._jobject:
+                self.save()
+
+    active = gobject.property(
+        type=bool, default=False, getter=get_active, setter=set_active)
+
+    def get_max_participants(self):
+        return self._max_participants
+
+    def set_max_participants(self, participants):
+        self._max_participants = participants
+
+    max_participants = gobject.property(
+            type=int, default=0, getter=get_max_participants,
+            setter=set_max_participants)
 
     def get_id(self):
         """Returns the activity id of the current instance of your activity.
@@ -615,7 +605,6 @@ class Activity(Window, gtk.Container):
         One commonly used canvas is gtk.ScrolledWindow
         """
         Window.set_canvas(self, canvas)
-        canvas.connect('map', self.__canvas_map_cb)
 
     def __session_quit_requested_cb(self, session):
         self._quit_requested = True
@@ -628,7 +617,7 @@ class Activity(Window, gtk.Container):
     def __session_quit_cb(self, client):
         self._complete_close()
 
-    def __canvas_map_cb(self, canvas):
+    def __map_cb(self, canvas):
         if self._jobject and self._jobject.file_path:
             self.read_file(self._jobject.file_path)
 
@@ -725,11 +714,22 @@ class Activity(Window, gtk.Container):
             self._jobject.destroy()
             self._jobject = None
 
-    def _get_preview(self):
-        pixbuf = self._preview.get_pixbuf()
-        if pixbuf is None:
-            return None
+    def get_preview(self):
+        """Returns an image representing the state of the activity. Generally
+        this is what the user is seeing in this moment.
 
+        Activities can override this method, which should return a str with the
+        binary content of a png image with a width of 300 and a height of 225
+        pixels.
+        """
+        if self.canvas is None or not hasattr(self.canvas, 'get_snapshot'):
+            return None
+        pixmap = self.canvas.get_snapshot((-1, -1, 0, 0))
+
+        width, height = pixmap.get_size()
+        pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, width, height)
+        pixbuf = pixbuf.get_from_drawable(pixmap, pixmap.get_colormap(),
+                                          0, 0, 0, 0, width, height)
         pixbuf = pixbuf.scale_simple(style.zoom(300), style.zoom(225),
                                      gtk.gdk.INTERP_BILINEAR)
 
@@ -740,24 +740,18 @@ class Activity(Window, gtk.Container):
         pixbuf.save_to_callback(save_func, 'png', user_data=preview_data)
         preview_data = ''.join(preview_data)
 
-        self._preview.clear()
-
         return preview_data
 
     def _get_buddies(self):
-        if self._shared_activity is not None:
+        if self.shared_activity is not None:
             buddies = {}
-            for buddy in self._shared_activity.get_joined_buddies():
+            for buddy in self.shared_activity.get_joined_buddies():
                 if not buddy.props.owner:
                     buddy_id = sha1(buddy.props.key).hexdigest()
                     buddies[buddy_id] = [buddy.props.nick, buddy.props.color]
             return buddies
         else:
             return {}
-
-    def take_screenshot(self):
-        if self.canvas:
-            self._preview.take_screenshot(self.canvas)
 
     def save(self):
         """Request that the activity is saved to the Journal.
@@ -780,21 +774,23 @@ class Activity(Window, gtk.Container):
 
         buddies_dict = self._get_buddies()
         if buddies_dict:
-            self.metadata['buddies_id'] = json.write(buddies_dict.keys())
-            self.metadata['buddies'] = json.write(self._get_buddies())
+            self.metadata['buddies_id'] = cjson.encode(buddies_dict.keys())
+            self.metadata['buddies'] = cjson.encode(self._get_buddies())
 
-        preview = self._get_preview()
-        if self._preview:
+        preview = self.get_preview()
+        if preview is not None:
             self.metadata['preview'] = dbus.ByteArray(preview)
 
+        file_path = os.path.join(self.get_activity_root(), 'instance',
+                                 '%i' % time.time())
         try:
-            file_path = os.path.join(self.get_activity_root(), 'instance',
-                                        '%i' % time.time())
             self.write_file(file_path)
-            self._owns_file = True
-            self._jobject.file_path = file_path
         except NotImplementedError:
             logging.debug('Activity.write_file is not implemented.')
+        else:
+            if os.path.exists(file_path):
+                self._owns_file = True
+                self._jobject.file_path = file_path
 
         # Cannot call datastore.write async for creates:
         # https://dev.laptop.org/ticket/3071
@@ -815,8 +811,6 @@ class Activity(Window, gtk.Container):
         copy work that needs to be done in write_file()
         """
         logging.debug('Activity.copy: %r' % self._jobject.object_id)
-        if not self._fully_obscured:
-            self.take_screenshot()
         self.save()
         self._jobject.object_id = None
 
@@ -828,7 +822,7 @@ class Activity(Window, gtk.Container):
 
     def __joined_cb(self, activity, success, err):
         """Callback when join has finished"""
-        self._shared_activity.disconnect(self._join_id)
+        self.shared_activity.disconnect(self._join_id)
         self._join_id = None
         if not success:
             logging.debug("Failed to join activity: %s" % err)
@@ -836,13 +830,20 @@ class Activity(Window, gtk.Container):
 
         self.present()
         self.emit('joined')
-        self.__privacy_changed_cb(self._shared_activity, None)
+        self.__privacy_changed_cb(self.shared_activity, None)
+
+    def get_shared_activity(self):
+        """Returns an instance of the shared Activity or None
+
+        The shared activity is of type sugar.presence.activity.Activity
+        """
+        return self._shared_activity
 
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
-        if not self._shared_activity:
+        if not self.shared_activity:
             return False
-        return self._shared_activity.props.joined
+        return self.shared_activity.props.joined
 
     def __share_cb(self, ps, success, activity, err):
         self._pservice.disconnect(self._share_id)
@@ -857,11 +858,11 @@ class Activity(Window, gtk.Container):
 
         activity.props.name = self._jobject.metadata['title']
 
-        self._shared_activity = activity
-        self._shared_activity.connect('notify::private',
+        self.shared_activity = activity
+        self.shared_activity.connect('notify::private',
                 self.__privacy_changed_cb)
         self.emit('shared')
-        self.__privacy_changed_cb(self._shared_activity, None)
+        self.__privacy_changed_cb(self.shared_activity, None)
 
         self._send_invites()
 
@@ -874,7 +875,7 @@ class Activity(Window, gtk.Container):
             buddy_key = self._invites_queue.pop()             
             buddy = self._pservice.get_buddy(buddy_key)
             if buddy:
-                self._shared_activity.invite(
+                self.shared_activity.invite(
                             buddy, '', self._invite_response_cb)
             else:
                 logging.error('Cannot invite %s, no such buddy.' % buddy_key)
@@ -888,8 +889,8 @@ class Activity(Window, gtk.Container):
         """
         self._invites_queue.append(buddy_key)
 
-        if (self._shared_activity is None
-            or not self._shared_activity.props.joined):
+        if (self.shared_activity is None
+            or not self.shared_activity.props.joined):
             self.share(True)
         else:
             self._send_invites()
@@ -903,7 +904,7 @@ class Activity(Window, gtk.Container):
         Once the activity is shared, its privacy can be changed by setting
         its 'private' property.
         """
-        if self._shared_activity and self._shared_activity.props.joined:
+        if self.shared_activity and self.shared_activity.props.joined:
             raise RuntimeError("Activity %s already shared." %
                                self._activity_id)
         verb = private and 'private' or 'public'
@@ -944,13 +945,13 @@ class Activity(Window, gtk.Container):
         if not skip_save:
             try:
                 self.save()
-            except Exception:
+            except:
                 logging.info(traceback.format_exc())
                 self._show_keep_failed_dialog()
                 return False
 
-        if self._shared_activity:
-            self._shared_activity.leave()
+        if self.shared_activity:
+            self.shared_activity.leave()
 
         self._closing = True
 
@@ -972,18 +973,21 @@ class Activity(Window, gtk.Container):
         write_file() to do any state saving instead. If the application wants
         to control wether it can close, it should override can_close().
         """
-        if not self._fully_obscured:
-            self.take_screenshot()
-
         if not self.can_close():
             return
 
-        if not self._closing:
-            if not self._prepare_close(skip_save):
-                return
+        if skip_save or self.metadata.get('title_set_by_user', '0') == '1':
+            if not self._closing:
+                if not self._prepare_close(skip_save):
+                    return
 
-        if not self._updating_jobject:
-            self._complete_close()
+            if not self._updating_jobject:
+                self._complete_close()
+        else:
+            title_alert = NamingAlert(self, get_bundle_path())
+            title_alert.set_transient_for(self.get_toplevel())
+            title_alert.show()
+            self.present()
 
     def __realize_cb(self, window):
         wm.set_bundle_id(window.window, self.get_bundle_id())
@@ -992,15 +996,6 @@ class Activity(Window, gtk.Container):
     def __delete_event_cb(self, widget, event):
         self.close()
         return True
-
-    def __visibility_notify_event_cb(self, widget, event):
-        """Visibility state is used when deciding if we can take screenshots.
-        Currently we allow screenshots whenever the activity window is fully
-        visible or partially obscured."""
-        if event.state is gtk.gdk.VISIBILITY_FULLY_OBSCURED:
-            self._fully_obscured = True
-        else:
-            self._fully_obscured = False
 
     def get_metadata(self):
         """Returns the jobject metadata or None if there is no jobject.
@@ -1020,6 +1015,15 @@ class Activity(Window, gtk.Container):
             return None
 
     metadata = property(get_metadata, None)
+
+    def handle_view_source(self):
+        raise NotImplementedError
+
+    def get_document_path(self, async_cb, async_err_cb):
+        async_err_cb(NotImplementedError())
+
+    # DEPRECATED
+    _shared_activity = property(lambda self: self.shared_activity, None)
 
 _session = None
 
