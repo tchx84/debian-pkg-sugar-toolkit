@@ -32,7 +32,8 @@ include debian/cdbs/1/class/python-autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
 include debian/cdbs/1/rules/buildinfo.mk
 
-pkg = python-sugar-toolkit
+pkgbase = python-sugar-toolkit
+pkg = $(pkgbase)-0.84
 
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
@@ -54,6 +55,11 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 CDBS_DEPENDS := python-gtk2, python-dbus, python-gobject, python-cairo, python-gnome2-desktop (>= 2.16), python-telepathy, python-json, python-sugar, python-hippocanvas
 CDBS_RECOMMENDS := sugar, python-olpc-datastore, sugar-presence-service, sugar-journal-activity, ttf-dejavu-core, unzip
 CDBS_SUGGESTS := git-core, subversion, ttf-dejavu-extra
+
+# Ensure only one variant is installed at a time (Debian Policy 7.6.2)
+CDBS_PROVIDES := $(pkgbase)
+CDBS_CONFLICTS := $(pkgbase)
+CDBS_REPLACES := $(pkgbase)
 
 # Needed for our packaging
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), chrpath
