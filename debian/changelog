@@ -1,8 +1,25 @@
-sugar-toolkit (0.84.1-1) UNRELEASED; urgency=low
+sugar-toolkit (0.84.1-1) unstable; urgency=low
 
   * New upstream release.
+  * Rename binary package as sugar-toolkit-0.84, with old name as
+    virtual package.
+  * Drop patch 0000 (backported snapshot) now included upstream.
+  * Update patch 1001 (danish locale).
+  * Unfuzz patches 2002, 2003 and 2991.
+  * Build only for Python 2.5 or newer, and drop patch 2001
+    (pre-python-2.5 workaround).
+  * Add README.source (and drop CDBS hints and README.packaging).
+  * Add git-buildpackage configfile, enable signed-tags and use of
+    pristine-tar and upstream-0.84 as upstream branch.
+  * Use sugarlabs.org URLs (and drop laptop.org ones) to upstream source
+    and Homepage.  Bump watch file to track 0.84*.
+  * Maintain all package dependencies in debian/rules, with comments.
+  * Update copyright and licensing info:
+    + Add proper copyright header to debian/rules
+    + Update debian/copyright and hints (bump years, a couple of new
+      authors, added another variant of GAP)
 
- -- Jonas Smedegaard <dr@jones.dk>  Mon, 30 Mar 2009 13:12:12 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 31 Mar 2009 03:49:15 +0200
 
 sugar-toolkit (0.82.11-7) unstable; urgency=medium
 
