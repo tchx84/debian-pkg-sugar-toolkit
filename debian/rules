@@ -52,7 +52,8 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 
 # Needed (always/often/seldom) at runtime
 #  * zip, git and subversion are used in .xo format packaging routines
-CDBS_DEPENDS := python-gtk2, python-dbus, python-gobject, python-cairo, python-gnome2-desktop (>= 2.16), python-telepathy, python-json, python-sugar, python-hippocanvas
+CDBS_DEPENDS := python-gtk2, python-dbus, python-gobject, python-cairo, python-telepathy, python-cjson, python-sugar, python-hippocanvas, python-gconf | python-gnome2 (<= 2.22.3-2)
+CDBS_DEPENDS := $(CDBS_DEPENDS), python-rsvg | python-gnome2-desktop (>= 2.16), python-rsvg | python-gnome2-desktop (<= 2.24.0-1), python-rsvg | python-gnome2-desktop (>= 2.22.0-2) | librsvg2-common
 CDBS_RECOMMENDS := sugar, python-olpc-datastore, sugar-presence-service, sugar-journal-activity, ttf-dejavu-core, unzip
 CDBS_SUGGESTS := git-core, subversion, ttf-dejavu-extra
 
