@@ -1,3 +1,9 @@
+sugar-toolkit (0.84.1-2) unstable; urgency=low
+
+  * Fix provide and conflict virtual package sugar-toolkit.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 31 Mar 2009 04:13:51 +0200
+
 sugar-toolkit (0.84.1-1) unstable; urgency=low
 
   * New upstream release.
