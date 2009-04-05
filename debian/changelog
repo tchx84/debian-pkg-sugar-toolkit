@@ -1,3 +1,11 @@
+sugar-toolkit-0.84 (0.84.1-1) UNRELEASED; urgency=low
+
+  * Repackage source adding branch-specific namespace, to support
+    multiple branches in same distribution concurrently.  Adapt
+    Sugar-specific package relations too.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 05 Apr 2009 15:45:37 +0200
+
 sugar-toolkit (0.84.1-3) unstable; urgency=low
 
   * Depend on python-cjson (and not python-json, python-gconf (or older
