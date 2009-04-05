@@ -1,5 +1,6 @@
-sugar-toolkit-0.84 (0.84.1-1) UNRELEASED; urgency=low
+sugar-toolkit-0.84 (0.84.2-1) UNRELEASED; urgency=low
 
+  * New upstream release.
   * Repackage source adding branch-specific namespace, to support
     multiple branches in same distribution concurrently.  Adapt
     Sugar-specific package relations too.
