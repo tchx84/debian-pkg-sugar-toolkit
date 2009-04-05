@@ -40,6 +40,8 @@ IGNORE_FILES = ['.gitignore', 'MANIFEST', '*.pyc', '*~', '*.bak', 'pseudo.po']
 def list_files(base_dir, ignore_dirs=None, ignore_files=None):
     result = []
 
+    base_dir = os.path.abspath(base_dir)
+
     for root, dirs, files in os.walk(base_dir):
         if ignore_files:
             for pattern in ignore_files:
@@ -205,7 +207,7 @@ class SourcePackager(Packager):
                                          self.config.tar_name)
 
     def get_files(self):
-        git_ls = subprocess.Popen('git-ls-files', stdout=subprocess.PIPE, 
+        git_ls = subprocess.Popen(['git', 'ls-files'], stdout=subprocess.PIPE, 
                                   cwd=self.config.source_dir)
         stdout, _ = git_ls.communicate()
         if git_ls.returncode :
@@ -213,7 +215,7 @@ class SourcePackager(Packager):
             return list_files(self.config.source_dir,
                               IGNORE_DIRS, IGNORE_FILES)
         
-        return [path.strip() for path in '\n'.split(stdout)]
+        return [path.strip() for path in stdout.strip('\n').split('\n')]
 
     def package(self):
         tar = tarfile.open(self.package_path, 'w:bz2')
