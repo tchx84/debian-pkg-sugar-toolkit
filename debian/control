@@ -1,4 +1,4 @@
-Source: sugar-toolkit
+Source: sugar-toolkit-0.84
 Section: python
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
