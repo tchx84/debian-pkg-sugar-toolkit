@@ -37,6 +37,9 @@ DEB_MAKE_INVOKE = $(DEB_MAKE_ENVVARS) $(MAKE) -C $(cdbs_make_curbuilddir)
 pre-build::
 	$(if $(cdbs_make_multibuilds),mkdir -p debian/stamp-autotools)
 
+# TODO: adapt autotools-files.mk and drop this
+$(cdbs_configure_stamps): debian/stamp-autotools-files
+
 common-configure-arch common-configure-indep:: common-configure-impl
 common-configure-impl:: $(cdbs_configure_stamps)
 $(cdbs_configure_stamps):
