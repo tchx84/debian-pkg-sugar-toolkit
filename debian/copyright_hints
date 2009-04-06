@@ -6,9 +6,12 @@ Files: po/af.po
 	po/ar.po
 	po/ay.po
 	po/bg.po
+	po/bi.po
 	po/bn.po
 	po/bn_IN.po
 	po/ca.po
+	po/cpp.po
+	po/cs.po
 	po/de.po
 	po/dz.po
 	po/el.po
@@ -17,21 +20,27 @@ Files: po/af.po
 	po/fa.po
 	po/fa_AF.po
 	po/ff.po
+	po/fil.po
 	po/fr.po
 	po/gu.po
 	po/ha.po
+	po/he.po
 	po/hi.po
 	po/ht.po
+	po/hu.po
+	po/id.po
 	po/ig.po
 	po/is.po
 	po/it.po
 	po/ja.po
 	po/km.po
 	po/ko.po
+	po/mi.po
 	po/mk.po
 	po/ml.po
 	po/mn.po
 	po/mr.po
+	po/ms.po
 	po/mvo.po
 	po/nb.po
 	po/ne.po
@@ -41,6 +50,7 @@ Files: po/af.po
 	po/pis.po
 	po/pl.po
 	po/ps.po
+	po/pseudo.po
 	po/pt.po
 	po/pt_BR.po
 	po/qu.po
@@ -49,13 +59,19 @@ Files: po/af.po
 	po/rw.po
 	po/sd.po
 	po/si.po
+	po/sk.po
 	po/sl.po
+	po/sugar-toolkit.pot
+	po/sv.po
+	po/sw.po
 	po/te.po
 	po/th.po
 	po/tpi.po
 	po/tr.po
+	po/ug.po
 	po/ur.po
 	po/vi.po
+	po/wa.po
 	po/yo.po
 	po/zh_CN.po
 	po/zh_TW.po
@@ -65,6 +81,7 @@ License: UNKNOWN
 Files: AUTHORS
 	Makefile.am
 	README
+	autogen.sh
 	configure.ac
 	debian/README.source
 	debian/compat
@@ -73,33 +90,59 @@ Files: AUTHORS
 	debian/gbp.conf
 	debian/patches/2002_ignore_debian_and_quilt-patches.patch
 	debian/patches/2003_bundlebuilder_exit_nonzero_on_error.patch
-	debian/patches/2991_enable_danish_l10n.patch
 	debian/patches/README
 	debian/patches/series
 	debian/pycompat
 	debian/watch
-	intltool-extract.in
-	intltool-merge.in
-	intltool-update.in
+	m4/.gitignore
 	m4/gnome-compiler-flags.m4
 	m4/python.m4
+	po/.gitignore
 	po/ChangeLog
 	po/POTFILES.in
 	po/POTFILES.skip
 	src/Makefile.am
+	src/sugar/.gitignore
+	src/sugar/.license
 	src/sugar/Makefile.am
 	src/sugar/_sugarext.defs
 	src/sugar/_sugarext.override
 	src/sugar/activity/Makefile.am
+	src/sugar/activity/__init__py
 	src/sugar/bundle/Makefile.am
 	src/sugar/datastore/Makefile.am
 	src/sugar/graphics/Makefile.am
 	src/sugar/presence/Makefile.am
-	src/sugar/sugar-marshal.c
-	src/sugar/sugar-marshal.h
+	src/sugar/presence/test_presence.txt
 	src/sugar/sugar-marshal.list
+	tests/graphics/hipposcalability.py
 Copyright: *No copyright*
 License: UNKNOWN
+
+Files: src/sugar/bundle/activitybundle.py
+	src/sugar/bundle/bundle.py
+	src/sugar/graphics/animator.py
+	src/sugar/graphics/entry.py
+	src/sugar/graphics/palettegroup.py
+	src/sugar/graphics/panel.py
+	src/sugar/graphics/style.py
+	src/sugar/graphics/toggletoolbutton.py
+	src/sugar/graphics/toolbox.py
+	src/sugar/graphics/toolcombobox.py
+	src/sugar/graphics/window.py
+	src/sugar/presence/activity.py
+	src/sugar/presence/buddy.py
+	src/sugar/presence/presenceservice.py
+	src/sugar/wm.py
+	tests/graphics/common.py
+	tests/graphics/iconcache.py
+	tests/graphics/iconwidget.py
+	tests/graphics/ticket2855.py
+	tests/graphics/toolbarpalettes.py
+	tests/graphics/tray.py
+	tests/lib/runall.py
+Copyright: 2007, Red Hat, Inc
+License: LGPL-2+
 
 Files: src/sugar/_sugarextmodule.c
 	src/sugar/activity/__init__.py
@@ -125,24 +168,6 @@ Files: src/sugar/_sugarextmodule.c
 Copyright: 2006-2007, Red Hat, Inc
 License: LGPL-2+
 
-Files: src/sugar/bundle/activitybundle.py
-	src/sugar/bundle/bundle.py
-	src/sugar/graphics/animator.py
-	src/sugar/graphics/entry.py
-	src/sugar/graphics/palettegroup.py
-	src/sugar/graphics/panel.py
-	src/sugar/graphics/style.py
-	src/sugar/graphics/toggletoolbutton.py
-	src/sugar/graphics/toolbox.py
-	src/sugar/graphics/toolcombobox.py
-	src/sugar/graphics/window.py
-	src/sugar/presence/activity.py
-	src/sugar/presence/buddy.py
-	src/sugar/presence/presenceservice.py
-	src/sugar/wm.py
-Copyright: 2007, Red Hat, Inc
-License: LGPL-2+
-
 Files: src/sugar/gsm-app.c
 	src/sugar/gsm-client-xsmp.c
 	src/sugar/gsm-client-xsmp.h
@@ -155,17 +180,6 @@ Files: src/sugar/gsm-app.c
 Copyright: 2007, Novell, Inc
 License: GPL-2+
 
-Files: Makefile.in
-	src/Makefile.in
-	src/sugar/Makefile.in
-	src/sugar/activity/Makefile.in
-	src/sugar/bundle/Makefile.in
-	src/sugar/datastore/Makefile.in
-	src/sugar/graphics/Makefile.in
-	src/sugar/presence/Makefile.in
-Copyright: 1994-2002
-License: UNKNOWN (GENERATED FILE)
-
 Files: src/sugar/datastore/__init__.py
 	src/sugar/datastore/datastore.py
 	src/sugar/graphics/alert.py
@@ -173,6 +187,8 @@ Files: src/sugar/datastore/__init__.py
 	src/sugar/graphics/iconentry.py
 	src/sugar/graphics/objectchooser.py
 	src/sugar/graphics/tray.py
+	tests/graphics/ticket2999.py
+	tests/graphics/ticket3000.py
 Copyright: 2007, One Laptop Per Child
 License: LGPL-2+
 
@@ -220,18 +236,6 @@ Files: src/sugar/sexy-icon-entry.c
 Copyright: 2004-2006, Christian Hammond
 License: LGPL-2+
 
-Files: missing
-Copyright: 1996-1997, 1999-2000, 2002-2006
-License: GPL (GENERATED FILE)
-
-Files: depcomp
-Copyright: 1999-2000, 2003-2007, Free Software
-License: GPL (GENERATED FILE)
-
-Files: py-compile
-Copyright: 2000-2001, 2003-2005, Free Software Foundation, Inc
-License: GPL (GENERATED FILE)
-
 Files: debian/cdbs/1/class/python-vars.mk
 Copyright: 2003,2008, Jonas Smedegaard <dr@jones.dk>
 License: GPL
@@ -252,22 +256,10 @@ Files: debian/cdbs/1/rules/copyright-check.mk
 Copyright: \s*(\S.*?)\s*\
 License: GPL
 
-Files: config.guess
-Copyright: 1992-1999,
-	1992-2001
-License: GPL-2+ (GENERATED FILE)
-
-Files: config.sub
-Copyright: 1992-1999
-License: GPL-2+ (GENERATED FILE)
-
-Files: ltmain.sh
-Copyright: 1996-2001, 2003-2006
-License: GPL-2+ (GENERATED FILE)
-
-Files: m4/intltool.m4
-Copyright: 2001, Eazel, Inc
-License: GPL-2+ (GENERATED FILE)
+Files: tests/lib/test_mime.py
+Copyright: 2007, One Laptop Per Child
+	2006, Red Hat, Inc
+License: GPL-2+
 
 Files: src/sugar/eggsmclient-xsmp.c
 Copyright: 1998, Carsten Schaar, and twm
@@ -348,28 +340,9 @@ Files: src/sugar/presence/sugartubeconn.py
 Copyright: 2008, One Laptop Per Child
 License: LGPL-2.1+
 
-Files: install-sh
-Copyright: 1994, X Consortium
-License: MIT/X11 (BSD like)
-
-Files: src/sugar/_sugarext.c
-Copyright: *No copyright*
+Files: debian/patches/2991_autoreconf.patch
+Copyright: 1994-2002
 License: UNKNOWN (GENERATED FILE)
-
-Files: configure
-Copyright: 1992-1996, 1998-2001
-License: UNKNOWN (GENERATED FILE)
-
-Files: aclocal.m4
-Copyright: 1995-2002, Free Software Foundation, Inc
-	2001-2004, Red Hat, Inc
-	1996-2004
-License: UNKNOWN (GENERATED FILE)
-
-Files: po/Makefile.in.in
-Copyright: 1995-1997, by Ulrich Drepper <drepper@gnu.ai.mit.edu>
-	2004-2008, Rodney Dawes <dobey.pwns@gmail.com>
-License: UNKNOWN
 
 Files: src/sugar/gsm-app.h
 Copyright: 2006, Novell, Inc
