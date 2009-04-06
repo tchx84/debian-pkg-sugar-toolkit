@@ -24,6 +24,10 @@ ifneq (,$(DEB_MAINTAINER_MODE))
   # Enable stuff not policy compliant (eg. unsuitable for build daemons)
   DEB_COPYRIGHT_CHECK_STRICT = yes
   DEB_AUTO_UPDATE_DEBIAN_CONTROL = yes
+  DEB_AUTO_UPDATE_ACLOCAL = 1.10
+  DEB_AUTO_UPDATE_AUTOMAKE = 1.10
+  DEB_AUTO_UPDATE_AUTOCONF = 1.10
+  DEB_AUTO_UPDATE_LIBTOOL = pre
 endif
 include debian/cdbs/1/rules/upstream-tarball.mk
 include /usr/share/cdbs/1/rules/patchsys-quilt.mk
@@ -41,6 +45,8 @@ DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_U
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
 DEB_UPSTREAM_TARBALL_MD5 = e9997dd73ad5af43aadd49ac89105b33
 
+DEB_AUTOMAKE_ARGS = --add-missing --copy
+
 # Drop created dir if empty to please lintian
 binary-post-install/$(pkg)::
 	rmdir --ignore-fail-on-non-empty --parents $(DEB_DESTDIR)/usr/share/locale
@@ -48,6 +54,35 @@ binary-post-install/$(pkg)::
 # Strip hardcoded rpath
 binary-strip/$(pkg)::
 	find $(DEB_DESTDIR)/usr/lib -type f -name '*.so' -exec chrpath -d '{}' ';'
+
+# Cleanup automade files
+clean::
+	find -type f -name Makefile.in -exec rm -f '{}' ';'
+	rm -f config.guess config.sub configure depcomp install-sh ltmain.sh m4/intltool.m4 m4/libtool.m4 m4/lt* missing po/Makefile.in.in py-compile
+
+# custom target to create/update patch containing automade files
+ifneq (,$(DEB_MAINTAINER_MODE))
+# Trick CDBS into initializing (not just updating) the aclocal file
+debian/stamp-autotools-files: aclocal.m4
+aclocal.m4:
+	touch aclocal.m4
+clean::
+	rm -f aclocal.m4
+
+aclocal.m4: po/Makefile.in.in
+po/Makefile.in.in:
+	intltoolize -c
+clean::
+	rm -f po/Makefile.in.in intltool-extract.in intltool-merge.in intltool-update.in
+
+DEB_PHONY_RULES += autogen
+autogen: debian/stamp-autotools-files
+	find -name .gitignore -exec rm '{}' ';'
+	git ls-files -m -o -z -x debian/\* -x config.guess -x config.sub -x autom4te.cache -x .gitignore \
+		| xargs -0 git add --
+	git diff --cached \
+		> debian/patches/2991_autoreconf.patch
+endif
 
 # Needed by upstream build process
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, libsm-dev, libice-dev, libasound2-dev | libasound-dev, gettext, intltool, libxml-parser-perl
