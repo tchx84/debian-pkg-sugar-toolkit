@@ -1,12 +1,19 @@
-sugar-toolkit-0.86 (0.85~0.84.2-1) UNRELEASED; urgency=low
+sugar-toolkit-0.86 (0.85~0.84.2-1) unstable; urgency=low
 
   * Swith namespaces to development tracks:
     + Use unversioned branch "master" as master branch
     + Bump watch file tracking to 0.85 and 0.86 releases
     + Append 0.86 to source and binary package names
     + Set next release to 0.85~<latest_stable_release>
+  * Enable autoreconfigure, and add autogen target to save as patch.
+  * Fix autotools.mk to ensure configure is automade before used.
+  * Replace patch 2991 from adjusting automade to provide them
+    (generated using above autogen target).
+  * Update copyright hints (same licenses and owners, merge GAP licenses
+    now contained in patch).
+  * Comment out use of pristine-tar (no upstream tarballs yet).
 
- -- Jonas Smedegaard <dr@jones.dk>  Mon, 06 Apr 2009 13:58:29 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 07 Apr 2009 03:14:12 +0200
 
 sugar-toolkit-0.84 (0.84.2-1) unstable; urgency=low
 
