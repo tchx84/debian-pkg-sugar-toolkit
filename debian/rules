@@ -47,6 +47,9 @@ DEB_UPSTREAM_TARBALL_MD5 = e9997dd73ad5af43aadd49ac89105b33
 
 DEB_AUTOMAKE_ARGS = --add-missing --copy
 
+post-patches::
+	chmod a+x depcomp install-sh missing py-compile
+
 # Drop created dir if empty to please lintian
 binary-post-install/$(pkg)::
 	rmdir --ignore-fail-on-non-empty --parents $(DEB_DESTDIR)/usr/share/locale
