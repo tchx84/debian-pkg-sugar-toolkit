@@ -48,7 +48,7 @@ DEB_UPSTREAM_TARBALL_MD5 = e9997dd73ad5af43aadd49ac89105b33
 DEB_AUTOMAKE_ARGS = --add-missing --copy
 
 post-patches::
-	chmod a+x depcomp install-sh missing py-compile
+	chmod a+x config.guess config.sub depcomp install-sh missing py-compile
 
 # Drop created dir if empty to please lintian
 binary-post-install/$(pkg)::
@@ -81,7 +81,7 @@ clean::
 DEB_PHONY_RULES += autogen
 autogen: debian/stamp-autotools-files
 	find -name .gitignore -exec rm '{}' ';'
-	git ls-files -m -o -z -x debian/\* -x config.guess -x config.sub -x autom4te.cache -x .gitignore \
+	git ls-files -m -o -z -x debian/\* -x autom4te.cache -x .gitignore \
 		| xargs -0 git add --
 	git diff --cached \
 		> debian/patches/2991_autoreconf.patch
