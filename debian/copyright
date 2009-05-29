@@ -1,11 +1,10 @@
-Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=420
-Upstream-Name: sugar-toolkit
-Upstream-Maintainer: sugar-devel@lists.sugarlabs.org
+Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=48
+Name: sugar-toolkit
+Maintainer: sugar-devel@lists.sugarlabs.org
 	irc://irc.freenode.net/sugar
-Upstream-Source: http://download.sugarlabs.org/sources/sucrose/glucose/sugar-toolkit/
+Source: http://download.sugarlabs.org/sources/sucrose/glucose/sugar-toolkit/
 	git://git.sugarlabs.org/sugar-toolkit/mainline
 
-Files: *
 Copyright: 2002,2006-2008, Red Hat, Inc
 License: LGPL-2+
 
