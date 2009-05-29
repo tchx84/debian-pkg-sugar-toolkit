@@ -94,7 +94,7 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 #  * zip, git and subversion are used in .xo format packaging routines
 CDBS_DEPENDS := python-gtk2, python-dbus, python-gobject, python-cairo, python-telepathy, python-cjson, python-sugar-$(pkgbranch), python-hippocanvas, python-gconf | python-gnome2 (<= 2.22.3-2)
 CDBS_DEPENDS := $(CDBS_DEPENDS), python-rsvg | python-gnome2-desktop (>= 2.16), python-rsvg | python-gnome2-desktop (<= 2.24.0-1), python-rsvg | python-gnome2-desktop (>= 2.22.0-2) | librsvg2-common
-CDBS_RECOMMENDS := sugar-$(pkgbranch), python-olpc-datastore-$(pkgbranch), sugar-presence-service-$(pkgbranch), sugar-journal-activity (>= $(pkgbranch)), ttf-dejavu-core, unzip
+CDBS_RECOMMENDS := sugar-$(pkgbranch), python-carquinyol-$(pkgbranch), sugar-presence-service-$(pkgbranch), sugar-journal-activity (>= $(pkgbranch)), ttf-dejavu-core, unzip
 CDBS_SUGGESTS := git-core, subversion, ttf-dejavu-extra
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
