@@ -1,3 +1,15 @@
+sugar-toolkit-0.86 (0.85.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Adjust to upstream-shipped automade files.
+    + drop patch 2991
+    + Stop generating and cleaning up autotools (keep but disable code)
+    + Build-depend on autotools-dev (not libtool, automake1.10 or
+      autoconf)
+    + Update debian/copyright and copyright hints
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 18 Jul 2009 14:06:08 +0200
+
 sugar-toolkit-0.86 (0.85~0.84.2-3) unstable; urgency=medium
 
   * Simplify dependency on python-rsvg and fallbacks to
