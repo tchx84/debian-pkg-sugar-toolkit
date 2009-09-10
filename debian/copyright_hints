@@ -1,5 +1,5 @@
-Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=XXX
-Upstream-Name: Untrusted draft - double-check copyrights yourself!
+Format: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=REVISION
+Name: Untrusted draft - double-check copyrights yourself!
 
 Files: po/af.po
 	po/am.po
@@ -17,7 +17,6 @@ Files: po/af.po
 	po/fa.po
 	po/fa_AF.po
 	po/ff.po
-	po/fr.po
 	po/gu.po
 	po/ha.po
 	po/hi.po
@@ -82,7 +81,6 @@ Files: AUTHORS
 	intltool-update.in
 	m4/gnome-compiler-flags.m4
 	m4/python.m4
-	po/ChangeLog
 	po/POTFILES.in
 	po/POTFILES.skip
 	src/Makefile.am
@@ -134,7 +132,6 @@ Files: src/sugar/bundle/activitybundle.py
 	src/sugar/graphics/toggletoolbutton.py
 	src/sugar/graphics/toolbox.py
 	src/sugar/graphics/toolcombobox.py
-	src/sugar/graphics/window.py
 	src/sugar/presence/activity.py
 	src/sugar/presence/buddy.py
 	src/sugar/presence/presenceservice.py
@@ -155,7 +152,6 @@ Copyright: 2007, Novell, Inc
 License: GPL-2+
 
 Files: Makefile.in
-	debian/patches/2991_autoreconf.patch
 	src/Makefile.in
 	src/sugar/Makefile.in
 	src/sugar/activity/Makefile.in
@@ -223,6 +219,18 @@ License: GPL
 Files: src/sugar/sexy-icon-entry.c
 	src/sugar/sexy-icon-entry.h
 Copyright: 2004-2006, Christian Hammond
+License: LGPL-2+
+
+Files: src/sugar/graphics/palette.py
+	src/sugar/graphics/palettewindow.py
+Copyright: 2007, Eduardo Silva <edsiper@gmail.com>
+	2008, One Laptop Per Child
+	2009, Tomeu Vizoso
+License: LGPL-2+
+
+Files: src/sugar/graphics/radiopalette.py
+	src/sugar/graphics/toolbarbox.py
+Copyright: 2009, Aleksey Lim
 License: LGPL-2+
 
 Files: m4/ltoptions.m4
@@ -313,11 +321,6 @@ Files: src/sugar/graphics/notebook.py
 Copyright: 2007, Eduardo Silva (edsiper@gmail.com)
 License: LGPL-2+
 
-Files: src/sugar/graphics/palette.py
-Copyright: 2007, Eduardo Silva <edsiper@gmail.com>
-	2008, One Laptop Per Child
-License: LGPL-2+
-
 Files: src/sugar/graphics/menuitem.py
 Copyright: 2007, Eduardo Silva <edsiper@gmail.com>
 License: LGPL-2+
@@ -344,6 +347,15 @@ License: LGPL-2+
 
 Files: src/sugar/graphics/canvastextview.py
 Copyright: 2008, One Laptop Per Child
+License: LGPL-2+
+
+Files: src/sugar/graphics/window.py
+Copyright: 2009, Aleksey Lim, Sayamindu Dasgupta
+	2007, Red Hat, Inc
+License: LGPL-2+
+
+Files: src/sugar/activity/widgets.py
+Copyright: 2009, Aleksey Lim, Simon Schampijer
 License: LGPL-2+
 
 Files: src/sugar/activity/namingalert.py
@@ -375,6 +387,11 @@ Copyright: 1995-2002, Free Software Foundation, Inc
 	2001-2004, Red Hat, Inc
 	1996-2004
 License: UNKNOWN (GENERATED FILE)
+
+Files: po/fr.po
+Copyright: %s"
+	YEAR THE PACKAGE'S HOLDER
+License: UNKNOWN
 
 Files: po/Makefile.in.in
 Copyright: 1995-1997, by Ulrich Drepper <drepper@gnu.ai.mit.edu>
