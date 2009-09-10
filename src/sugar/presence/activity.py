@@ -26,40 +26,42 @@ import dbus
 import gobject
 import telepathy
 
+
 _logger = logging.getLogger('sugar.presence.activity')
+
 
 class Activity(gobject.GObject):
     """UI interface for an Activity in the presence service
-    
+
     Activities in the presence service represent your and other user's
     shared activities.
-    
+
     Properties:
-        id 
-        color 
-        name 
-        type 
-        joined 
+        id
+        color
+        name
+        type
+        joined
     """
     __gsignals__ = {
         'buddy-joined': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT])),
-        'buddy-left':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT])),
-        'new-channel':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT])),
-        'joined':       (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+            ([gobject.TYPE_PYOBJECT])),
+        'buddy-left': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+            ([gobject.TYPE_PYOBJECT])),
+        'new-channel': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+            ([gobject.TYPE_PYOBJECT])),
+        'joined': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+            ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
     }
 
     __gproperties__ = {
-        'id'        : (str, None, None, None, gobject.PARAM_READABLE),
-        'name'      : (str, None, None, None, gobject.PARAM_READWRITE),
-        'tags'      : (str, None, None, None, gobject.PARAM_READWRITE),
-        'color'     : (str, None, None, None, gobject.PARAM_READWRITE),
-        'type'      : (str, None, None, None, gobject.PARAM_READABLE),
-        'private'   : (bool, None, None, True, gobject.PARAM_READWRITE),
-        'joined'    : (bool, None, None, False, gobject.PARAM_READABLE),
+        'id': (str, None, None, None, gobject.PARAM_READABLE),
+        'name': (str, None, None, None, gobject.PARAM_READWRITE),
+        'tags': (str, None, None, None, gobject.PARAM_READWRITE),
+        'color': (str, None, None, None, gobject.PARAM_READWRITE),
+        'type': (str, None, None, None, gobject.PARAM_READABLE),
+        'private': (bool, None, None, True, gobject.PARAM_READWRITE),
+        'joined': (bool, None, None, False, gobject.PARAM_READABLE),
     }
 
     _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
@@ -74,7 +76,7 @@ class Activity(gobject.GObject):
         self._ps_del_object = del_obj_cb
         bobj = bus.get_object(self._PRESENCE_SERVICE, object_path)
         self._activity = dbus.Interface(bobj, self._ACTIVITY_DBUS_INTERFACE)
-        self._activity.connect_to_signal('BuddyHandleJoined', 
+        self._activity.connect_to_signal('BuddyHandleJoined',
                                          self._buddy_handle_joined_cb)
         self._activity.connect_to_signal('BuddyLeft',
                                          self._buddy_left_cb)
@@ -175,10 +177,10 @@ class Activity(gobject.GObject):
         elif pspec.name == "private":
             return self._private
 
-    # FIXME: need an asynchronous API to set these properties, particularly
-    # 'private'
     def do_set_property(self, pspec, val):
         """Set a particular property in our property dictionary"""
+        # FIXME: need an asynchronous API to set these properties,
+        # particularly 'private'
         if pspec.name == "name":
             self._activity.SetProperties({'name': val})
             self._name = val
@@ -211,7 +213,7 @@ class Activity(gobject.GObject):
 
     def _emit_buddy_left_signal(self, object_path):
         """Generate buddy-left GObject signal with presence Buddy object
-        
+
         XXX note use of _ps_new_object instead of _ps_del_object here
         """
         self.emit('buddy-left', self._ps_new_object(object_path))
@@ -225,8 +227,8 @@ class Activity(gobject.GObject):
             self._handle_to_buddy_path.pop(handle, None)
 
     def _emit_new_channel_signal(self, object_path):
-        """Generate new-channel GObject signal with channel object path 
-        
+        """Generate new-channel GObject signal with channel object path
+
         New telepathy-python communications channel has been opened
         """
         self.emit('new-channel', object_path)
@@ -255,7 +257,7 @@ class Activity(gobject.GObject):
 
     def get_buddy_by_handle(self, handle):
         """Retrieve the Buddy object given a telepathy handle.
-        
+
         buddy object paths are cached in self._handle_to_buddy_path,
         so we can get the buddy without calling PS.
         """
@@ -378,8 +380,8 @@ class Activity(gobject.GObject):
     # GetChannels() wrapper
 
     def get_channels(self):
-        """Retrieve communications channel descriptions for the activity 
-        
+        """Retrieve communications channel descriptions for the activity
+
         Returns a tuple containing:
             - the D-Bus well-known service name of the connection
               (FIXME: this is redundant; in Telepathy it can be derived

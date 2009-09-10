@@ -27,11 +27,14 @@ import dbus
 
 from sugar.datastore import datastore
 
+
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
 J_DBUS_PATH = '/org/laptop/Journal'
 
+
 class ObjectChooser(object):
+
     def __init__(self, title=None, parent=None, flags=None, buttons=None,
                  what_filter=None):
         # For backwards compatibility:
@@ -56,7 +59,7 @@ class ObjectChooser(object):
         self._chooser_id = None
         self._response_code = gtk.RESPONSE_NONE
         self._what_filter = what_filter
-        
+
     def run(self):
         self._object_id = None
 
@@ -110,7 +113,7 @@ class ObjectChooser(object):
     def __chooser_response_cb(self, chooser_id, object_id):
         if chooser_id != self._chooser_id:
             return
-        logging.debug('ObjectChooser.__chooser_response_cb: %r' % object_id)
+        logging.debug('ObjectChooser.__chooser_response_cb: %r', object_id)
         self._response_code = gtk.RESPONSE_ACCEPT
         self._object_id = object_id
         self._cleanup()
@@ -118,7 +121,7 @@ class ObjectChooser(object):
     def __chooser_cancelled_cb(self, chooser_id):
         if chooser_id != self._chooser_id:
             return
-        logging.debug('ObjectChooser.__chooser_cancelled_cb: %r' % chooser_id)
+        logging.debug('ObjectChooser.__chooser_cancelled_cb: %r', chooser_id)
         self._response_code = gtk.RESPONSE_CANCEL
         self._cleanup()
 
@@ -127,4 +130,3 @@ class ObjectChooser(object):
         # Journal service disappeared from the bus
         self._response_code = gtk.RESPONSE_CANCEL
         self._cleanup()
-

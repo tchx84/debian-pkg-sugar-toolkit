@@ -1,5 +1,3 @@
-# Copyright (C) 2007, Red Hat, Inc.
-#
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
@@ -14,17 +12,3 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
-
-"""
-STABLE.
-"""
-
-import gtk
-
-
-class Panel(gtk.VBox):
-
-    __gtype_name__ = 'SugarPanel'
-
-    def __init__(self):
-        gtk.VBox.__init__(self)

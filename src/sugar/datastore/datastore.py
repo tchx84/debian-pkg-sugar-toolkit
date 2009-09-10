@@ -29,10 +29,10 @@ import gobject
 from sugar.datastore import dbus_helpers
 from sugar import mime
 
+
 class DSMetadata(gobject.GObject):
     __gsignals__ = {
-        'updated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                    ([]))
+        'updated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self, props=None):
@@ -41,7 +41,7 @@ class DSMetadata(gobject.GObject):
             self._props = {}
         else:
             self._props = props
-        
+
         default_keys = ['activity', 'activity_id',
                         'mime_type', 'title_set_by_user']
         for key in default_keys:
@@ -61,13 +61,13 @@ class DSMetadata(gobject.GObject):
 
     def __contains__(self, key):
         return self._props.__contains__(key)
-    
+
     def has_key(self, key):
         return self._props.has_key(key)
 
     def keys(self):
         return self._props.keys()
-    
+
     def get_dictionary(self):
         return self._props
 
@@ -80,7 +80,9 @@ class DSMetadata(gobject.GObject):
         else:
             return default
 
+
 class DSObject(object):
+
     def __init__(self, object_id, metadata=None, file_path=None):
         self.object_id = object_id
         self._metadata = metadata
@@ -93,7 +95,7 @@ class DSObject(object):
             metadata = DSMetadata(dbus_helpers.get_properties(self.object_id))
             self._metadata = metadata
         return self._metadata
-    
+
     def set_metadata(self, metadata):
         if self._metadata != metadata:
             self._metadata = metadata
@@ -105,7 +107,7 @@ class DSObject(object):
             self.set_file_path(dbus_helpers.get_filename(self.object_id))
             self._owns_file = True
         return self._file_path
-    
+
     def set_file_path(self, file_path):
         if self._file_path != file_path:
             if self._file_path and self._owns_file:
@@ -129,12 +131,13 @@ class DSObject(object):
 
     def __del__(self):
         if not self._destroyed:
-            logging.warning('DSObject was deleted without cleaning up first. ' \
+            logging.warning('DSObject was deleted without cleaning up first. '
                             'Call DSObject.destroy() before disposing it.')
             self.destroy()
 
     def copy(self):
         return DSObject(None, self._metadata.copy(), self._file_path)
+
 
 def get(object_id):
     logging.debug('datastore.get')
@@ -144,11 +147,13 @@ def get(object_id):
     # TODO: register the object for updates
     return ds_object
 
+
 def create():
     metadata = DSMetadata()
     metadata['mtime'] = datetime.now().isoformat()
     metadata['timestamp'] = int(time.time())
     return DSObject(object_id=None, metadata=metadata, file_path=None)
+
 
 def write(ds_object, update_mtime=True, transfer_ownership=False,
           reply_handler=None, error_handler=None, timeout=-1):
@@ -183,11 +188,13 @@ def write(ds_object, update_mtime=True, transfer_ownership=False,
                                                   transfer_ownership)
         ds_object.metadata['uid'] = ds_object.object_id
         # TODO: register the object for updates
-    logging.debug('Written object %s to the datastore.' % ds_object.object_id)
+    logging.debug('Written object %s to the datastore.', ds_object.object_id)
+
 
 def delete(object_id):
     logging.debug('datastore.delete')
     dbus_helpers.delete(object_id)
+
 
 def find(query, sorting=None, limit=None, offset=None, properties=None,
          reply_handler=None, error_handler=None):
@@ -203,10 +210,10 @@ def find(query, sorting=None, limit=None, offset=None, properties=None,
         query['limit'] = limit
     if offset:
         query['offset'] = offset
-    
+
     props_list, total_count = dbus_helpers.find(query, properties,
                                                 reply_handler, error_handler)
-    
+
     objects = []
     for props in props_list:
         object_id = props['uid']
@@ -216,6 +223,7 @@ def find(query, sorting=None, limit=None, offset=None, properties=None,
         objects.append(ds_object)
 
     return objects, total_count
+
 
 def copy(jobject, mount_point):
 
@@ -238,17 +246,22 @@ def copy(jobject, mount_point):
 
     write(new_jobject)
 
+
 def mount(uri, options, timeout=-1):
     return dbus_helpers.mount(uri, options, timeout=timeout)
+
 
 def unmount(mount_point_id):
     dbus_helpers.unmount(mount_point_id)
 
+
 def mounts():
     return dbus_helpers.mounts()
 
+
 def complete_indexing():
     return dbus_helpers.complete_indexing()
+
 
 def get_unique_values(key):
     return dbus_helpers.get_unique_values(key)

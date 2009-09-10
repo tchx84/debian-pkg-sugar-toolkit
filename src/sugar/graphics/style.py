@@ -28,8 +28,10 @@ import logging
 import gtk
 import pango
 
-_FOCUS_LINE_WIDTH = 2
+
+FOCUS_LINE_WIDTH = 2
 _TAB_CURVATURE = 1
+
 
 def _compute_zoom_factor():
     if os.environ.has_key('SUGAR_SCALING'):
@@ -41,7 +43,9 @@ def _compute_zoom_factor():
 
     return 1.0
 
+
 class Font(object):
+
     def __init__(self, desc):
         self._desc = desc
 
@@ -51,7 +55,9 @@ class Font(object):
     def get_pango_desc(self):
         return pango.FontDescription(self._desc)
 
+
 class Color(object):
+
     def __init__(self, color, alpha=1.0):
         self._r, self._g, self._b = self._html_to_rgb(color)
         self._a = alpha
@@ -91,8 +97,10 @@ class Color(object):
         else:
             return self.get_html()
 
+
 def zoom(units):
     return int(ZOOM_FACTOR * units)
+
 
 ZOOM_FACTOR = _compute_zoom_factor()
 
@@ -115,8 +123,8 @@ FONT_BOLD_H = zoom(24)
 
 TOOLBOX_SEPARATOR_HEIGHT = zoom(9)
 TOOLBOX_HORIZONTAL_PADDING = zoom(75)
-TOOLBOX_TAB_VBORDER = int((zoom(36) - FONT_NORMAL_H - _FOCUS_LINE_WIDTH) / 2)
-TOOLBOX_TAB_HBORDER = zoom(15) - _FOCUS_LINE_WIDTH - _TAB_CURVATURE
+TOOLBOX_TAB_VBORDER = int((zoom(36) - FONT_NORMAL_H - FOCUS_LINE_WIDTH) / 2)
+TOOLBOX_TAB_HBORDER = zoom(15) - FOCUS_LINE_WIDTH - _TAB_CURVATURE
 TOOLBOX_TAB_LABEL_WIDTH = zoom(150 - 15 * 2)
 
 COLOR_BLACK = Color('#000000')
@@ -131,3 +139,5 @@ COLOR_INACTIVE_STROKE = Color('#757575')
 COLOR_TEXT_FIELD_GREY = Color('#E5E5E5')
 
 PALETTE_CURSOR_DISTANCE = zoom(10)
+
+TOOLBAR_ARROW_SIZE = zoom(24)

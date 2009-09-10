@@ -28,6 +28,7 @@ import gobject
 from sugar.graphics.icon import Icon
 from sugar.graphics.palette import Palette, ToolInvoker
 
+
 def _add_accelerator(tool_button):
     if not tool_button.props.accelerator or not tool_button.get_toplevel() or \
             not tool_button.child:
@@ -46,14 +47,18 @@ def _add_accelerator(tool_button):
     tool_button.child.add_accelerator('clicked', accel_group, keyval, mask,
                                       gtk.ACCEL_LOCKED | gtk.ACCEL_VISIBLE)
 
+
 def _hierarchy_changed_cb(tool_button, previous_toplevel):
     _add_accelerator(tool_button)
+
 
 def setup_accelerator(tool_button):
     _add_accelerator(tool_button)
     tool_button.connect('hierarchy-changed', _hierarchy_changed_cb)
 
+
 class ToolButton(gtk.ToolButton):
+
     __gtype_name__ = "SugarToolButton"
 
     def __init__(self, icon_name=None, **kwargs):
@@ -68,7 +73,6 @@ class ToolButton(gtk.ToolButton):
         if icon_name:
             self.set_icon(icon_name)
 
-        self.connect('clicked', self.__button_clicked_cb)
         self.get_child().connect('can-activate-accel',
                                  self.__button_can_activate_accel_cb)
 
@@ -98,7 +102,8 @@ class ToolButton(gtk.ToolButton):
     def get_tooltip(self):
         return self._tooltip
 
-    tooltip = gobject.property(type=str, setter=set_tooltip, getter=get_tooltip)
+    tooltip = gobject.property(type=str, setter=set_tooltip,
+        getter=get_tooltip)
 
     def set_accelerator(self, accelerator):
         self._accelerator = accelerator
@@ -129,7 +134,7 @@ class ToolButton(gtk.ToolButton):
 
     def get_palette_invoker(self):
         return self._palette_invoker
-    
+
     def set_palette_invoker(self, palette_invoker):
         self._palette_invoker.detach()
         self._palette_invoker = palette_invoker
@@ -151,8 +156,7 @@ class ToolButton(gtk.ToolButton):
                                   allocation.width, allocation.height)
 
         gtk.ToolButton.do_expose_event(self, event)
-    
-    def __button_clicked_cb(self, widget):
+
+    def do_clicked(self):
         if self.palette:
             self.palette.popdown(True)
-

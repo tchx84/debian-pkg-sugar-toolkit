@@ -29,23 +29,26 @@ from sugar import env
 from sugar import util
 from sugar.graphics.xocolor import XoColor
 
+
 _profile = None
+
 
 class Profile(object):
     """Local user's current options/profile information
-    
-    User settings were previously stored in an INI-style 
-    configuration file. We moved to gconf now. The deprected 
+
+    User settings were previously stored in an INI-style
+    configuration file. We moved to gconf now. The deprected
     API is kept around to not break activities still using it.
 
     The profile is also responsible for loading the user's
     public and private ssh keys from disk.
-    
+
     Attributes:
-        
+
         pubkey -- public ssh key
-        privkey_hash -- SHA has of the child's public key 
+        privkey_hash -- SHA has of the child's public key
     """
+
     def __init__(self, path):
         self._pubkey = None
         self._privkey_hash = None
@@ -66,8 +69,8 @@ class Profile(object):
             f = open(key_path, "r")
             lines = f.readlines()
             f.close()
-        except IOError, e:
-            logging.error("Error reading public key: %s" % e)
+        except IOError:
+            logging.exception('Error reading public key')
             return None
 
         magic = "ssh-dss "
@@ -92,8 +95,8 @@ class Profile(object):
             f = open(key_path, "r")
             lines = f.readlines()
             f.close()
-        except IOError, e:
-            logging.error("Error reading private key: %s" % e)
+        except IOError:
+            logging.exception('Error reading private key')
             return None
 
         key = ""
@@ -138,7 +141,7 @@ class Profile(object):
             client.set_string("/desktop/sugar/user/color", color)
         if cp.has_option('Jabber', 'Server'):
             server = cp.get('Jabber', 'Server')
-            client.set_string("/desktop/sugar/collaboration/jabber_server", 
+            client.set_string("/desktop/sugar/collaboration/jabber_server",
                               server)
         if cp.has_option('Date', 'Timezone'):
             timezone = cp.get('Date', 'Timezone')
@@ -165,7 +168,7 @@ class Profile(object):
                 client.set_bool("/desktop/sugar/power/extreme", True)
         if cp.has_option('Shell', 'FavoritesLayout'):
             layout = cp.get('Shell', 'FavoritesLayout')
-            client.set_string("/desktop/sugar/desktop/favorites_layout", 
+            client.set_string("/desktop/sugar/desktop/favorites_layout",
                               layout)
         del cp
         try:
@@ -182,17 +185,18 @@ class Profile(object):
             '#export LM_DEBUG=net\n' \
             '#export GABBLE_DEBUG=all\n' \
             '#export ' \
-            'GABBLE_LOGFILE=~/.sugar/default/logs/telepathy-gabble.log\n' \
+            'GABBLE_LOGFILE=$HOME/.sugar/default/logs/telepathy-gabble.log\n' \
             '#export SALUT_DEBUG=all\n' \
             '#export ' \
-            'SALUT_LOGFILE=~/.sugar/default/logs/telepathy-salut.log\n' \
+            'SALUT_LOGFILE=$HOME/.sugar/default/logs/telepathy-salut.log\n' \
             '#export GIBBER_DEBUG=all\n' \
             '#export PRESENCESERVICE_DEBUG=1\n' \
             '#export SUGAR_LOGGER_LEVEL=debug\n\n' \
             '# Uncomment the following line to enable core dumps\n' \
             '#ulimit -c unlimited\n'
-        fd.write(text)        
+        fd.write(text)
         fd.close()
+
 
 def get_profile():
     global _profile
@@ -203,14 +207,17 @@ def get_profile():
 
     return _profile
 
+
 def get_nick_name():
     client = gconf.client_get_default()
-    return client.get_string("/desktop/sugar/user/nick")    
+    return client.get_string("/desktop/sugar/user/nick")
+
 
 def get_color():
     client = gconf.client_get_default()
-    color = client.get_string("/desktop/sugar/user/color")    
+    color = client.get_string("/desktop/sugar/user/color")
     return XoColor(color)
+
 
 def get_pubkey():
     return get_profile().pubkey

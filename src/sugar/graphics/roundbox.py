@@ -25,6 +25,7 @@ import hippo
 
 from sugar.graphics import style
 
+
 class CanvasRoundBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarRoundBox'
 
@@ -35,13 +36,13 @@ class CanvasRoundBox(hippo.CanvasBox, hippo.CanvasItem):
 
         # TODO: we should calculate radius depending on the height of the box.
         self._radius = style.zoom(10)
-        
+
         self.props.orientation = hippo.ORIENTATION_HORIZONTAL
         self.props.border = self._BORDER_DEFAULT
         self.props.border_left = self._radius
         self.props.border_right = self._radius
         self.props.border_color = style.COLOR_BLACK.get_int()
-            
+
     def do_paint_background(self, cr, damaged_box):
         [width, height] = self.get_allocation()
 

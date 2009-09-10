@@ -31,9 +31,10 @@ from sugar import util
 from sugar.bundle.bundle import Bundle, \
     MalformedBundleException, NotInstalledException
 
+
 class ActivityBundle(Bundle):
     """A Sugar activity bundle
-    
+
     See http://wiki.laptop.org/go/Activity_bundles for details
     """
 
@@ -48,7 +49,7 @@ class ActivityBundle(Bundle):
         Bundle.__init__(self, path)
         self.activity_class = None
         self.bundle_exec = None
-        
+
         self._name = None
         self._icon = None
         self._bundle_id = None
@@ -83,16 +84,16 @@ class ActivityBundle(Bundle):
         if not f:
             logging.warning("Activity directory lacks a MANIFEST file.")
             return []
-        
-        ret = [line.strip() for line in f.readlines()] 
+
+        ret = [line.strip() for line in f.readlines()]
         f.close()
         return ret
-        
+
     def _read_manifest(self):
-        """return a list with the lines in MANIFEST, with invalid lines replaced
-        by empty lines.
-        
-        Since absolute order carries information on file history, it should 
+        """return a list with the lines in MANIFEST, with invalid lines
+        replaced by empty lines.
+
+        Since absolute order carries information on file history, it should
         be preserved. For instance, when renaming a file, you should leave
         the new name on the same line as the old one.
         """
@@ -110,24 +111,24 @@ class ActivityBundle(Bundle):
             # Remove duplicates
             if line in lines[0:num]:
                 lines[num] = ""
-                logging.warning("Bundle %s: duplicate entry in MANIFEST: %s"
-                                % (self._name,line))
+                logging.warning('Bundle %s: duplicate entry in MANIFEST: %s',
+                    self._name, line)
                 continue
-            
+
             # Remove MANIFEST
             if line == "MANIFEST":
                 lines[num] = ""
-                logging.warning("Bundle %s: MANIFEST includes itself: %s"
-                                % (self._name,line))
-                
+                logging.warning('Bundle %s: MANIFEST includes itself: %s',
+                    self._name, line)
+
             # Remove invalid files
             if not self.is_file(line):
                 lines[num] = ""
-                logging.warning("Bundle %s: invalid entry in MANIFEST: %s"
-                                % (self._name,line))
+                logging.warning('Bundle %s: invalid entry in MANIFEST: %s',
+                    self._name, line)
 
         return lines
-    
+
     def get_files(self, manifest = None):
         files = [line for line in (manifest or self.manifest) if line]
 
@@ -135,7 +136,7 @@ class ActivityBundle(Bundle):
             files.append('MANIFEST')
 
         return files
-      
+
     def _parse_info(self, info_file):
         cp = ConfigParser()
         cp.readfp(info_file)
@@ -170,7 +171,7 @@ class ActivityBundle(Bundle):
 
         if cp.has_option(section, 'mime_types'):
             mime_list = cp.get(section, 'mime_types').strip(';')
-            self._mime_types = [ mime.strip() for mime in mime_list.split(';') ]
+            self._mime_types = [mime.strip() for mime in mime_list.split(';')]
 
         if cp.has_option(section, 'show_launcher'):
             if cp.get(section, 'show_launcher') == 'no':
@@ -251,16 +252,17 @@ class ActivityBundle(Bundle):
         """Get the activity bundle id"""
         return self._bundle_id
 
-    # FIXME: this should return the icon data, not a filename, so that
-    # we don't need to create a temp file in the zip case
     def get_icon(self):
         """Get the activity icon name"""
+        # FIXME: this should return the icon data, not a filename, so that
+        # we don't need to create a temp file in the zip case
         icon_path = os.path.join('activity', self._icon + '.svg')
         if self._zip_file is None:
             return os.path.join(self._path, icon_path)
         else:
             icon_data = self.get_file(icon_path).read()
-            temp_file, temp_file_path = tempfile.mkstemp(prefix=self._icon, suffix='.svg')
+            temp_file, temp_file_path = tempfile.mkstemp(prefix=self._icon,
+                                                         suffix='.svg')
             os.write(temp_file, icon_data)
             os.close(temp_file)
             return util.TempFilePath(temp_file_path)
@@ -297,34 +299,41 @@ class ActivityBundle(Bundle):
         self._unzip(install_dir)
 
         install_path = os.path.join(install_dir, self._zip_root_dir)
-        
+
         # List installed files
         manifestfiles = self.get_files(self._raw_manifest())
-        paths  = []
+        paths = []
         for root, dirs_, files in os.walk(install_path):
             rel_path = root[len(install_path) + 1:]
             for f in files:
                 paths.append(os.path.join(rel_path, f))
-                
+
         # Check the list against the MANIFEST
         for path in paths:
             if path in manifestfiles:
                 manifestfiles.remove(path)
             elif path != "MANIFEST":
-                logging.warning("Bundle %s: %s not in MANIFEST"%
-                                (self._name,path))
+                logging.warning('Bundle %s: %s not in MANIFEST', self._name,
+                    path)
                 if strict_manifest:
                     os.remove(os.path.join(install_path, path))
-                    
+
         # Is anything in MANIFEST left over after accounting for all files?
         if manifestfiles:
             err = ("Bundle %s: files in MANIFEST not included: %s"%
-                   (self._name,str(manifestfiles)))
+                   (self._name, str(manifestfiles)))
             if strict_manifest:
                 raise MalformedBundleException(err)
             else:
                 logging.warning(err)
 
+        self.install_mime_type(install_path)
+
+        return install_path
+
+    def install_mime_type(self, install_path):
+        ''' Update the mime type database and install the mime type icon
+        '''
         xdg_data_home = os.getenv('XDG_DATA_HOME',
                                   os.path.expanduser('~/.local/share'))
 
@@ -343,7 +352,7 @@ class ActivityBundle(Bundle):
         mime_types = self.get_mime_types()
         if mime_types is not None:
             installed_icons_dir = os.path.join(xdg_data_home,
-                                               'icons/sugar/scalable/mimetypes')
+                'icons/sugar/scalable/mimetypes')
             if not os.path.isdir(installed_icons_dir):
                 os.makedirs(installed_icons_dir)
 
@@ -360,7 +369,6 @@ class ActivityBundle(Bundle):
                     os.symlink(info_file,
                                os.path.join(installed_icons_dir,
                                             os.path.basename(info_file)))
-        return install_path
 
     def uninstall(self, install_path, force=False):
         if os.path.islink(install_path):
@@ -383,7 +391,7 @@ class ActivityBundle(Bundle):
         mime_types = self.get_mime_types()
         if mime_types is not None:
             installed_icons_dir = os.path.join(xdg_data_home,
-                                               'icons/sugar/scalable/mimetypes')
+                'icons/sugar/scalable/mimetypes')
             if os.path.isdir(installed_icons_dir):
                 for f in os.listdir(installed_icons_dir):
                     path = os.path.join(installed_icons_dir, f)
@@ -392,3 +400,6 @@ class ActivityBundle(Bundle):
                         os.remove(path)
 
         self._uninstall(install_path)
+
+    def is_user_activity(self):
+        return self.get_path().startswith(env.get_user_activities_path())

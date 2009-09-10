@@ -19,31 +19,31 @@
 STABLE.
 """
 
+
 class ActivityHandle(object):
     """Data structure storing simple activity metadata"""
-    def __init__(
-        self, activity_id=None, object_id=None, uri=None
-    ):
+
+    def __init__(self, activity_id=None, object_id=None, uri=None):
         """Initialise the handle from activity_id
-        
+
         activity_id -- unique id for the activity to be
             created
-        object_id -- identity of the journal object 
-            associated with the activity. It was used by 
-            the journal prototype implementation, might 
-            change when we do the real one. 
-            
-            When you resume an activity from the journal 
-            the object_id will be passed in. It's optional 
-            since new activities does not have an 
+        object_id -- identity of the journal object
+            associated with the activity. It was used by
+            the journal prototype implementation, might
+            change when we do the real one.
+
+            When you resume an activity from the journal
+            the object_id will be passed in. It's optional
+            since new activities does not have an
             associated object (yet).
-            
+
             XXX Not clear how this relates to the activity
             id yet, i.e. not sure we really need both. TBF
-        uri -- URI associated with the activity. Used when 
-            opening an external file or resource in the 
-            activity, rather than a journal object 
-            (downloads stored on the file system for 
+        uri -- URI associated with the activity. Used when
+            opening an external file or resource in the
+            activity, rather than a journal object
+            (downloads stored on the file system for
             example or web pages)
         """
         self.activity_id = activity_id
@@ -52,7 +52,7 @@ class ActivityHandle(object):
 
     def get_dict(self):
         """Retrieve our settings as a dictionary"""
-        result = { 'activity_id' : self.activity_id }
+        result = {'activity_id': self.activity_id}
         if self.object_id:
             result['object_id'] = self.object_id
         if self.uri:
@@ -60,11 +60,10 @@ class ActivityHandle(object):
 
         return result
 
+
 def create_from_dict(handle_dict):
     """Create a handle from a dictionary of parameters"""
-    result = ActivityHandle(
-        handle_dict['activity_id'],
+    result = ActivityHandle(handle_dict['activity_id'],
         object_id = handle_dict.get('object_id'),
-        uri = handle_dict.get('uri'),
-    )
+        uri = handle_dict.get('uri'))
     return result

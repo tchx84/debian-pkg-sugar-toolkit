@@ -26,27 +26,34 @@ import shutil
 import StringIO
 import zipfile
 
+
 class AlreadyInstalledException(Exception):
     pass
+
 
 class NotInstalledException(Exception):
     pass
 
+
 class InvalidPathException(Exception):
     pass
+
 
 class ZipExtractException(Exception):
     pass
 
+
 class RegistrationException(Exception):
     pass
+
 
 class MalformedBundleException(Exception):
     pass
 
+
 class Bundle(object):
     """A Sugar activity, content module, etc.
-    
+
     The bundle itself may be either a zip file or a directory
     hierarchy, with metadata about the bundle stored various files
     inside it.
@@ -71,7 +78,7 @@ class Bundle(object):
         # manifest = self._get_file(self._infodir + '/contents')
         # if manifest is None:
         #     raise MalformedBundleException('No manifest file')
-        # 
+
         # signature = self._get_file(self._infodir + '/contents.sig')
         # if signature is None:
         #     raise MalformedBundleException('No signature file')
@@ -112,7 +119,7 @@ class Bundle(object):
         if self._zip_file is None:
             path = os.path.join(self._path, filename)
             try:
-                f = open(path,"rb")
+                f = open(path, "rb")
             except IOError:
                 return None
         else:
@@ -121,10 +128,10 @@ class Bundle(object):
                 data = self._zip_file.read(path)
                 f = StringIO.StringIO(data)
             except KeyError:
-                logging.debug('%s not found.' % filename)
+                logging.debug('%s not found.', filename)
 
         return f
-    
+
     def is_file(self, filename):
         if self._zip_file is None:
             path = os.path.join(self._path, filename)
