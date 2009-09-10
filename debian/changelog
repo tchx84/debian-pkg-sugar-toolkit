@@ -1,3 +1,12 @@
+sugar-toolkit-0.86 (0.85.7-1) unstable; urgency=low
+
+  * New upstream development release.
+  * Fix double listing of ltmain.sh in debian/copyright.
+  * Update OLPC relation (now historic) in long description.
+  * Bump up policy compliance to standards version 3.8.3.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 10 Sep 2009 21:30:50 +0200
+
 sugar-toolkit-0.86 (0.85.6-1) unstable; urgency=low
 
   * New upstream release.
