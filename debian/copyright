@@ -76,7 +76,6 @@ License: GPL-2+ | other-Autoconf
 Files: ./depcomp
 	./config.guess
 	./config.sub
-	./ltmain.sh
 	./py-compile
 Copyright: 1999-2008, Free Software Foundation, Inc.
 License: GPL-2+ | other-Autoconf
