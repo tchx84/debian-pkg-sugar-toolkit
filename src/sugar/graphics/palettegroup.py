@@ -21,7 +21,9 @@ STABLE.
 
 import gobject
 
+
 _groups = {}
+
 
 def get_group(group_id):
     if _groups.has_key(group_id):
@@ -32,13 +34,14 @@ def get_group(group_id):
 
     return group
 
+
 class Group(gobject.GObject):
+
     __gsignals__ = {
-        'popup' : (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE, ([])),
-        'popdown' : (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE, ([]))
+        'popup': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'popdown': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
+
     def __init__(self):
         gobject.GObject.__init__(self)
         self._up = False
@@ -76,7 +79,7 @@ class Group(gobject.GObject):
 
     def popdown(self):
         for palette in self._palettes:
-            if palette.is_up(): 
+            if palette.is_up():
                 palette.popdown(immediate=True)
 
     def _palette_popup_cb(self, palette):

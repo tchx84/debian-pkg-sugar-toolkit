@@ -17,7 +17,7 @@
 
 """Notebook class
 
-This class create a gtk.Notebook() widget supporting 
+This class create a gtk.Notebook() widget supporting
 a close button in every tab when the 'can-close-tabs' gproperty
 is enabled (True)
 
@@ -27,22 +27,23 @@ STABLE.
 import gtk
 import gobject
 
+
 class Notebook(gtk.Notebook):
+
     __gtype_name__ = 'SugarNotebook'
 
     __gproperties__ = {
         'can-close-tabs': (bool, None, None, False,
-                           gobject.PARAM_READWRITE |
-                           gobject.PARAM_CONSTRUCT_ONLY)
+            gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
     }
 
     def __init__(self, **kwargs):
         # Initialise the Widget
-        #
-        #    Side effects: 
+
+        #    Side effects:
         #        Set the 'can-close-tabs' property using **kwargs
         #        Set True the scrollable notebook property
-        
+
         gobject.GObject.__init__(self, **kwargs)
 
         self._can_close_tabs = None
@@ -108,7 +109,7 @@ class Notebook(gtk.Notebook):
 
         tab_box.show_all()
         event_box.add(tab_box)
-        
+
         return event_box
 
     def add_page(self, text_label, widget):
@@ -130,16 +131,16 @@ class Notebook(gtk.Notebook):
         # Add a new page to the notebook
         if self._can_close_tabs:
             eventbox = self._create_custom_tab(text_label, widget)
-            self.append_page(widget, eventbox)		
+            self.append_page(widget, eventbox)
         else:
             self.append_page(widget, gtk.Label(text_label))
-            
+
         pages = self.get_n_pages()
 
         # Set the new page
         self.set_current_page(pages - 1)
         self.show_all()
-        
+
         return True
 
     def _close_page(self, button, child):

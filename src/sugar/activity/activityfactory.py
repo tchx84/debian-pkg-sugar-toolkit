@@ -34,6 +34,9 @@ from sugar import env
 from errno import EEXIST, ENOSPC
 
 import os
+import tempfile
+import subprocess
+import pwd
 
 _SHELL_SERVICE = "org.laptop.Shell"
 _SHELL_PATH = "/org/laptop/Shell"
@@ -45,16 +48,14 @@ _DS_PATH = "/org/laptop/sugar/DataStore"
 
 _ACTIVITY_FACTORY_INTERFACE = "org.laptop.ActivityFactory"
 
-_RAINBOW_SERVICE_NAME = "org.laptop.security.Rainbow"
-_RAINBOW_ACTIVITY_FACTORY_PATH = "/"
-_RAINBOW_ACTIVITY_FACTORY_INTERFACE = "org.laptop.security.Rainbow"
-
 # helper method to close all filedescriptors
 # borrowed from subprocess.py
 try:
     MAXFD = os.sysconf("SC_OPEN_MAX")
 except ValueError:
     MAXFD = 256
+
+
 def _close_fds():
     for i in xrange(3, MAXFD):
         try:
@@ -62,6 +63,7 @@ def _close_fds():
         # pylint: disable-msg=W0704
         except Exception:
             pass
+
 
 def create_activity_id():
     """Generate a new, unique ID for this activity"""
@@ -85,6 +87,7 @@ def create_activity_id():
             return act_id
     raise RuntimeError("Cannot generate unique activity id.")
 
+
 def get_environment(activity):
     environ = os.environ.copy()
 
@@ -107,21 +110,16 @@ def get_environment(activity):
         os.mkdir(tmp_dir)
 
     environ['SUGAR_BUNDLE_PATH'] = activity.get_path()
-    environ['SUGAR_BUNDLE_ID']   = activity.get_bundle_id()
+    environ['SUGAR_BUNDLE_ID'] = activity.get_bundle_id()
     environ['SUGAR_ACTIVITY_ROOT'] = activity_root
     environ['PATH'] = bin_path + ':' + environ['PATH']
-    #environ['RAINBOW_STRACE_LOG'] = '1'
 
     if activity.get_path().startswith(env.get_user_activities_path()):
-        environ['SUGAR_LOCALEDIR'] = os.path.join(activity.get_path(), 'locale')
-
-    if activity.get_bundle_id() in [ 'org.laptop.WebActivity', 
-                                     'org.laptop.GmailActivity',
-                                     'org.laptop.WikiBrowseActivity'
-                                   ]:
-        environ['RAINBOW_CONSTANT_UID'] = 'yes'
+        environ['SUGAR_LOCALEDIR'] = os.path.join(activity.get_path(),
+            'locale')
 
     return environ
+
 
 def get_command(activity, activity_id=None, object_id=None, uri=None):
     if not activity_id:
@@ -144,9 +142,10 @@ def get_command(activity, activity_id=None, object_id=None, uri=None):
         if os.path.exists(absolute_path):
             command[0] = absolute_path
 
-    logging.debug('launching: %r' % command)
+    logging.debug('launching: %r', command)
 
     return command
+
 
 def open_log_file(activity):
     i = 1
@@ -162,9 +161,10 @@ def open_log_file(activity):
                 i += 1
             elif e.errno == ENOSPC:
                 # not the end of the world; let's try to keep going.
-                return ('/dev/null', open('/dev/null','w'))
+                return ('/dev/null', open('/dev/null', 'w'))
             else:
                 raise e
+
 
 class ActivityCreationHandler(gobject.GObject):
     """Sugar-side activity creation interface
@@ -206,24 +206,15 @@ class ActivityCreationHandler(gobject.GObject):
         self._service_name = bundle.get_bundle_id()
         self._handle = handle
 
-        self._use_rainbow = os.path.exists('/etc/olpc-security')
-        if self._service_name in [ 'org.laptop.JournalActivity',
-                                   'org.laptop.Terminal',
-                                   'org.laptop.Log',
-                                   'org.laptop.Analyze'
-                                 ]:
-            self._use_rainbow = False                    
-    
         bus = dbus.SessionBus()
-
         bus_object = bus.get_object(_SHELL_SERVICE, _SHELL_PATH)
         self._shell = dbus.Interface(bus_object, _SHELL_IFACE)
 
-        if handle.activity_id is not None and \
-           handle.object_id is None:
+        if handle.activity_id is not None and handle.object_id is None:
             datastore = dbus.Interface(
                     bus.get_object(_DS_SERVICE, _DS_PATH), _DS_INTERFACE)
-            datastore.find({ 'activity_id': self._handle.activity_id }, [],
+            datastore.find({'activity_id': self._handle.activity_id},
+                           [],
                            reply_handler=self._find_object_reply_handler,
                            error_handler=self._find_object_error_handler,
                            byte_arrays=True)
@@ -253,64 +244,65 @@ class ActivityCreationHandler(gobject.GObject):
                               self._handle.object_id,
                               self._handle.uri)
 
-        if not self._use_rainbow:
-            # use gobject spawn functionality, so that zombies are
-            # automatically reaped by the gobject event loop.
-            def child_setup():
-                # clone logfile.fileno() onto stdout/stderr
-                os.dup2(log_file.fileno(), 1)
-                os.dup2(log_file.fileno(), 2)
-                # close all other fds
-                _close_fds()
-            # we need to sanitize and str-ize the various bits which
-            # dbus gives us.
-            gobject.spawn_async([str(s) for s in command],
-                                envp=['%s=%s' % (k, str(v))
-                                        for k, v in environ.items()],
-                                working_directory=str(self._bundle.get_path()),
-                                child_setup=child_setup,
-                                flags=(gobject.SPAWN_SEARCH_PATH |
-                                        gobject.SPAWN_LEAVE_DESCRIPTORS_OPEN))
-            log_file.close()
-        else:
-            log_file.close()
-            system_bus = dbus.SystemBus()
-            factory = system_bus.get_object(_RAINBOW_SERVICE_NAME,
-                                            _RAINBOW_ACTIVITY_FACTORY_PATH)
-            factory.CreateActivity(
-                    log_path,
-                    environ,
-                    command,
-                    environ['SUGAR_BUNDLE_PATH'],
-                    environ['SUGAR_BUNDLE_ID'],
-                    timeout=30,
-                    reply_handler=self._create_reply_handler,
-                    error_handler=self._create_error_handler,
-                    dbus_interface=_RAINBOW_ACTIVITY_FACTORY_INTERFACE)
+        environment_dir = None
+        if os.path.exists('/etc/olpc-security'):
+            environment_dir = tempfile.mkdtemp()
+            command = ['/usr/bin/sudo', '-E', '--',
+                       '/usr/bin/rainbow-run',
+                       '-v', '-v',
+                       '-a', '/usr/bin/rainbow-sugarize',
+                       '-s', '/var/spool/rainbow/2',
+                       '-f', '1',
+                       '-f', '2',
+                       '-c', self._bundle.get_path(),
+                       '-u', pwd.getpwuid(os.getuid()).pw_name,
+                       '-i', environ['SUGAR_BUNDLE_ID'],
+                       '-e', environment_dir,
+                       '--',
+                      ] + command
+
+            for key, value in environ.items():
+                file_path = os.path.join(environment_dir, str(key))
+                open(file_path, 'w').write(str(value))
+
+            log_file.write(' '.join(command) + '\n\n')
+
+        dev_null = file('/dev/null', 'r')
+        child = subprocess.Popen([str(s) for s in command],
+            env=environ,
+            cwd=str(self._bundle.get_path()),
+            close_fds=True,
+            stdin=dev_null.fileno(),
+            stdout=log_file.fileno(),
+            stderr=log_file.fileno())
+
+        gobject.child_watch_add(child.pid,
+                                _child_watch_cb,
+                                (environment_dir, log_file))
 
     def _no_reply_handler(self, *args):
         pass
 
     def _notify_launch_failure_error_handler(self, err):
-        logging.error('Notify launch failure failed %s' % err)
+        logging.error('Notify launch failure failed %s', err)
 
     def _notify_launch_error_handler(self, err):
-        logging.debug('Notify launch failed %s' % err)
+        logging.debug('Notify launch failed %s', err)
 
     def _activate_reply_handler(self, activated):
         if not activated:
             self._create_activity()
 
     def _activate_error_handler(self, err):
-        logging.error("Activity activation request failed %s" % err)
+        logging.error('Activity activation request failed %s', err)
 
     def _create_reply_handler(self):
-        logging.debug("Activity created %s (%s)." %
-            (self._handle.activity_id, self._service_name))
+        logging.debug('Activity created %s (%s).',
+            self._handle.activity_id, self._service_name)
 
     def _create_error_handler(self, err):
-        logging.error("Couldn't create activity %s (%s): %s" %
-            (self._handle.activity_id, self._service_name, err))
+        logging.error("Couldn't create activity %s (%s): %s",
+            self._handle.activity_id, self._service_name, err)
         self._shell.NotifyLaunchFailure(
             self._handle.activity_id, reply_handler=self._no_reply_handler,
             error_handler=self._notify_launch_failure_error_handler)
@@ -323,8 +315,9 @@ class ActivityCreationHandler(gobject.GObject):
         self._launch_activity()
 
     def _find_object_error_handler(self, err):
-        logging.error("Datastore find failed %s" % err)
+        logging.error('Datastore find failed %s', err)
         self._launch_activity()
+
 
 def create(bundle, activity_handle=None):
     """Create a new activity from its name."""
@@ -332,12 +325,34 @@ def create(bundle, activity_handle=None):
         activity_handle = ActivityHandle()
     return ActivityCreationHandler(bundle, activity_handle)
 
+
 def create_with_uri(bundle, uri):
     """Create a new activity and pass the uri as handle."""
     activity_handle = ActivityHandle(uri=uri)
     return ActivityCreationHandler(bundle, activity_handle)
 
+
 def create_with_object_id(bundle, object_id):
     """Create a new activity and pass the object id as handle."""
     activity_handle = ActivityHandle(object_id=object_id)
     return ActivityCreationHandler(bundle, activity_handle)
+
+
+def _child_watch_cb(pid, condition, user_data):
+    # FIXME we use standalone method here instead of ActivityCreationHandler's
+    # member to have workaround code, see #1123
+    environment_dir, log_file = user_data
+    if environment_dir is not None:
+        subprocess.call(['/bin/rm', '-rf', environment_dir])
+    try:
+        log_file.write('Activity died: pid %s condition %s data %s\n' %
+            (pid, condition, user_data))
+    finally:
+        log_file.close()
+
+    # try to reap zombies in case SIGCHLD has not been set to SIG_IGN
+    try:
+        os.waitpid(pid, 0)
+    except OSError:
+        # SIGCHLD = SIG_IGN, no zombies
+        pass

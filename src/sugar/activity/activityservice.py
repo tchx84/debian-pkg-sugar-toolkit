@@ -24,26 +24,28 @@ import logging
 import dbus
 import dbus.service
 
+
 _ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
 _ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 _ACTIVITY_INTERFACE = "org.laptop.Activity"
 
+
 class ActivityService(dbus.service.Object):
     """Base dbus service object that each Activity uses to export dbus methods.
-    
+
     The dbus service is separate from the actual Activity object so that we can
     tightly control what stuff passes through the dbus python bindings."""
 
     def __init__(self, activity):
         """Initialise the service for the given activity
-        
+
         activity -- sugar.activity.activity.Activity instance
-        
+
         Creates dbus services that use the instance's activity_id
-        as discriminants among all active services 
-        of this type.  That is, the services are all available 
+        as discriminants among all active services
+        of this type.  That is, the services are all available
         as names/paths derived from the instance's activity_id.
-        
+
         The various methods exposed on dbus are just forwarded
         to the client Activity object's equally-named methods.
         """
@@ -51,7 +53,7 @@ class ActivityService(dbus.service.Object):
 
         activity_id = activity.get_id()
         service_name = _ACTIVITY_SERVICE_NAME + activity_id
-        object_path  = _ACTIVITY_SERVICE_PATH + "/" + activity_id
+        object_path = _ACTIVITY_SERVICE_PATH + '/' + activity_id
 
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(service_name, bus=bus)
@@ -61,7 +63,7 @@ class ActivityService(dbus.service.Object):
 
     @dbus.service.method(_ACTIVITY_INTERFACE)
     def SetActive(self, active):
-        logging.debug('ActivityService.set_active: %s.' % active)
+        logging.debug('ActivityService.set_active: %s.', active)
         self._activity.props.active = active
 
     @dbus.service.method(_ACTIVITY_INTERFACE)
@@ -79,4 +81,3 @@ class ActivityService(dbus.service.Object):
             self._activity.get_document_path(async_cb, async_err_cb)
         except Exception, e:
             async_err_cb(e)
-

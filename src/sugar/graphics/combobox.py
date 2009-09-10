@@ -22,8 +22,10 @@ STABLE.
 import gobject
 import gtk
 
+
 class ComboBox(gtk.ComboBox):
-    __gtype_name__ = 'SugarComboBox'    
+
+    __gtype_name__ = 'SugarComboBox'
 
     def __init__(self):
         gtk.ComboBox.__init__(self)
@@ -129,7 +131,7 @@ class ComboBox(gtk.ComboBox):
         None
 
         """
-        self._model.append([0, None, None, True])    
+        self._model.append([0, None, None, True])
 
     def get_active_item(self):
         """

@@ -30,20 +30,25 @@ from sugar.activity import activityhandle
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar import logger
 
+
 def create_activity_instance(constructor, handle):
     activity = constructor(handle)
     activity.show()
 
+
 def get_single_process_name(bundle_id):
     return bundle_id
+
 
 def get_single_process_path(bundle_id):
     return '/' + bundle_id.replace('.', '/')
 
+
 class SingleProcess(dbus.service.Object):
+
     def __init__(self, name_service, constructor):
         self.constructor = constructor
-    
+
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(name_service, bus=bus)
         object_path = get_single_process_path(name_service)
@@ -53,6 +58,7 @@ class SingleProcess(dbus.service.Object):
     def create(self, handle_dict):
         handle = activityhandle.create_from_dict(handle_dict)
         create_activity_instance(self.constructor, handle)
+
 
 def main():
     parser = OptionParser()
@@ -77,7 +83,7 @@ def main():
 
     if len(args) == 0:
         print 'A python class must be specified as first argument.'
-        sys.exit(1)    
+        sys.exit(1)
 
     bundle_path = os.environ['SUGAR_BUNDLE_PATH']
     sys.path.append(bundle_path)
@@ -102,7 +108,7 @@ def main():
     module_name = splitted_module[0]
     class_name = splitted_module[1]
 
-    module = __import__(module_name)        
+    module = __import__(module_name)
     for comp in module_name.split('.')[1:]:
         module = getattr(module, comp)
 

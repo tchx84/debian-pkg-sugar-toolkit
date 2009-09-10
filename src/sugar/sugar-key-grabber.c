@@ -83,8 +83,9 @@ sugar_key_grabber_class_init(SugarKeyGrabberClass *grabber_class)
                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                          G_STRUCT_OFFSET (SugarKeyGrabberClass, key_pressed),
                          NULL, NULL,
-                         sugar_marshal_BOOLEAN__UINT_UINT,
-                         G_TYPE_BOOLEAN, 2,
+                         sugar_marshal_BOOLEAN__UINT_UINT_UINT,
+                         G_TYPE_BOOLEAN, 3,
+                         G_TYPE_UINT,
                          G_TYPE_UINT,
                          G_TYPE_UINT);
 	signals[KEY_RELEASED] = g_signal_new ("key-released",
@@ -92,8 +93,9 @@ sugar_key_grabber_class_init(SugarKeyGrabberClass *grabber_class)
                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                          G_STRUCT_OFFSET (SugarKeyGrabberClass, key_released),
                          NULL, NULL,
-                         sugar_marshal_BOOLEAN__UINT_UINT,
-                         G_TYPE_BOOLEAN, 2,
+                         sugar_marshal_BOOLEAN__UINT_UINT_UINT,
+                         G_TYPE_BOOLEAN, 3,
+                         G_TYPE_UINT,
                          G_TYPE_UINT,
                          G_TYPE_UINT);
 }
@@ -123,7 +125,7 @@ filter_events(GdkXEvent *xevent, GdkEvent *event, gpointer data)
 	if (xev->type == KeyRelease) {
 		int return_value;
 		g_signal_emit (grabber, signals[KEY_RELEASED], 0, xev->xkey.keycode,
-					   xev->xkey.state, &return_value);
+					   xev->xkey.state, xev->xkey.time, &return_value);
 		if(return_value)
 			return GDK_FILTER_REMOVE;
 	}
@@ -131,7 +133,7 @@ filter_events(GdkXEvent *xevent, GdkEvent *event, gpointer data)
 	if (xev->type == KeyPress) {
 		int return_value;
 		g_signal_emit (grabber, signals[KEY_PRESSED], 0, xev->xkey.keycode,
-					   xev->xkey.state, &return_value);
+					   xev->xkey.state, xev->xkey.time, &return_value);
 		if(return_value)
 			return GDK_FILTER_REMOVE;
 	}
@@ -151,7 +153,7 @@ sugar_key_grabber_init(SugarKeyGrabber *grabber)
 	gdk_window_add_filter(grabber->root, filter_events, grabber);
 }
 
-/* grab_key and grab_key_real are from 
+/* grab_key and grab_key_real are from
  * gnome-control-center/gnome-settings-daemon/gnome-settings-multimedia-keys.c
  */
 
@@ -211,7 +213,7 @@ sugar_key_grabber_grab_keys(SugarKeyGrabber *grabber, const char **keys)
     while (*cur != NULL) {
         key = *cur;
         cur += 1;
-        
+
         keyinfo = g_new0 (Key, 1);
         keyinfo->key = g_strdup(key);
 
@@ -277,9 +279,9 @@ sugar_key_grabber_is_modifier(SugarKeyGrabber *grabber, guint keycode, guint mas
 			break;
 		}
 	}
-	
+
 	XFreeModifiermap (modmap);
-	
+
 	return is_modifier;
 }
 
