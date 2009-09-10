@@ -56,6 +56,18 @@ Files: src/sugar/sexy-icon-entry.[ch]
 Copyright: 2004-2006, Christian Hammond
 License: LGPL-2+
 
+Files: src/sugar/graphics/palette.py
+       src/sugar/graphics/palettewindow.py
+Copyright: 2007, Eduardo Silva <edsiper@gmail.com>
+       2008, One Laptop Per Child
+       2009, Tomeu Vizoso
+License: LGPL-2+
+
+Files: src/sugar/graphics/radiopalette.py
+       src/sugar/graphics/toolbarbox.py
+Copyright: 2009, Aleksey Lim
+License: LGPL-2+
+
 Files: ./missing
 Copyright: 1996, Fran,cois Pinard <pinard@iro.umontreal.ca>
 	1996-1997,1999-2000,2002-2006, Free Software Foundation, Inc.
@@ -109,11 +121,6 @@ Files: src/sugar/graphics/notebook.py
 Copyright: 2007, Eduardo Silva (edsiper@gmail.com)
 License: LGPL-2+
 
-Files: src/sugar/graphics/palette.py
-Copyright: 2007, Eduardo Silva <edsiper@gmail.com>
-	2008, One Laptop Per Child
-License: LGPL-2+
-
 Files: src/sugar/graphics/colorbutton.py
 Copyright: 2007, Red Hat, Inc
        2008, Benjamin Berg <benjamin@sipsolutions.net>
@@ -122,6 +129,17 @@ License: LGPL-2+
 Files: src/sugar/bundle/contentbundle.py
 Copyright: 2007, Red Hat, Inc
        2009, Aleksey Lim
+License: LGPL-2+
+
+Files: src/sugar/graphics/window.py
+Copyright: 2009, Aleksey Lim
+	2009, Sayamindu Dasgupta
+       2007, Red Hat, Inc
+License: LGPL-2+
+
+Files: src/sugar/activity/widgets.py
+Copyright: 2009, Aleksey Lim
+	2009, Simon Schampijer
 License: LGPL-2+
 
 Files: src/sugar/presence/tubeconn.py
