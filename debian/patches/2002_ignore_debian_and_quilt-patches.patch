@@ -1,12 +1,12 @@
 diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuilder.py
 --- a/src/sugar/activity/bundlebuilder.py
 +++ b/src/sugar/activity/bundlebuilder.py
-@@ -34,7 +34,7 @@ from fnmatch import fnmatch
- from sugar import env
+@@ -35,7 +35,7 @@ from sugar import env
  from sugar.bundle.activitybundle import ActivityBundle
+ 
  
 -IGNORE_DIRS = ['dist', '.git']
 +IGNORE_DIRS = ['dist', '.git', 'debian', '.pc']
  IGNORE_FILES = ['.gitignore', 'MANIFEST', '*.pyc', '*~', '*.bak', 'pseudo.po']
-         
- def list_files(base_dir, ignore_dirs=None, ignore_files=None):
+ 
+ 
