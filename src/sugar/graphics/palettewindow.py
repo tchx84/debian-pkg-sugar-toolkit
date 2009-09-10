@@ -319,20 +319,27 @@ class PaletteWindow(gtk.Window):
         if not immediate:
             self._popup_anim.start()
         else:
+            self._popup_anim.stop()
             self.show()
+            # we have to invoke update_position() twice
+            # since WM could ignore first move() request
+            self.update_position()
 
     def popdown(self, immediate=False):
         logging.debug('PaletteWindow.popdown immediate %r', immediate)
-        self._popup_anim.stop()
 
+        self._popup_anim.stop()
         self._mouse_detector.stop()
 
         if not immediate:
             self._popdown_anim.start()
         else:
+            self._popdown_anim.stop()
+            self.size_request()
             self.hide()
 
     def on_invoker_enter(self):
+        self._popdown_anim.stop()
         self._mouse_detector.start()
 
     def on_invoker_leave(self):
@@ -365,7 +372,8 @@ class PaletteWindow(gtk.Window):
             self.on_leave(event)
 
     def __show_cb(self, widget):
-        self._invoker.notify_popup()
+        if self._invoker is not None:
+            self._invoker.notify_popup()
 
         self._up = True
         self.emit('popup')
@@ -385,8 +393,7 @@ class PaletteWindow(gtk.Window):
 
         x = win_x + rectangle.x
         y = win_y + rectangle.y
-        width = rectangle.width
-        height = rectangle.height
+        width, height = self.size_request()
 
         return gtk.gdk.Rectangle(x, y, width, height)
 
@@ -410,7 +417,7 @@ class _PopupAnimation(animator.Animation):
 
     def next_frame(self, current):
         if current == 1.0:
-            self._palette.show()
+            self._palette.popup(immediate=True)
 
 
 class _PopdownAnimation(animator.Animation):
@@ -421,7 +428,7 @@ class _PopdownAnimation(animator.Animation):
 
     def next_frame(self, current):
         if current == 1.0:
-            self._palette.hide()
+            self._palette.popdown(immediate=True)
 
 
 class Invoker(gobject.GObject):
@@ -634,6 +641,9 @@ class Invoker(gobject.GObject):
         return self._palette
 
     def set_palette(self, palette):
+        if self._palette is not None:
+            self._palette.popdown(immediate=True)
+
         if self._palette:
             self._palette.props.invoker = None
 
@@ -913,9 +923,13 @@ class CellRendererInvoker(Invoker):
             self.notify_mouse_leave()
 
     def _redraw_path(self, path):
-        model = self._tree_view.get_model()
-        iterator = model.get_iter(path)
-        model.row_changed(path, iterator)
+        for column in self._tree_view.get_columns():
+            if self._cell_renderer in column.get_cell_renderers():
+                break
+        area = self._tree_view.get_background_area(path, column)
+        x, y = \
+            self._tree_view.convert_bin_window_to_widget_coords(area.x, area.y)
+        self._tree_view.queue_draw_area(x, y, area.width, area.height)
 
     def __leave_notify_event_cb(self, widget, event):
         self.notify_mouse_leave()

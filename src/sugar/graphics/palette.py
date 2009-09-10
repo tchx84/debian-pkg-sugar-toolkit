@@ -154,6 +154,8 @@ class Palette(PaletteWindow):
         self._update_separators()
 
     def __destroy_cb(self, palette):
+        self._secondary_anim.stop()
+        self.popdown(immediate=True)
         # Break the reference cycle. It looks like the gc is not able to free
         # it, possibly because gtk.Menu memory handling is very special.
         self.menu = None
@@ -191,7 +193,25 @@ class Palette(PaletteWindow):
             state = self.PRIMARY
         self.set_palette_state(state)
 
-        self._secondary_anim.start()
+        if state == self.PRIMARY:
+            self._secondary_anim.start()
+        else:
+            self._secondary_anim.stop()
+
+    def popdown(self, immediate=False):
+        if immediate:
+            self._secondary_anim.stop()
+            self._popdown_submenus()
+            # to suppress glitches while later re-opening
+            self.set_palette_state(self.PRIMARY)
+        PaletteWindow.popdown(self, immediate)
+
+    def _popdown_submenus(self):
+        # TODO explicit hiding of subitems
+        # should be removed after fixing #1301
+        for menu_item in self.menu.get_children():
+            if menu_item.props.submenu is not None:
+                menu_item.props.submenu.popdown()
 
     def on_enter(self, event):
         PaletteWindow.on_enter(self, event)
