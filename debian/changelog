@@ -1,3 +1,10 @@
+sugar-toolkit-0.86 (0.85.8-1) unstable; urgency=low
+
+  * New upstream development release.
+  * Re-enable pristine-tar in gbp.conf.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 19 Sep 2009 23:22:13 +0200
+
 sugar-toolkit-0.86 (0.85.7-1) unstable; urgency=low
 
   * New upstream development release.
