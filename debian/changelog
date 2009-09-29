@@ -1,3 +1,9 @@
+sugar-toolkit-0.86 (0.86.0-0) UNRELEASED; urgency=low
+
+  * New upstream stable release.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 29 Sep 2009 22:32:11 +0200
+
 sugar-toolkit-0.86 (0.85.8-1) unstable; urgency=low
 
   * New upstream development release.
