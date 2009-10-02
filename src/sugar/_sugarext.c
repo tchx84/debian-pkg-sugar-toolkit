@@ -880,12 +880,24 @@ _wrap_gsm_session_initiate_shutdown(PyGObject *self)
     return Py_None;
 }
 
+static PyObject *
+_wrap_gsm_session_cancel_shutdown(PyGObject *self)
+{
+    
+    gsm_session_cancel_shutdown(GSM_SESSION(self->obj));
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static const PyMethodDef _PyGsmSession_methods[] = {
     { "set_name", (PyCFunction)_wrap_gsm_session_set_name, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { "start", (PyCFunction)_wrap_gsm_session_start, METH_NOARGS,
       NULL },
     { "initiate_shutdown", (PyCFunction)_wrap_gsm_session_initiate_shutdown, METH_NOARGS,
+      NULL },
+    { "cancel_shutdown", (PyCFunction)_wrap_gsm_session_cancel_shutdown, METH_NOARGS,
       NULL },
     { NULL, NULL, 0, NULL }
 };
@@ -1291,7 +1303,7 @@ py_sugarext_register_classes(PyObject *d)
     }
 
 
-#line 1295 "_sugarext.c"
+#line 1307 "_sugarext.c"
     pygobject_register_class(d, "SugarAddressEntry", SUGAR_TYPE_ADDRESS_ENTRY, &PySugarAddressEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
     pygobject_register_class(d, "SugarKeyGrabber", SUGAR_TYPE_KEY_GRABBER, &PySugarKeyGrabber_Type, Py_BuildValue("(O)", &PyGObject_Type));
     pyg_set_object_has_new_constructor(SUGAR_TYPE_KEY_GRABBER);
