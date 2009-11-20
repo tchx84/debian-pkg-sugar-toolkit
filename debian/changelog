@@ -1,9 +1,11 @@
-sugar-toolkit-0.88 (0.86.2-1) UNRELEASED; urgency=low
+sugar-toolkit-0.88 (0.86.2-1) experimental; urgency=low
 
   * Switch packaging to branch 0.88.
   * Tighten python-gobject dependency to versions providing GIO binding.
+  * Release for experimental, as not all parts of 0.88 branch are
+    packaged yet.
 
- -- Jonas Smedegaard <dr@jones.dk>  Fri, 20 Nov 2009 21:24:10 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 20 Nov 2009 21:28:12 +0100
 
 sugar-toolkit-0.86 (0.86.2-1) unstable; urgency=low
 
