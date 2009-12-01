@@ -77,7 +77,7 @@ Files: ./depcomp
 	./config.guess
 	./config.sub
 	./py-compile
-Copyright: 1999-2008, Free Software Foundation, Inc.
+Copyright: 1999-2009, Free Software Foundation, Inc.
 License: GPL-2+ | other-Autoconf
 
 Files: m4/intltool.m4
