@@ -237,11 +237,11 @@ Copyright: 1996-1997, 1999-2000, 2002-2006
 License: GPL (GENERATED FILE)
 
 Files: depcomp
-Copyright: 1999-2000, 2003-2007, Free Software
+Copyright: 1999-2000, 2003-2007, 2009, Free
 License: GPL (GENERATED FILE)
 
 Files: py-compile
-Copyright: 2000-2001, 2003-2005, Free Software Foundation, Inc
+Copyright: 2000-2001, 2003-2005, 2008-2009, Free Software
 License: GPL (GENERATED FILE)
 
 Files: debian/cdbs/1/class/python-vars.mk
