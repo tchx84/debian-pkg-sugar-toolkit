@@ -36,17 +36,20 @@ DEB_COPYRIGHT_CHECK_REGEX = .*
 #DEB_COPYRIGHT_CHECK_IGNORE_REGEX = ^(debian/.*|(.*/)?config\.(guess|sub|rpath)(\..*)?)$
 DEB_COPYRIGHT_CHECK_IGNORE_REGEX = ^debian/(changelog|copyright(|_hints|_newhints))$
 
+# number of lines from the top of each file to investigate
+DEB_COPYRIGHT_CHECK_PARSELINES = 99999
+
 pre-build:: debian/stamp-copyright-check
 
 debian/stamp-copyright-check:
 	@echo 'Scanning upstream source for new/changed copyright notices...'
-	@echo licensecheck -c '$(DEB_COPYRIGHT_CHECK_REGEX)' -r --copyright -i '$(DEB_COPYRIGHT_CHECK_IGNORE_REGEX)' * \
+	@echo licensecheck -c '$(DEB_COPYRIGHT_CHECK_REGEX)' -r --copyright -i '$(DEB_COPYRIGHT_CHECK_IGNORE_REGEX)' -l '$(DEB_COPYRIGHT_CHECK_PARSELINES)' * \
 		"| some-output-filtering..."
 
 # Perl in shell in make requires extra care:
 #  * Single-quoting ('...') protects against shell expansion
 #  * Double-dollar ($$) expands to plain dollar ($) in make
-	@licensecheck -c '$(DEB_COPYRIGHT_CHECK_REGEX)' -r --copyright -i '$(DEB_COPYRIGHT_CHECK_IGNORE_REGEX)' * \
+	@licensecheck -c '$(DEB_COPYRIGHT_CHECK_REGEX)' -r --copyright -i '$(DEB_COPYRIGHT_CHECK_IGNORE_REGEX)' -l '$(DEB_COPYRIGHT_CHECK_PARSELINES)' * \
 		| LC_ALL=C perl -e \
 	'print "Format: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=REVISION\n";'\
 	'print "Name: Untrusted draft - double-check copyrights yourself!\n\n";'\
@@ -66,26 +69,30 @@ debian/stamp-copyright-check:
 	'	$$file->{license} =~ s/\s+\(v([^)]+) or later\)/-$$1+/;'\
 	'	$$file->{license} =~ s/\s+\(v([^)]+)\)/-$$1/;'\
 	'	$$file->{license} =~ s/\s*(\*No copyright\*)\s*// and $$file->{copyright} = $$1;'\
-	'	$$file->{license} =~ s/^\s*(GENERATED FILE)/UNKNOWN ($$1)/;'\
-	'	$$file->{license} =~ s/\s+(GENERATED FILE)/ ($$1)/;'\
+	'	$$file->{license} =~ s/^\s*(GENERATED FILE)/UNKNOWN/;'\
+	'	$$file->{license} =~ s/\s+(GENERATED FILE)//;'\
 	'	$$file->{copyright} =~ s/(?<=(\b\d{4}))(?{$$y=$$^N})\s*[,-]\s*((??{$$y+1}))\b/-$$2/g;'\
 	'	$$file->{copyright} =~ s/(?<=\b\d{4})\s*-\s*\d{4}(?=\s*-\s*(\d{4})\b)//g;'\
 	'	$$file->{copyright} =~ s/\b(\d{4})\s+([\S^\d])/$$1, $$2/g;'\
 	'	$$file->{copyright} =~ s/^\W*\s+\/\s+//g;'\
 	'	$$file->{copyright} =~ s/\s+\/\s+\W*$$//;'\
-	'	$$file->{copyright} =~ s/\s+\/\s+/\n\t/g;'\
-	'	$$pattern = "$$file->{license} [$$file->{copyright}]";'\
+	'	@ownerlines = split /(?:\s+\/|\Z)\s*/, $$file->{copyright};'\
+	'	@owners = grep {/[^\s\d,].*$$/} @ownerlines;'\
+	'	$$pattern = join ("\n", $$file->{license}, sort @owners);'\
 	'	push @{ $$patternfiles{"$$pattern"} }, $$file->{name};'\
+	'	push @{ $$patternownerlines{"$$pattern"} }, @ownerlines;'\
+	'	$$patternlicense{"$$pattern"} = $$file->{license};'\
 	'};'\
 	'foreach $$pattern ( sort {'\
 	'			@{$$patternfiles{$$b}} <=> @{$$patternfiles{$$a}}'\
 	'			||'\
 	'			$$a cmp $$b'\
 	'		} keys %patternfiles ) {'\
-	'	($$license, $$copyright) = $$pattern =~ /(.*) \[(.*)\]/s;'\
+	'	$$ownerline_prev = "dummy text";'\
+	'	@ownerlines_unique = grep($$_ ne $$prev && (($$prev) = $$_), sort @{ $$patternownerlines{$$pattern} });'\
 	'	print "Files: ", join("\n\t", sort @{ $$patternfiles{$$pattern} }), "\n";'\
-	'	print "Copyright: $$copyright\n";'\
-	'	print "License: $$license\n\n";'\
+	'	print "Copyright: ", join("\n\t", @ownerlines_unique), "\n";'\
+	'	print "License: $$patternlicense{$$pattern}\n\n";'\
 	'};'\
 		> debian/copyright_newhints
 	@patterncount="`cat debian/copyright_newhints | sed 's/^[^:]*://' | LANG=C sort -u | grep . -c -`"; \

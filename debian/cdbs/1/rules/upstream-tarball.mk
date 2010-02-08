@@ -26,7 +26,7 @@ _cdbs_rules_upstream_tarball := 1
 
 include $(_cdbs_rules_path)/buildvars.mk$(_cdbs_makefile_suffix)
 
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), cdbs (>= 0.4.39)
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), cdbs
 
 # Prefix for upstream location of all upstream tarballs (mandatory!)
 #DEB_UPSTREAM_URL = 
@@ -107,7 +107,7 @@ get-orig-source:
 	@untar="tar -x -C"; \
 	case "$(cdbs_upstream_received_tarball)" in \
 	    *.tar.gz)  unpack="gunzip -c";; \
-	    *.tar.bz2) unpack="bunzip2 -c";    uncompress="bunzip2";; \
+	    *.tar.bz2) unpack="bunzip2 -c"; grep -q '3.0 (quilt)' debian/source/format || uncompress="bunzip2";; \
 	    *.tar.Z)   unpack="uncompress -c"; uncompress="uncompress";; \
 	    *.zip)     unpack="unzip -q";      uncompress="false";       untar="-d"; nopipe="true";; \
 	    *.tar)     unpack="cat";           uncompress="true";; \
