@@ -1,3 +1,6 @@
+Description: Danish l10n of upstream strings
+Author: Jonas Smedegaard <dr@jones.dk>
+Last-Update: 2010-02-08
 diff --git a/po/da.po b/po/da.po
 --- /dev/null
 +++ b/po/da.po

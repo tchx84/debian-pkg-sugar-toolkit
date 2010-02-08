@@ -1,3 +1,6 @@
+Description: Fail (exit with errorcode 1) on fatal errors in bundlebuilder.py
+Author: Jonas Smedegaard <dr@jones.dk>
+Last-Update: 2010-02-08
 diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuilder.py
 --- a/src/sugar/activity/bundlebuilder.py
 +++ b/src/sugar/activity/bundlebuilder.py
