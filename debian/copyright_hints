@@ -159,7 +159,6 @@ License: GPL-2+
 
 Files: src/sugar/activity/namingalert.py
 	src/sugar/datastore/__init__.py
-	src/sugar/datastore/datastore.py
 	src/sugar/graphics/alert.py
 	src/sugar/graphics/canvastextview.py
 	src/sugar/graphics/combobox.py
@@ -219,11 +218,9 @@ Copyright: 2007, Novell, Inc
 License: LGPL-2+
 
 Files: src/sugar/activity/activity.py
-	src/sugar/datastore/dbus_helpers.py
 	src/sugar/graphics/radiotoolbutton.py
 	src/sugar/graphics/toolbutton.py
 Copyright: 2006-2007, Red Hat, Inc
-	2007, One Laptop Per Child
 	2007, Red Hat, Inc
 	2007-2008, One Laptop Per Child
 	2007-2009, One Laptop Per Child
@@ -366,6 +363,11 @@ License: LGPL-2+
 Files: src/sugar/util.py
 Copyright: 2003, Josiah Carlson
 	2006-2007, Red Hat, Inc
+License: LGPL-2+
+
+Files: src/sugar/datastore/datastore.py
+Copyright: 2007, One Laptop Per Child
+	2010, Simon Schampijer
 License: LGPL-2+
 
 Files: src/sugar/eggaccelerators.c
