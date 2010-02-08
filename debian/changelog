@@ -1,3 +1,22 @@
+sugar-toolkit-0.88 (0.87.1-2) UNRELEASED; urgency=low
+
+  * Update local cdbs snippets:
+    + Update package-relations.mk: Cleanup and tighten dependencies.
+      Improve whitespace cleanup. Rewrite and silence applying
+      dependencies.
+    + Let copyright-check.mk investigate top 99999 lines (not just 60 as
+      default for licensecheck), and make it configurable with
+      DEB_COPYRIGHT_CHECK_PARSELINES. Silence (GENERATED FILE) licensing
+      notices. Group ownerships by sorted owner list (ignoring years).
+    + Update upstream-tarball.mk to preserve bzip2 tarballs with source
+      format 3.0 (quilt).
+  * Use source format '3.0 "quilt"'.
+  * Add DEP3 header to patches.
+  * Bump Standards-Version to 3.8.4.
+  * Cleanup double cdbs build-dependency.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 08 Feb 2010 16:25:14 +0100
+
 sugar-toolkit-0.88 (0.87.1-1) unstable; urgency=low
 
   * New upstream development release.
