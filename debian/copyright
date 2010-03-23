@@ -12,7 +12,8 @@ Files: src/sugar/gsm-*
 Copyright: 2007, Novell, Inc
 License: GPL-2+
 
-Files: src/sugar/activity/namingalert.py
+Files: src/sugar/activity/i18n.py,
+	src/sugar/activity/namingalert.py
 	src/sugar/datastore/__init__.py
 	src/sugar/graphics/alert.py
 	src/sugar/graphics/canvastextview.py
@@ -20,7 +21,7 @@ Files: src/sugar/activity/namingalert.py
 	src/sugar/graphics/iconentry.py
 	src/sugar/graphics/objectchooser.py
 	src/sugar/graphics/tray.py
-Copyright: 2007-2009, One Laptop Per Child
+Copyright: 2007-2010, One Laptop Per Child
 License: LGPL-2+
 
 Files: Makefile.in
