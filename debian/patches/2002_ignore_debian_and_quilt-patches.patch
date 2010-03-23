@@ -1,10 +1,9 @@
 Description: Ignore Debian-specific packaging dirs debian/ and .pc/ in bundlebuilder.py
 Author: Jonas Smedegaard <dr@jones.dk>
 Last-Update: 2010-02-08
-diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuilder.py
 --- a/src/sugar/activity/bundlebuilder.py
 +++ b/src/sugar/activity/bundlebuilder.py
-@@ -35,7 +35,7 @@ from sugar import env
+@@ -35,7 +35,7 @@
  from sugar.bundle.activitybundle import ActivityBundle
  
  

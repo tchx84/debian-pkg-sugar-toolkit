@@ -1,10 +1,9 @@
 Description: Fail (exit with errorcode 1) on fatal errors in bundlebuilder.py
 Author: Jonas Smedegaard <dr@jones.dk>
 Last-Update: 2010-02-08
-diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuilder.py
 --- a/src/sugar/activity/bundlebuilder.py
 +++ b/src/sugar/activity/bundlebuilder.py
-@@ -132,6 +132,7 @@ class Builder(object):
+@@ -132,6 +132,7 @@
              retcode = subprocess.call(args)
              if retcode:
                  print 'ERROR - msgfmt failed with return code %i.' % retcode
@@ -12,7 +11,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
              cat = gettext.GNUTranslations(open(mo_file, 'r'))
              translated_name = cat.gettext(self.config.activity_name)
-@@ -144,7 +145,7 @@ class Builder(object):
+@@ -144,7 +145,7 @@
          files = self.config.bundle.get_files()
  
          if not files:
@@ -21,7 +20,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
              self.fix_manifest()
              files = self.config.bundle.get_files()
  
-@@ -279,8 +280,9 @@ def cmd_dev(config, args):
+@@ -279,8 +280,9 @@
      '''Setup for development'''
  
      if args:
@@ -32,7 +31,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      bundle_path = env.get_user_activities_path()
      if not os.path.isdir(bundle_path):
-@@ -293,14 +295,16 @@ def cmd_dev(config, args):
+@@ -293,14 +295,16 @@
              print 'ERROR - The bundle has been already setup for development.'
          else:
              print 'ERROR - A bundle with the same name is already installed.'
@@ -50,7 +49,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      packager = XOPackager(Builder(config))
      packager.package()
-@@ -310,8 +314,9 @@ def cmd_fix_manifest(config, args):
+@@ -310,8 +314,9 @@
      '''Add missing files to the manifest'''
  
      if args:
@@ -61,7 +60,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      builder = Builder(config)
      builder.fix_manifest()
-@@ -321,8 +326,9 @@ def cmd_dist_source(config, args):
+@@ -321,8 +326,9 @@
      '''Create a tar source package'''
  
      if args:
@@ -72,7 +71,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      packager = SourcePackager(config)
      packager.package()
-@@ -336,8 +342,9 @@ def cmd_install(config, args):
+@@ -336,8 +342,9 @@
                        help='Prefix to install files to')
      (suboptions, subargs) = parser.parse_args(args)
      if subargs:
@@ -83,7 +82,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      installer = Installer(Builder(config))
      installer.install(suboptions.prefix)
-@@ -347,8 +354,9 @@ def cmd_genpot(config, args):
+@@ -347,8 +354,9 @@
      '''Generate the gettext pot file'''
  
      if args:
@@ -94,7 +93,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      po_path = os.path.join(config.source_dir, 'po')
      if not os.path.isdir(po_path):
-@@ -380,14 +388,16 @@ def cmd_genpot(config, args):
+@@ -380,14 +388,16 @@
      retcode = subprocess.call(args)
      if retcode:
          print 'ERROR - xgettext failed with return code %i.' % retcode
@@ -112,7 +111,7 @@ diff --git a/src/sugar/activity/bundlebuilder.py b/src/sugar/activity/bundlebuil
  
      builder = Builder(config)
      builder.build()
-@@ -417,7 +427,9 @@ def start(bundle_name=None):
+@@ -417,7 +427,9 @@
      try:
          globals()['cmd_' + args[0]](config, args[1:])
      except (KeyError, IndexError):
