@@ -5,9 +5,13 @@ Files: ./po/af.po,
 	./po/am.po,
 	./po/ay.po,
 	./po/bg.po,
+	./po/bi.po,
 	./po/bn.po,
 	./po/bn_IN.po,
 	./po/ca.po,
+	./po/cpp.po,
+	./po/cs.po,
+	./po/da.po,
 	./po/de.po,
 	./po/dz.po,
 	./po/el.po,
@@ -16,21 +20,28 @@ Files: ./po/af.po,
 	./po/fa.po,
 	./po/fa_AF.po,
 	./po/ff.po,
+	./po/fil.po,
 	./po/fr.po,
 	./po/gu.po,
 	./po/ha.po,
+	./po/he.po,
 	./po/hi.po,
 	./po/ht.po,
+	./po/hu.po,
+	./po/id.po,
 	./po/ig.po,
 	./po/is.po,
 	./po/it.po,
 	./po/ja.po,
 	./po/km.po,
 	./po/ko.po,
+	./po/kos.po,
+	./po/mi.po,
 	./po/mk.po,
 	./po/ml.po,
 	./po/mn.po,
 	./po/mr.po,
+	./po/ms.po,
 	./po/mvo.po,
 	./po/nb.po,
 	./po/ne.po,
@@ -48,12 +59,21 @@ Files: ./po/af.po,
 	./po/rw.po,
 	./po/sd.po,
 	./po/si.po,
+	./po/sk.po,
 	./po/sl.po,
+	./po/sq.po,
+	./po/sv.po,
+	./po/sw.po,
+	./po/ta.po,
 	./po/te.po,
 	./po/th.po,
 	./po/tpi.po,
 	./po/tr.po,
+	./po/tvl.po,
+	./po/tzo.po,
+	./po/ug.po,
 	./po/ur.po,
+	./po/wa.po,
 	./po/yo.po,
 	./po/zh_CN.po,
 	./po/zh_TW.po
@@ -161,7 +181,8 @@ Copyright: 2007, Novell, Inc
 License: GPL-2+
  FIXME
 
-Files: ./src/sugar/activity/namingalert.py,
+Files: ./src/sugar/activity/i18n.py,
+	./src/sugar/activity/namingalert.py,
 	./src/sugar/datastore/__init__.py,
 	./src/sugar/graphics/alert.py,
 	./src/sugar/graphics/canvastextview.py,
@@ -172,6 +193,7 @@ Files: ./src/sugar/activity/namingalert.py,
 Copyright: 2007, One Laptop Per Child
 	2008, One Laptop Per Child
 	2009, One Laptop Per Child
+	2010, One Laptop Per Child
 License: LGPL-2+
  FIXME
 
@@ -253,12 +275,6 @@ Copyright: 2007, Eduardo Silva <edsiper@gmail.com>
 License: LGPL-2+
  FIXME
 
-Files: ./debian/patches/1001_danish_l10n.patch,
-	./po/da.po
-Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
-License: UNKNOWN
- FIXME
-
 Files: ./missing
 Copyright: 1996-1997, 1999-2000, 2002-2006
 License: GPL
@@ -297,6 +313,7 @@ License: GPL-2+
 Files: ./aclocal.m4
 Copyright: 1995-2002, Free Software Foundation, Inc
 	1995-2003, 2005-2006, Free Software Foundation, Inc
+	1996, 1998, 2000-2005, 2008
 	1996-1997, 2000-2001, 2003, 2005, 2008
 	1996-2004,
 	1997, 1999-2001, 2003-2005, 2008
@@ -427,6 +444,17 @@ Copyright: (Firmware):"
 	YEAR THE PACKAGE'S HOLDER
 	شبك� XO"
 	شبك� XO..."
+License: UNKNOWN
+ FIXME
+
+Files: ./po/mg.po
+Copyright: <rakoto.manasse@auf.org>\n"
+	YEAR THE PACKAGE'S HOLDER
+License: UNKNOWN
+ FIXME
+
+Files: ./debian/patches/1001_danish_l10n.patch
+Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
 License: UNKNOWN
  FIXME
 

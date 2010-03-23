@@ -1,12 +1,20 @@
-sugar-toolkit-0.88 (0.87.4-2) UNRELEASED; urgency=low
+sugar-toolkit-0.88 (0.87.8-1) unstable; urgency=low
 
+  * New upstream development release.
   * Drop all local CDBS snippets: included with main cdbs package now.
   * Drop patchsys-quilt.mk snippet: superfluous with source format "3.0
     (quilt)".
   * Refresh patches with shortening quilt options --no-timestamps --no-
     index -pab.
+  * Build-depend on python-dateutil.
+  * Drop build-dependencies on quilt and patchutils.
+  * Relax build-dependency on python-central and python-all-dev to be
+    unversioned.
+  * Tighten build-dependency on cdbs.
+  * Disable patch 1001 (danish l10n): Upstream ships with alternative
+    translation now (merging postponed till later).
 
- -- Jonas Smedegaard <dr@jones.dk>  Wed, 24 Mar 2010 00:09:33 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 24 Mar 2010 00:29:19 +0100
 
 sugar-toolkit-0.88 (0.87.4-1) unstable; urgency=low
 
