@@ -7,202 +7,204 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-08-26 00:33-0400\n"
-"PO-Revision-Date: 2009-12-22 08:05-0400\n"
-"Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
+"PO-Revision-Date: 2009-06-05 02:13-0400\n"
+"Last-Translator: Deependra Ariyadewa <deependra@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: zh_TW\n"
+"Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.2.1\n"
 
 #: ../src/sugar/activity/activity.py:329
 #, python-format
 msgid "%s Activity"
-msgstr "%s 活動"
+msgstr "%s செயற்பாடு"
 
 #: ../src/sugar/activity/activity.py:714
 msgid "Keep error"
-msgstr "保存時發生錯誤"
+msgstr "தவறு  வைத்திரு"
 
 #: ../src/sugar/activity/activity.py:715
 msgid "Keep error: all changes will be lost"
-msgstr "保存時發生錯誤：所作的變動將遺失"
+msgstr "தவறு வைத்திரு: எல்லா மாற்றங்களும் அழிந்துவிடும்."
 
 #: ../src/sugar/activity/activity.py:718
 msgid "Don't stop"
-msgstr "不停止"
+msgstr "நிறுத்தாதே"
 
 #: ../src/sugar/activity/activity.py:721
 msgid "Stop anyway"
-msgstr "確定停止"
+msgstr "எப்படியாயினும் நிறுத்து"
 
 #: ../src/sugar/activity/namingalert.py:82
 msgid "Name this entry"
-msgstr "命名"
+msgstr "இப் பெயரை பதி"
 
 #: ../src/sugar/activity/namingalert.py:87
 #: ../src/sugar/activity/widgets.py:162
 msgid "Keep"
-msgstr "保存"
+msgstr "வைத்திரு"
 
 #: ../src/sugar/activity/namingalert.py:283
 msgid "Untitled"
-msgstr "未命名"
+msgstr "தலைப்பில்லாத"
 
 #: ../src/sugar/activity/namingalert.py:290
 msgid "Description:"
-msgstr "描述："
+msgstr "விளக்கம்"
 
 #: ../src/sugar/activity/namingalert.py:314
 msgid "Tags:"
-msgstr "標籤："
+msgstr "இணை"
 
 #: ../src/sugar/activity/widgets.py:79
 msgid "Stop"
-msgstr "停止"
+msgstr "நிறுத்து"
 
 #: ../src/sugar/activity/widgets.py:91
 msgid "Undo"
-msgstr "復原"
+msgstr "செயலை ரத்து செய்"
 
 #: ../src/sugar/activity/widgets.py:99
 msgid "Redo"
-msgstr "取消復原"
+msgstr "மீள் செய்"
 
 #: ../src/sugar/activity/widgets.py:106
 msgid "Copy"
-msgstr "複製"
+msgstr "பிரதி செய்"
 
 #: ../src/sugar/activity/widgets.py:113
 msgid "Paste"
-msgstr "貼上"
+msgstr "ஒட்டு"
 
 #: ../src/sugar/activity/widgets.py:123
 msgid "Private"
-msgstr "私人"
+msgstr "தனியார்"
 
 #: ../src/sugar/activity/widgets.py:130
 msgid "My Neighborhood"
-msgstr "我的鄰居"
+msgstr "எனது அயல்"
 
 #: ../src/sugar/activity/widgets.py:341
 msgid "Activity"
-msgstr "活動"
+msgstr "செயற்பாடு"
 
 #: ../src/sugar/graphics/alert.py:286 ../src/sugar/graphics/alert.py:365
 msgid "Cancel"
-msgstr "取消"
+msgstr "இரத்துசெய்"
 
 #: ../src/sugar/graphics/alert.py:290 ../src/sugar/graphics/alert.py:424
 msgid "Ok"
-msgstr "確定"
+msgstr "சரி"
 
 #: ../src/sugar/graphics/alert.py:375
 msgid "Continue"
-msgstr "繼續"
+msgstr "தொடர்ச்சி"
 
 #: ../src/sugar/graphics/colorbutton.py:52
 msgid "Choose a color"
-msgstr "選擇喜歡的顏色"
+msgstr "நிறத்தை தெரிவு செய்"
 
 #: ../src/sugar/graphics/colorbutton.py:272
 msgid "Red"
-msgstr "紅色"
+msgstr "சிவப்பு"
 
 #: ../src/sugar/graphics/colorbutton.py:274
 msgid "Green"
-msgstr "綠色"
+msgstr "பச்சை"
 
 #: ../src/sugar/graphics/colorbutton.py:276
 msgid "Blue"
-msgstr "藍色"
+msgstr "நீலம்"
 
 #: ../src/sugar/util.py:218
 msgid " and "
-msgstr " 和 "
+msgstr "உடன்"
 
 #: ../src/sugar/util.py:219
 msgid ", "
-msgstr ", "
+msgstr ""
 
-# TRANS: Indicating something that just happened, eg. "just now", "moments ago"
 #. TRANS: Indicating something that just happened, eg. "just now", "moments ago"
 #: ../src/sugar/util.py:222
 msgid "Seconds ago"
-msgstr "數秒鐘前"
+msgstr "வினாடிகளின் பின்"
 
-# TRANS: Indicating time passed, eg. "[10 day, 5 hours] ago",
-# "[2 minutes] in the past", or "[3 years, 1 month] earlier"
 #. TRANS: Indicating time passed, eg. "[10 day, 5 hours] ago",
 #. "[2 minutes] in the past", or "[3 years, 1 month] earlier"
 #: ../src/sugar/util.py:226
 #, python-format
 msgid "%s ago"
-msgstr "%s 前"
+msgstr "%sமுன்"
 
-# TRANS: Relative dates (eg. 1 month and 5 days).
 #. TRANS: Relative dates (eg. 1 month and 5 days).
 #: ../src/sugar/util.py:241
 #, python-format
 msgid "%d year"
 msgid_plural "%d years"
-msgstr[0] "%d 年"
+msgstr[0] "%dவருடம்"
+msgstr[1] "%d  வருடங்கள் "
 
 #: ../src/sugar/util.py:242
 #, python-format
 msgid "%d month"
 msgid_plural "%d months"
-msgstr[0] "%d 個月"
+msgstr[0] "%d  மாதம்"
+msgstr[1] "%d  மாதங்கள்"
 
 #: ../src/sugar/util.py:243
 #, python-format
 msgid "%d week"
 msgid_plural "%d weeks"
-msgstr[0] "%d 週"
+msgstr[0] "%d கிழமை"
+msgstr[1] "%d கிழமைகள்"
 
 #: ../src/sugar/util.py:244
 #, python-format
 msgid "%d day"
 msgid_plural "%d days"
-msgstr[0] "%d 天"
+msgstr[0] "%dநாள்"
+msgstr[1] "%dநாற்கள்"
 
 #: ../src/sugar/util.py:245
 #, python-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] "%d 小時"
+msgstr[0] "%d மணித்தியாலம்"
+msgstr[1] ""
 
 #: ../src/sugar/util.py:246
 #, python-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] "%d 分鐘"
+msgstr[0] "%dநிமிடம்"
+msgstr[1] "%dநிமிடங்கள்"
 
 #: ../src/sugar/util.py:339
 msgid "Empty"
-msgstr "無"
+msgstr ""
 
 #: ../src/sugar/util.py:341
 #, python-format
 msgid "%d B"
-msgstr "%d B"
+msgstr ""
 
 #: ../src/sugar/util.py:343
 #, python-format
 msgid "%d KB"
-msgstr "%d KB"
+msgstr ""
 
 #: ../src/sugar/util.py:345
 #, python-format
 msgid "%d MB"
-msgstr "%d MB"
+msgstr ""
 
 #: ../src/sugar/util.py:347
 #, python-format
 msgid "%d GB"
-msgstr "%d GB"
+msgstr ""
 
 #~ msgid "Share with:"
-#~ msgstr "分享給："
+#~ msgstr "பங்கீடு"

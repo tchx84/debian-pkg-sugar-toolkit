@@ -1,208 +1,208 @@
-# Vietnamese translation for Sugar Tookit.
-# Copyright © 2009 Free Software Foundation, Inc.
-# Clytie Siddall <clytie@riverland.net.au>, 2009.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
-"Project-Id-Version: sugar-toolkit\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-20 13:10-0500\n"
-"PO-Revision-Date: 2009-09-25 09:03-0400\n"
-"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
-"Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
-"Language: vi\n"
+"POT-Creation-Date: 2009-08-26 00:33-0400\n"
+"PO-Revision-Date: 2009-08-17 21:36-0400\n"
+"Last-Translator: Chris Leonard <cjl@laptop.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.2.1\n"
 
-#: ../src/sugar/activity/activity.py:338
+#: ../src/sugar/activity/activity.py:329
 #, python-format
 msgid "%s Activity"
-msgstr "Hoạt động %s"
+msgstr "%s Aktivitet"
 
-#: ../src/sugar/activity/activity.py:738
+#: ../src/sugar/activity/activity.py:714
 msgid "Keep error"
-msgstr "Giữ lỗi"
+msgstr "Beholdefejl"
 
-#: ../src/sugar/activity/activity.py:739
+#: ../src/sugar/activity/activity.py:715
 msgid "Keep error: all changes will be lost"
-msgstr "Giữ lỗi: tất cả các thay đổi sẽ bị mất"
+msgstr "Beholdefejl: alle ændringer går tabt"
 
-#: ../src/sugar/activity/activity.py:742
+#: ../src/sugar/activity/activity.py:718
 msgid "Don't stop"
-msgstr "Không dừng"
+msgstr "Stop ikke"
 
-#: ../src/sugar/activity/activity.py:745
+#: ../src/sugar/activity/activity.py:721
 msgid "Stop anyway"
-msgstr "Vẫn dừng"
+msgstr "Stop alligevel"
 
 #: ../src/sugar/activity/namingalert.py:82
 msgid "Name this entry"
-msgstr "Đặt tên mục nhập này"
+msgstr ""
 
 #: ../src/sugar/activity/namingalert.py:87
-#: ../src/sugar/activity/widgets.py:166
+#: ../src/sugar/activity/widgets.py:162
 msgid "Keep"
-msgstr "Giữ"
+msgstr "Behold"
 
 #: ../src/sugar/activity/namingalert.py:283
 msgid "Untitled"
-msgstr "Không tên"
+msgstr "Uden navn"
 
 #: ../src/sugar/activity/namingalert.py:290
 msgid "Description:"
-msgstr "Mô tả:"
+msgstr "Beskrivelse:"
 
 #: ../src/sugar/activity/namingalert.py:314
 msgid "Tags:"
-msgstr "Thẻ:"
+msgstr "Mærkater:"
 
-#: ../src/sugar/activity/widgets.py:83
+#: ../src/sugar/activity/widgets.py:79
 msgid "Stop"
-msgstr "Dừng"
+msgstr "Stop"
 
-#: ../src/sugar/activity/widgets.py:95
+#: ../src/sugar/activity/widgets.py:91
 msgid "Undo"
-msgstr "Hủy bước"
+msgstr "Fortryd"
 
-#: ../src/sugar/activity/widgets.py:103
+#: ../src/sugar/activity/widgets.py:99
 msgid "Redo"
-msgstr "Hoàn lại"
+msgstr "Gentag"
 
-#: ../src/sugar/activity/widgets.py:110
+#: ../src/sugar/activity/widgets.py:106
 msgid "Copy"
-msgstr "Chép"
+msgstr "Kopiér"
 
-#: ../src/sugar/activity/widgets.py:117
+#: ../src/sugar/activity/widgets.py:113
 msgid "Paste"
-msgstr "Dán"
+msgstr "Sæt ind"
 
-#: ../src/sugar/activity/widgets.py:127
+#: ../src/sugar/activity/widgets.py:123
 msgid "Private"
-msgstr "Riêng"
+msgstr "Privat"
 
-#: ../src/sugar/activity/widgets.py:134
+#: ../src/sugar/activity/widgets.py:130
 msgid "My Neighborhood"
-msgstr "Hàng xóm mình"
+msgstr "Mit nabolag"
 
-#: ../src/sugar/activity/widgets.py:345
+#: ../src/sugar/activity/widgets.py:341
 msgid "Activity"
-msgstr "Hoạt động"
+msgstr "Aktivitet"
 
 #: ../src/sugar/graphics/alert.py:286 ../src/sugar/graphics/alert.py:365
 msgid "Cancel"
-msgstr "Thôi"
+msgstr "Afbryd"
 
 #: ../src/sugar/graphics/alert.py:290 ../src/sugar/graphics/alert.py:424
 msgid "Ok"
-msgstr "OK"
+msgstr "Ok"
 
 #: ../src/sugar/graphics/alert.py:375
 msgid "Continue"
-msgstr "Tiếp"
+msgstr "Fortsæt"
 
 #: ../src/sugar/graphics/colorbutton.py:52
 msgid "Choose a color"
-msgstr "Chọn một màu"
+msgstr ""
 
 #: ../src/sugar/graphics/colorbutton.py:272
+#, fuzzy
 msgid "Red"
-msgstr "Đỏ"
+msgstr "Gentag"
 
 #: ../src/sugar/graphics/colorbutton.py:274
 msgid "Green"
-msgstr "Lục"
+msgstr ""
 
 #: ../src/sugar/graphics/colorbutton.py:276
 msgid "Blue"
-msgstr "Xanh"
+msgstr ""
 
-# Không cần từ. No word needed.
 #: ../src/sugar/util.py:218
 msgid " and "
-msgstr " "
+msgstr " og "
 
 #: ../src/sugar/util.py:219
 msgid ", "
 msgstr ", "
 
-# TRANS: Indicating something that just happened, eg. "just now", "moments ago"
 #. TRANS: Indicating something that just happened, eg. "just now", "moments ago"
 #: ../src/sugar/util.py:222
 msgid "Seconds ago"
-msgstr "Giây trước"
+msgstr "sekunder siden"
 
-# TRANS: Indicating time passed, eg. "[10 day, 5 hours] ago",
-# "[2 minutes] in the past", or "[3 years, 1 month] earlier"
 #. TRANS: Indicating time passed, eg. "[10 day, 5 hours] ago",
 #. "[2 minutes] in the past", or "[3 years, 1 month] earlier"
 #: ../src/sugar/util.py:226
 #, python-format
 msgid "%s ago"
-msgstr "%s trước"
+msgstr "%s siden"
 
-# TRANS: Relative dates (eg. 1 month and 5 days).
 #. TRANS: Relative dates (eg. 1 month and 5 days).
 #: ../src/sugar/util.py:241
 #, python-format
 msgid "%d year"
 msgid_plural "%d years"
-msgstr[0] "%d năm"
+msgstr[0] "%d år"
+msgstr[1] "%d år"
 
 #: ../src/sugar/util.py:242
 #, python-format
 msgid "%d month"
 msgid_plural "%d months"
-msgstr[0] "%d tháng"
+msgstr[0] "%d måned"
+msgstr[1] "%d måneder"
 
 #: ../src/sugar/util.py:243
 #, python-format
 msgid "%d week"
 msgid_plural "%d weeks"
-msgstr[0] "%d tuần"
+msgstr[0] "%d uge"
+msgstr[1] "%d uger"
 
 #: ../src/sugar/util.py:244
 #, python-format
 msgid "%d day"
 msgid_plural "%d days"
-msgstr[0] "%d ngày"
+msgstr[0] "%d dag"
+msgstr[1] "%d dage"
 
 #: ../src/sugar/util.py:245
 #, python-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] "%d giờ"
+msgstr[0] "%d time"
+msgstr[1] "%d timer"
 
 #: ../src/sugar/util.py:246
 #, python-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] "%d phút"
+msgstr[0] "%d minut"
+msgstr[1] "%d minutter"
 
 #: ../src/sugar/util.py:339
 msgid "Empty"
-msgstr "Trống"
+msgstr ""
 
 #: ../src/sugar/util.py:341
 #, python-format
 msgid "%d B"
-msgstr "%d B"
+msgstr ""
 
 #: ../src/sugar/util.py:343
 #, python-format
 msgid "%d KB"
-msgstr "%d KB"
+msgstr ""
 
 #: ../src/sugar/util.py:345
 #, python-format
 msgid "%d MB"
-msgstr "%d MB"
+msgstr ""
 
 #: ../src/sugar/util.py:347
 #, python-format
 msgid "%d GB"
-msgstr "%d GB"
-
-#~ msgid "Share with:"
-#~ msgstr "Chia sẻ với:"
+msgstr ""
