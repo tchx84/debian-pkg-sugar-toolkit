@@ -1,3 +1,13 @@
+sugar-toolkit-0.88 (0.87.4-2) UNRELEASED; urgency=low
+
+  * Drop all local CDBS snippets: included with main cdbs package now.
+  * Drop patchsys-quilt.mk snippet: superfluous with source format "3.0
+    (quilt)".
+  * Refresh patches with shortening quilt options --no-timestamps --no-
+    index -pab.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 24 Mar 2010 00:09:33 +0100
+
 sugar-toolkit-0.88 (0.87.4-1) unstable; urgency=low
 
   * New upstream development release.
