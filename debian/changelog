@@ -1,6 +1,6 @@
-sugar-toolkit-0.88 (0.87.8-1) unstable; urgency=low
+sugar-toolkit-0.88 (0.88.0-1) unstable; urgency=low
 
-  * New upstream development release.
+  * New upstream stable release.
   * Drop all local CDBS snippets: included with main cdbs package now.
   * Drop patchsys-quilt.mk snippet: superfluous with source format "3.0
     (quilt)".
@@ -13,8 +13,13 @@ sugar-toolkit-0.88 (0.87.8-1) unstable; urgency=low
   * Tighten build-dependency on cdbs.
   * Disable patch 1001 (danish l10n): Upstream ships with alternative
     translation now (merging postponed till later).
+  * Add git-buildpackage hint about use of bzip2-compressed tarballs.
+  * Update copyright file:
+    + Reformat to conform to draft DEP5 rev. 135.
+    + Add GPL disclaimers.
+    + Adjust years for debian/*.
 
- -- Jonas Smedegaard <dr@jones.dk>  Wed, 24 Mar 2010 00:29:19 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 30 Mar 2010 18:17:55 +0200
 
 sugar-toolkit-0.88 (0.87.4-1) unstable; urgency=low
 
