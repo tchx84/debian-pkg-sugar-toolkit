@@ -108,6 +108,7 @@ class CopyButton(ToolButton):
     def __init__(self, **kwargs):
         ToolButton.__init__(self, 'edit-copy', **kwargs)
         self.props.tooltip = _('Copy')
+        self.props.accelerator = '<Ctrl>C'
 
 
 class PasteButton(ToolButton):
@@ -115,6 +116,7 @@ class PasteButton(ToolButton):
     def __init__(self, **kwargs):
         ToolButton.__init__(self, 'edit-paste', **kwargs)
         self.props.tooltip = _('Paste')
+        self.props.accelerator = '<Ctrl>V'
 
 
 class ShareButton(RadioMenuButton):
@@ -334,7 +336,7 @@ class ActivityToolbox(Toolbox):
         ... your code, inserting all other toolbars you need, like EditToolbar
 
         # Add the toolbox to the activity frame:
-        self.set_toolbox(toolbox)
+        self.set_toolbar_box(toolbox)
         # And make it visible:
         toolbox.show()
     """
