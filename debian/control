@@ -19,7 +19,7 @@ Build-Depends: autotools-dev,
  intltool,
  libxml-parser-perl,
  chrpath
-Standards-Version: 3.8.4
+Standards-Version: 3.9.0
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar-toolkit.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/sugar-toolkit.git;a=summary
 Homepage: http://wiki.sugarlabs.org/go/Sugar
