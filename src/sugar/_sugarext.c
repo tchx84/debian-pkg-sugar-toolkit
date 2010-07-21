@@ -165,7 +165,7 @@ _wrap_sugar_key_grabber_get_key(PyGObject *self, PyObject *args, PyObject *kwarg
     gchar *ret;
     guint keycode = 0, state = 0;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"OO:SugarKeyGrabber.get_key", kwlist, &py_keycode, &py_state))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"OO:Sugar.KeyGrabber.get_key", kwlist, &py_keycode, &py_state))
         return NULL;
     if (py_keycode) {
         if (PyLong_Check(py_keycode))
@@ -207,7 +207,7 @@ _wrap_sugar_key_grabber_is_modifier(PyGObject *self, PyObject *args, PyObject *k
     int ret;
     guint keycode = 0, mask = -1;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O|O:SugarKeyGrabber.is_modifier", kwlist, &py_keycode, &py_mask))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O|O:Sugar.KeyGrabber.is_modifier", kwlist, &py_keycode, &py_mask))
         return NULL;
     if (py_keycode) {
         if (PyLong_Check(py_keycode))
@@ -301,7 +301,7 @@ _wrap_sugar_menu_set_active(PyGObject *self, PyObject *args, PyObject *kwargs)
     static char *kwlist[] = { "active", NULL };
     int active;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:SugarMenu.set_active", kwlist, &active))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:Sugar.Menu.set_active", kwlist, &active))
         return NULL;
     
     sugar_menu_set_active(SUGAR_MENU(self->obj), active);
@@ -316,7 +316,7 @@ _wrap_sugar_menu_embed(PyGObject *self, PyObject *args, PyObject *kwargs)
     static char *kwlist[] = { "container", NULL };
     PyGObject *container;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!:SugarMenu.embed", kwlist, &PyGtkContainer_Type, &container))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!:Sugar.Menu.embed", kwlist, &PyGtkContainer_Type, &container))
         return NULL;
     
     sugar_menu_embed(SUGAR_MENU(self->obj), GTK_CONTAINER(container->obj));
@@ -400,7 +400,7 @@ _wrap_sugar_grid_setup(PyGObject *self, PyObject *args, PyObject *kwargs)
     static char *kwlist[] = { "width", "height", NULL };
     int width, height;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"ii:SugarGrid.setup", kwlist, &width, &height))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"ii:Sugar.Grid.setup", kwlist, &width, &height))
         return NULL;
     
     sugar_grid_setup(SUGAR_GRID(self->obj), width, height);
@@ -416,7 +416,7 @@ _wrap_sugar_grid_add_weight(PyGObject *self, PyObject *args, PyObject *kwargs)
     PyObject *py_rect;
     GdkRectangle rect = { 0, 0, 0, 0 };
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:SugarGrid.add_weight", kwlist, &py_rect))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:Sugar.Grid.add_weight", kwlist, &py_rect))
         return NULL;
     if (!pygdk_rectangle_from_pyobject(py_rect, &rect))
         return NULL;
@@ -434,7 +434,7 @@ _wrap_sugar_grid_remove_weight(PyGObject *self, PyObject *args, PyObject *kwargs
     PyObject *py_rect;
     GdkRectangle rect = { 0, 0, 0, 0 };
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:SugarGrid.remove_weight", kwlist, &py_rect))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:Sugar.Grid.remove_weight", kwlist, &py_rect))
         return NULL;
     if (!pygdk_rectangle_from_pyobject(py_rect, &rect))
         return NULL;
@@ -453,7 +453,7 @@ _wrap_sugar_grid_compute_weight(PyGObject *self, PyObject *args, PyObject *kwarg
     GdkRectangle rect = { 0, 0, 0, 0 };
     guint ret;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:SugarGrid.compute_weight", kwlist, &py_rect))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:Sugar.Grid.compute_weight", kwlist, &py_rect))
         return NULL;
     if (!pygdk_rectangle_from_pyobject(py_rect, &rect))
         return NULL;
@@ -553,7 +553,7 @@ _wrap_sexy_icon_entry_set_icon(PyGObject *self, PyObject *args, PyObject *kwargs
     SexyIconEntryPosition position;
     GtkImage *icon = NULL;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"OO:SexyIconEntry.set_icon", kwlist, &py_position, &py_icon))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"OO:Sexy.IconEntry.set_icon", kwlist, &py_position, &py_icon))
         return NULL;
     if (pyg_enum_get_value(SEXY_TYPE_ICON_ENTRY_POSITION, py_position, (gpointer)&position))
         return NULL;
@@ -578,7 +578,7 @@ _wrap_sexy_icon_entry_set_icon_highlight(PyGObject *self, PyObject *args, PyObje
     int highlight;
     SexyIconEntryPosition position;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"Oi:SexyIconEntry.set_icon_highlight", kwlist, &py_position, &highlight))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"Oi:Sexy.IconEntry.set_icon_highlight", kwlist, &py_position, &highlight))
         return NULL;
     if (pyg_enum_get_value(SEXY_TYPE_ICON_ENTRY_POSITION, py_position, (gpointer)&position))
         return NULL;
@@ -597,7 +597,7 @@ _wrap_sexy_icon_entry_get_icon(PyGObject *self, PyObject *args, PyObject *kwargs
     SexyIconEntryPosition position;
     GtkImage *ret;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:SexyIconEntry.get_icon", kwlist, &py_position))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:Sexy.IconEntry.get_icon", kwlist, &py_position))
         return NULL;
     if (pyg_enum_get_value(SEXY_TYPE_ICON_ENTRY_POSITION, py_position, (gpointer)&position))
         return NULL;
@@ -616,7 +616,7 @@ _wrap_sexy_icon_entry_get_icon_highlight(PyGObject *self, PyObject *args, PyObje
     int ret;
     SexyIconEntryPosition position;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:SexyIconEntry.get_icon_highlight", kwlist, &py_position))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:Sexy.IconEntry.get_icon_highlight", kwlist, &py_position))
         return NULL;
     if (pyg_enum_get_value(SEXY_TYPE_ICON_ENTRY_POSITION, py_position, (gpointer)&position))
         return NULL;
@@ -728,7 +728,7 @@ _wrap_egg_sm_client_will_quit(PyGObject *self, PyObject *args, PyObject *kwargs)
     static char *kwlist[] = { "will_quit", NULL };
     int will_quit;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:EggSMClient.will_quit", kwlist, &will_quit))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:Egg.SMClient.will_quit", kwlist, &will_quit))
         return NULL;
     
     egg_sm_client_will_quit(EGG_SM_CLIENT(self->obj), will_quit);
@@ -851,7 +851,7 @@ _wrap_gsm_session_set_name(PyGObject *self, PyObject *args, PyObject *kwargs)
     static char *kwlist[] = { "name", NULL };
     char *name;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"s:GsmSession.set_name", kwlist, &name))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"s:Gsm.Session.set_name", kwlist, &name))
         return NULL;
     
     gsm_session_set_name(GSM_SESSION(self->obj), name);
@@ -988,7 +988,7 @@ _wrap_acme_volume_set_volume(PyGObject *self, PyObject *args, PyObject *kwargs)
     static char *kwlist[] = { "val", NULL };
     int val;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:AcmeVolume.set_volume", kwlist, &val))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:Acme.Volume.set_volume", kwlist, &val))
         return NULL;
     
     acme_volume_set_volume(ACME_VOLUME(self->obj), val);
@@ -1015,7 +1015,7 @@ _wrap_acme_volume_set_mute(PyGObject *self, PyObject *args, PyObject *kwargs)
     static char *kwlist[] = { "val", NULL };
     int val;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:AcmeVolume.set_mute", kwlist, &val))
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"i:Acme.Volume.set_mute", kwlist, &val))
         return NULL;
     
     acme_volume_set_mute(ACME_VOLUME(self->obj), val);
