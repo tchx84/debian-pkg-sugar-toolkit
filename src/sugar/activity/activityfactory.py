@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,11 +23,11 @@ the moment there is no reason to stabilize this API.
 """
 
 import logging
+import uuid
 
 import dbus
 import gobject
 
-from sugar.presence import presenceservice
 from sugar.activity.activityhandle import ActivityHandle
 from sugar import util
 from sugar import env
@@ -64,25 +65,7 @@ def _close_fds():
 
 def create_activity_id():
     """Generate a new, unique ID for this activity"""
-    pservice = presenceservice.get_instance()
-
-    # create a new unique activity ID
-    i = 0
-    act_id = None
-    while i < 10:
-        act_id = util.unique_id()
-        i += 1
-
-        # check through network activities
-        found = False
-        activities = pservice.get_activities()
-        for act in activities:
-            if act_id == act.props.id:
-                found = True
-                break
-        if not found:
-            return act_id
-    raise RuntimeError("Cannot generate unique activity id.")
+    return util.unique_id(uuid.getnode())
 
 
 def get_environment(activity):
@@ -118,7 +101,8 @@ def get_environment(activity):
     return environ
 
 
-def get_command(activity, activity_id=None, object_id=None, uri=None):
+def get_command(activity, activity_id=None, object_id=None, uri=None,
+                activity_invite=False):
     if not activity_id:
         activity_id = create_activity_id()
 
@@ -130,6 +114,8 @@ def get_command(activity, activity_id=None, object_id=None, uri=None):
         command.extend(['-o', object_id])
     if uri is not None:
         command.extend(['-u', uri])
+    if activity_invite:
+        command.append('-i')
 
     # if the command is in $BUNDLE_ROOT/bin, execute the absolute path so there
     # is no need to mangle with the shell's PATH
@@ -233,8 +219,8 @@ class ActivityCreationHandler(gobject.GObject):
         environ = get_environment(self._bundle)
         (log_path, log_file) = open_log_file(self._bundle)
         command = get_command(self._bundle, self._handle.activity_id,
-                              self._handle.object_id,
-                              self._handle.uri)
+                              self._handle.object_id, self._handle.uri,
+                              self._handle.invited)
 
         dev_null = file('/dev/null', 'w')
         environment_dir = None

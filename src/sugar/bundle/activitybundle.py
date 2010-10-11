@@ -23,8 +23,10 @@ UNSTABLE.
 from ConfigParser import ConfigParser
 import locale
 import os
+import shutil
 import tempfile
 import logging
+import warnings
 
 from sugar import env
 from sugar import util
@@ -71,7 +73,7 @@ class ActivityBundle(Bundle):
             self._parse_linfo(linfo_file)
 
         if self._local_name == None:
-           self._local_name = self._name
+            self._local_name = self._name
 
     def _get_manifest(self):
         if self._manifest is None:
@@ -151,6 +153,8 @@ class ActivityBundle(Bundle):
             self._bundle_id = cp.get(section, 'bundle_id')
         # FIXME deprecated
         elif cp.has_option(section, 'service_name'):
+            warnings.warn('use bundle_id instead of service_name ' \
+                              'in your activity.info', DeprecationWarning)
             self._bundle_id = cp.get(section, 'service_name')
         else:
             raise MalformedBundleException(
@@ -165,6 +169,8 @@ class ActivityBundle(Bundle):
 
         # FIXME class is deprecated
         if cp.has_option(section, 'class'):
+            warnings.warn('use exec instead of class ' \
+                              'in your activity.info', DeprecationWarning)
             self.activity_class = cp.get(section, 'class')
         elif cp.has_option(section, 'exec'):
             self.bundle_exec = cp.get(section, 'exec')
@@ -388,7 +394,7 @@ class ActivityBundle(Bundle):
             os.unlink(dst)
         os.symlink(src, dst)
 
-    def uninstall(self, install_path, force=False):
+    def uninstall(self, install_path, force=False, delete_profile=False):
         if os.path.islink(install_path):
             # Don't remove the actual activity dir if it's a symbolic link
             # because we may be removing user data.
@@ -416,6 +422,12 @@ class ActivityBundle(Bundle):
                     if os.path.islink(path) and \
                        os.readlink(path).startswith(install_path):
                         os.remove(path)
+
+        if delete_profile:
+            bundle_profile_path = env.get_profile_path(self._bundle_id)
+            if os.path.exists(bundle_profile_path):
+                os.chmod(bundle_profile_path, 0775)
+                shutil.rmtree(bundle_profile_path, ignore_errors=True)
 
         self._uninstall(install_path)
 

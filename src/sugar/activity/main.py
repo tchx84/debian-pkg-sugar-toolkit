@@ -56,7 +56,7 @@ class SingleProcess(dbus.service.Object):
         object_path = get_single_process_path(name_service)
         dbus.service.Object.__init__(self, bus_name, object_path)
 
-    @dbus.service.method("org.laptop.SingleProcess", in_signature="a{ss}")
+    @dbus.service.method("org.laptop.SingleProcess", in_signature="a{sv}")
     def create(self, handle_dict):
         handle = activityhandle.create_from_dict(handle_dict)
         create_activity_instance(self.constructor, handle)
@@ -75,6 +75,10 @@ def main():
     parser.add_option('-s', '--single-process', dest='single_process',
                       action='store_true',
                       help='start all the instances in the same process')
+    parser.add_option('-i', '--invited', dest='invited',
+                      action='store_true', default=False,
+                      help='the activity is being launched for handling an '
+                           'invite from the network')
     (options, args) = parser.parse_args()
 
     logger.start()
@@ -121,7 +125,8 @@ def main():
     activity_constructor = getattr(module, class_name)
     activity_handle = activityhandle.ActivityHandle(
             activity_id=options.activity_id,
-            object_id=options.object_id, uri=options.uri)
+            object_id=options.object_id, uri=options.uri,
+            invited=options.invited)
 
     if options.single_process is True:
         sessionbus = dbus.SessionBus()
@@ -141,7 +146,8 @@ def main():
             SingleProcess(service_name, activity_constructor)
         else:
             single_process = sessionbus.get_object(service_name, service_path)
-            single_process.create(activity_handle.get_dict())
+            single_process.create(activity_handle.get_dict(),
+                                  dbus_interface='org.laptop.SingleProcess')
 
             print 'Created %s in a single process.' % service_name
             sys.exit(0)
