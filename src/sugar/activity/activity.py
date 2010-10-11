@@ -31,6 +31,7 @@ STABLE.
 """
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2007-2009 One Laptop Per Child
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -52,13 +53,21 @@ import logging
 import os
 import time
 from hashlib import sha1
-import gconf
+from functools import partial
 
+import gconf
 import gtk
 import gobject
 import dbus
 import dbus.service
+from dbus import PROPERTIES_IFACE
 import cjson
+from telepathy.server import DBusProperties
+from telepathy.interfaces import CHANNEL, \
+                                 CHANNEL_TYPE_TEXT, \
+                                 CLIENT, \
+                                 CLIENT_HANDLER
+from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT
 
 from sugar import util
 from sugar.presence import presenceservice
@@ -87,6 +96,7 @@ J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_PATH = '/org/laptop/Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
 
+CONN_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
 
 class _ActivitySession(gobject.GObject):
 
@@ -266,9 +276,7 @@ class Activity(Window, gtk.Container):
 
         self._active = False
         self._activity_id = handle.activity_id
-        self._pservice = presenceservice.get_instance()
         self.shared_activity = None
-        self._share_id = None
         self._join_id = None
         self._updating_jobject = False
         self._closing = False
@@ -301,9 +309,58 @@ class Activity(Window, gtk.Container):
             if self._jobject.metadata.has_key('share-scope'):
                 share_scope = self._jobject.metadata['share-scope']
 
+        self.shared_activity = None
+        self._join_id = None
+
+        if handle.invited:
+            wait_loop = gobject.MainLoop()
+            self._client_handler = _ClientHandler(
+                    self.get_bundle_id(),
+                    partial(self.__got_channel_cb, wait_loop))
+            # FIXME: The current API requires that self.shared_activity is set
+            # before exiting from __init__, so we wait until we have got the
+            # shared activity. http://bugs.sugarlabs.org/ticket/2168
+            wait_loop.run()
+        else:
+            pservice = presenceservice.get_instance()
+            mesh_instance = pservice.get_activity(self._activity_id,
+                                                  warn_if_none=False)
+            self._set_up_sharing(mesh_instance, share_scope)
+
+        if handle.object_id is None and create_jobject:
+            logging.debug('Creating a jobject.')
+            self._jobject = self._initialize_journal_object()
+            self.set_title(self._jobject.metadata['title'])
+
+    def _initialize_journal_object(self):
+        title = _('%s Activity') % get_bundle_name()
+
+        if self.shared_activity is not None:
+            icon_color = self.shared_activity.props.color
+        else:
+            client = gconf.client_get_default()
+            icon_color = client.get_string('/desktop/sugar/user/color')
+
+        jobject = datastore.create()
+        jobject.metadata['title'] = title
+        jobject.metadata['title_set_by_user'] = '0'
+        jobject.metadata['activity'] = self.get_bundle_id()
+        jobject.metadata['activity_id'] = self.get_id()
+        jobject.metadata['keep'] = '0'
+        jobject.metadata['preview'] = ''
+        jobject.metadata['share-scope'] = SCOPE_PRIVATE
+        jobject.metadata['icon-color'] = icon_color
+        jobject.file_path = ''
+
+        # FIXME: We should be able to get an ID synchronously from the DS,
+        # then call async the actual create.
+        # http://bugs.sugarlabs.org/ticket/2169
+        datastore.write(jobject)
+
+        return jobject
+
+    def _set_up_sharing(self, mesh_instance, share_scope):
         # handle activity share/join
-        mesh_instance = self._pservice.get_activity(self._activity_id,
-                                                    warn_if_none=False)
         logging.debug("*** Act %s, mesh instance %r, scope %s",
                       self._activity_id, mesh_instance, share_scope)
         if mesh_instance is not None:
@@ -331,29 +388,19 @@ class Activity(Window, gtk.Container):
             else:
                 logging.debug('Unknown share scope %r', share_scope)
 
-        if handle.object_id is None and create_jobject:
-            logging.debug('Creating a jobject.')
-            self._jobject = datastore.create()
-            title = _('%s Activity') % get_bundle_name()
-            self._jobject.metadata['title'] = title
-            self.set_title(self._jobject.metadata['title'])
-            self._jobject.metadata['title_set_by_user'] = '0'
-            self._jobject.metadata['activity'] = self.get_bundle_id()
-            self._jobject.metadata['activity_id'] = self.get_id()
-            self._jobject.metadata['keep'] = '0'
-            self._jobject.metadata['preview'] = ''
-            self._jobject.metadata['share-scope'] = SCOPE_PRIVATE
-            if self.shared_activity is not None:
-                icon_color = self.shared_activity.props.color
-            else:
-                client = gconf.client_get_default()
-                icon_color = client.get_string('/desktop/sugar/user/color')
-            self._jobject.metadata['icon-color'] = icon_color
+    def __got_channel_cb(self, wait_loop, connection_path, channel_path):
+        logging.debug('Activity.__got_channel_cb')
+        connection_name = connection_path.replace('/', '.')[1:]
 
-            self._jobject.file_path = ''
-            # Cannot call datastore.write async for creates:
-            # https://dev.laptop.org/ticket/3071
-            datastore.write(self._jobject)
+        bus = dbus.SessionBus()
+        channel = bus.get_object(connection_name, channel_path)
+        room_handle = channel.Get(CHANNEL, 'TargetHandle')
+
+        pservice = presenceservice.get_instance()
+        mesh_instance = pservice.get_activity_by_handle(connection_path,
+                                                        room_handle)
+        self._set_up_sharing(mesh_instance, SCOPE_PRIVATE)
+        wait_loop.quit()
 
     def get_active(self):
         return self._active
@@ -638,6 +685,7 @@ class Activity(Window, gtk.Container):
         self._jobject.object_id = None
 
     def __privacy_changed_cb(self, shared_activity, param_spec):
+        logging.debug('__privacy_changed_cb %r', shared_activity.props.private)
         if shared_activity.props.private:
             self._jobject.metadata['share-scope'] = SCOPE_INVITE_ONLY
         else:
@@ -645,6 +693,7 @@ class Activity(Window, gtk.Container):
 
     def __joined_cb(self, activity, success, err):
         """Callback when join has finished"""
+        logging.debug('Activity.__joined_cb %r', success)
         self.shared_activity.disconnect(self._join_id)
         self._join_id = None
         if not success:
@@ -669,8 +718,6 @@ class Activity(Window, gtk.Container):
         return self.shared_activity.props.joined
 
     def __share_cb(self, ps, success, activity, err):
-        self._pservice.disconnect(self._share_id)
-        self._share_id = None
         if not success:
             logging.debug('Share of activity %s failed: %s.',
                 self._activity_id, err)
@@ -695,22 +742,24 @@ class Activity(Window, gtk.Container):
 
     def _send_invites(self):
         while self._invites_queue:
-            buddy_key = self._invites_queue.pop()
-            buddy = self._pservice.get_buddy(buddy_key)
+            account_path, contact_id = self._invites_queue.pop()
+            pservice = presenceservice.get_instance()
+            buddy = pservice.get_buddy(account_path, contact_id)
             if buddy:
                 self.shared_activity.invite(
                             buddy, '', self._invite_response_cb)
             else:
-                logging.error('Cannot invite %s, no such buddy.', buddy_key)
+                logging.error('Cannot invite %s %s, no such buddy',
+                              account_path, contact_id)
 
-    def invite(self, buddy_key):
+    def invite(self, account_path, contact_id):
         """Invite a buddy to join this Activity.
 
         Side Effects:
             Calls self.share(True) to privately share the activity if it wasn't
             shared before.
         """
-        self._invites_queue.append(buddy_key)
+        self._invites_queue.append((account_path, contact_id))
 
         if (self.shared_activity is None
             or not self.shared_activity.props.joined):
@@ -733,9 +782,9 @@ class Activity(Window, gtk.Container):
         verb = private and 'private' or 'public'
         logging.debug('Requesting %s share of activity %s.', verb,
             self._activity_id)
-        self._share_id = self._pservice.connect("activity-shared",
-                                                self.__share_cb)
-        self._pservice.share_activity(self, private=private)
+        pservice = presenceservice.get_instance()
+        pservice.connect('activity-shared', self.__share_cb)
+        pservice.share_activity(self, private=private)
 
     def _show_keep_failed_dialog(self):
         alert = Alert()
@@ -854,6 +903,50 @@ class Activity(Window, gtk.Container):
     # DEPRECATED
     _shared_activity = property(lambda self: self.shared_activity, None)
 
+
+class _ClientHandler(dbus.service.Object, DBusProperties):
+    def __init__(self, bundle_id, got_channel_cb):
+        self._interfaces = set([CLIENT, CLIENT_HANDLER, PROPERTIES_IFACE])
+        self._got_channel_cb = got_channel_cb
+
+        bus = dbus.Bus()
+        name = CLIENT + '.' + bundle_id
+        bus_name = dbus.service.BusName(name, bus=bus)
+
+        path = '/' + name.replace('.', '/')
+        dbus.service.Object.__init__(self, bus_name, path)
+        DBusProperties.__init__(self)
+
+        self._implement_property_get(CLIENT, {
+            'Interfaces': lambda: list(self._interfaces),
+          })
+        self._implement_property_get(CLIENT_HANDLER, {
+            'HandlerChannelFilter': self.__get_filters_cb,
+          })
+
+    def __get_filters_cb(self):
+        logging.debug('__get_filters_cb')
+        filters = {
+            CHANNEL + '.ChannelType'     : CHANNEL_TYPE_TEXT,
+            CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
+            }
+        filter_dict = dbus.Dictionary(filters, signature='sv')
+        logging.debug('__get_filters_cb %r', dbus.Array([filter_dict],
+                                                        signature='a{sv}'))
+        return dbus.Array([filter_dict], signature='a{sv}')
+
+    @dbus.service.method(dbus_interface=CLIENT_HANDLER,
+                         in_signature='ooa(oa{sv})aota{sv}', out_signature='')
+    def HandleChannels(self, account, connection, channels, requests_satisfied,
+                        user_action_time, handler_info):
+        logging.debug('HandleChannels\n\t%r\n\t%r\n\t%r\n\t%r\n\t%r\n\t%r',
+                account, connection, channels, requests_satisfied,
+                user_action_time, handler_info)
+        try:
+            for channel in channels:
+                self._got_channel_cb(connection, channel[0])
+        except Exception, e:
+            logging.exception(e)
 
 _session = None
 
