@@ -32,7 +32,7 @@ pkg = $(pkgbase)-$(pkgbranch)
 DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
-DEB_UPSTREAM_TARBALL_MD5 = 2de0d3da8c82e6fafcbf876b7283986a
+DEB_UPSTREAM_TARBALL_MD5 = 5f5f0d84f8d0f1176be3c00ed0feca38
 
 DEB_AUTOMAKE_ARGS = --add-missing --copy
 
