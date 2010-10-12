@@ -55,7 +55,7 @@ CDBS_BUILD_DEPENDS += , libglib2.0-dev, python-gtk2-dev, libsm-dev, libice-dev, 
 #  * zip, git and subversion are used in .xo format packaging routines
 CDBS_DEPENDS_DEFAULT = python-gtk2, python-dbus, python-gobject (>= 2.15.0), python-cairo, python-telepathy, python-cjson, python-sugar-$(pkgbranch), python-hippocanvas, python-gconf | python-gnome2 (<= 2.22.3-2), python-dateutil
 CDBS_DEPENDS_DEFAULT += , python-rsvg | python-gnome2-desktop (<= 2.24.0-1), python-rsvg | librsvg2-common
-CDBS_RECOMMENDS_DEFAULT = sugar-$(pkgbranch), python-carquinyol-$(pkgbranch), python-jarabe-$(pkgbranch), ttf-dejavu-core, unzip
+CDBS_RECOMMENDS_DEFAULT = sugar-$(pkgbranch), python-carquinyol-$(pkgbranch), sugar-presence-service-$(pkgbranch), python-jarabe-$(pkgbranch), ttf-dejavu-core, unzip
 CDBS_RECOMMENDS_DEFAULT += , telepathy-mission-control-5 (>= 5.6), telepathy-gabble (>= 0.10), telepathy-salut (>= 0.4)
 CDBS_SUGGESTS_DEFAULT = git-core, subversion, ttf-dejavu-extra
 
@@ -63,9 +63,6 @@ CDBS_SUGGESTS_DEFAULT = git-core, subversion, ttf-dejavu-extra
 CDBS_PROVIDES_DEFAULT = $(pkgbase)
 CDBS_CONFLICTS_DEFAULT = $(pkgbase)
 CDBS_REPLACES_DEFAULT = $(pkgbase)
-
-# code from sugar-presence-service adopted here since branch 0.90
-CDBS_PROVIDES_DEFAULT = sugar-presence-service
 
 # Needed for our packaging
 CDBS_BUILD_DEPENDS += , chrpath
