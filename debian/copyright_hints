@@ -81,53 +81,6 @@ Copyright: YEAR THE PACKAGE'S HOLDER
 License: UNKNOWN
  FIXME
 
-Files: ./src/sugar/_sugarextmodule.c,
-	./src/sugar/activity/__init__.py,
-	./src/sugar/activity/activityfactory.py,
-	./src/sugar/activity/activityhandle.py,
-	./src/sugar/activity/activityservice.py,
-	./src/sugar/activity/bundlebuilder.py,
-	./src/sugar/activity/main.py,
-	./src/sugar/bundle/__init__.py,
-	./src/sugar/bundle/activitybundle.py,
-	./src/sugar/bundle/bundle.py,
-	./src/sugar/eggaccelerators.h,
-	./src/sugar/env.py,
-	./src/sugar/graphics/__init__.py,
-	./src/sugar/graphics/animator.py,
-	./src/sugar/graphics/entry.py,
-	./src/sugar/graphics/icon.py,
-	./src/sugar/graphics/palettegroup.py,
-	./src/sugar/graphics/panel.py,
-	./src/sugar/graphics/roundbox.py,
-	./src/sugar/graphics/style.py,
-	./src/sugar/graphics/toggletoolbutton.py,
-	./src/sugar/graphics/toolbox.py,
-	./src/sugar/graphics/toolcombobox.py,
-	./src/sugar/graphics/xocolor.py,
-	./src/sugar/network.py,
-	./src/sugar/presence/__init__.py,
-	./src/sugar/presence/activity.py,
-	./src/sugar/presence/buddy.py,
-	./src/sugar/presence/presenceservice.py,
-	./src/sugar/profile.py,
-	./src/sugar/session.py,
-	./src/sugar/sugar-address-entry.c,
-	./src/sugar/sugar-address-entry.h,
-	./src/sugar/sugar-grid.c,
-	./src/sugar/sugar-grid.h,
-	./src/sugar/sugar-key-grabber.c,
-	./src/sugar/sugar-key-grabber.h,
-	./src/sugar/sugar-menu.c,
-	./src/sugar/sugar-menu.h,
-	./src/sugar/wm.py
-Copyright: 2002, Red Hat, Inc
-	2006-2007, Red Hat, Inc
-	2007, Red Hat, Inc
-	2008, Red Hat, Inc
-License: LGPL-2+
- FIXME
-
 Files: ./AUTHORS,
 	./Makefile.am,
 	./README,
@@ -143,6 +96,7 @@ Files: ./AUTHORS,
 	./debian/patches/series,
 	./debian/pycompat,
 	./debian/source/format,
+	./debian/source/local-options,
 	./debian/watch,
 	./intltool-extract.in,
 	./intltool-merge.in,
@@ -168,6 +122,49 @@ Copyright: *No copyright*
 License: UNKNOWN
  FIXME
 
+Files: ./src/sugar/_sugarextmodule.c,
+	./src/sugar/activity/__init__.py,
+	./src/sugar/activity/activityhandle.py,
+	./src/sugar/activity/activityservice.py,
+	./src/sugar/activity/bundlebuilder.py,
+	./src/sugar/activity/main.py,
+	./src/sugar/bundle/__init__.py,
+	./src/sugar/bundle/activitybundle.py,
+	./src/sugar/bundle/bundle.py,
+	./src/sugar/eggaccelerators.h,
+	./src/sugar/env.py,
+	./src/sugar/graphics/__init__.py,
+	./src/sugar/graphics/animator.py,
+	./src/sugar/graphics/entry.py,
+	./src/sugar/graphics/icon.py,
+	./src/sugar/graphics/palettegroup.py,
+	./src/sugar/graphics/panel.py,
+	./src/sugar/graphics/roundbox.py,
+	./src/sugar/graphics/style.py,
+	./src/sugar/graphics/toggletoolbutton.py,
+	./src/sugar/graphics/toolbox.py,
+	./src/sugar/graphics/toolcombobox.py,
+	./src/sugar/graphics/xocolor.py,
+	./src/sugar/network.py,
+	./src/sugar/presence/__init__.py,
+	./src/sugar/profile.py,
+	./src/sugar/session.py,
+	./src/sugar/sugar-address-entry.c,
+	./src/sugar/sugar-address-entry.h,
+	./src/sugar/sugar-grid.c,
+	./src/sugar/sugar-grid.h,
+	./src/sugar/sugar-key-grabber.c,
+	./src/sugar/sugar-key-grabber.h,
+	./src/sugar/sugar-menu.c,
+	./src/sugar/sugar-menu.h,
+	./src/sugar/wm.py
+Copyright: 2002, Red Hat, Inc
+	2006-2007, Red Hat, Inc
+	2007, Red Hat, Inc
+	2008, Red Hat, Inc
+License: LGPL-2+
+ FIXME
+
 Files: ./src/sugar/gsm-app.c,
 	./src/sugar/gsm-client-xsmp.c,
 	./src/sugar/gsm-client-xsmp.h,
@@ -184,7 +181,6 @@ License: GPL-2+
 Files: ./src/sugar/activity/i18n.py,
 	./src/sugar/activity/namingalert.py,
 	./src/sugar/datastore/__init__.py,
-	./src/sugar/graphics/alert.py,
 	./src/sugar/graphics/canvastextview.py,
 	./src/sugar/graphics/combobox.py,
 	./src/sugar/graphics/iconentry.py,
@@ -229,22 +225,21 @@ Copyright: 2002-2003, Bastien Nocera
 License: LGPL-2+
  FIXME
 
+Files: ./src/sugar/activity/activityfactory.py,
+	./src/sugar/presence/activity.py,
+	./src/sugar/presence/buddy.py,
+	./src/sugar/presence/presenceservice.py
+Copyright: 2006-2007, Red Hat, Inc
+	2007, Red Hat, Inc
+	2010, Collabora Ltd. <http://www.collabora.co.uk/>
+License: LGPL-2+
+ FIXME
+
 Files: ./src/sugar/eggdesktopfile.h,
 	./src/sugar/eggsmclient-private.h,
 	./src/sugar/eggsmclient.c,
 	./src/sugar/eggsmclient.h
 Copyright: 2007, Novell, Inc
-License: LGPL-2+
- FIXME
-
-Files: ./src/sugar/activity/activity.py,
-	./src/sugar/graphics/radiotoolbutton.py,
-	./src/sugar/graphics/toolbutton.py
-Copyright: 2006-2007, Red Hat, Inc
-	2007, Red Hat, Inc
-	2007-2008, One Laptop Per Child
-	2007-2009, One Laptop Per Child
-	2008, One Laptop Per Child
 License: LGPL-2+
  FIXME
 
@@ -272,6 +267,14 @@ Files: ./src/sugar/graphics/palette.py,
 Copyright: 2007, Eduardo Silva <edsiper@gmail.com>
 	2008, One Laptop Per Child
 	2009, Tomeu Vizoso
+License: LGPL-2+
+ FIXME
+
+Files: ./src/sugar/graphics/radiotoolbutton.py,
+	./src/sugar/graphics/toolbutton.py
+Copyright: 2007, Red Hat, Inc
+	2007-2008, One Laptop Per Child
+	2008, One Laptop Per Child
 License: LGPL-2+
  FIXME
 
@@ -362,6 +365,12 @@ Copyright: 2009, Aleksey Lim, Simon Schampijer
 License: LGPL-2+
  FIXME
 
+Files: ./src/sugar/graphics/alert.py
+Copyright: 2007, One Laptop Per Child
+	2010, Anish Mangal <anishmangal2002@gmail.com>
+License: LGPL-2+
+ FIXME
+
 Files: ./src/sugar/graphics/colorbutton.py
 Copyright: 2007, Red Hat, Inc
 	2008, Benjamin Berg <benjamin@sipsolutions.net>
@@ -372,6 +381,18 @@ Files: ./src/sugar/eggsmclient-xsmp.c
 Copyright: 1998, Carsten Schaar, and twm
 	1998, The Open Group
 	2007, Novell, Inc
+License: LGPL-2+
+ FIXME
+
+Files: ./src/sugar/presence/connectionmanager.py
+Copyright: 2010, Collabora Ltd. <http://www.collabora.co.uk/>
+License: LGPL-2+
+ FIXME
+
+Files: ./src/sugar/activity/activity.py
+Copyright: 2006-2007, Red Hat, Inc
+	2007-2009, One Laptop Per Child
+	2010, Collabora Ltd. <http://www.collabora.co.uk/>
 License: LGPL-2+
  FIXME
 

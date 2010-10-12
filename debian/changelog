@@ -1,3 +1,16 @@
+sugar-toolkit-0.90 (0.90.1-1) unstable; urgency=low
+
+  * New upstream stable release.
+  * sugar-presence-service has been merged with sugar-toolkit:
+    + Provide (not recommend) sugar-presence-service
+    + Recommend telepathy-mission-control-5, telepathy-gabble and
+      telepathy-salut.
+      Version the recommendations to match upstream release notes.
+  * Update copyright file: New authors and years (no new licenses).
+  * Bump Policy compliance to standards-version 3.9.1.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 12 Oct 2010 11:59:41 +0200
+
 sugar-toolkit-0.90 (0.89.1-1) experimental; urgency=low
 
   * New upstream development release.
