@@ -1,3 +1,10 @@
+sugar-toolkit-0.90 (0.90.1-2) unstable; urgency=low
+
+  * Fix recommend (not provide) sugar-presence-service: Apparently only
+    parts of it was merged.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 12 Oct 2010 13:36:45 +0200
+
 sugar-toolkit-0.90 (0.90.1-1) unstable; urgency=low
 
   * New upstream stable release.
