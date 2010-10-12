@@ -32,16 +32,17 @@ Files: ./src/sugar/acme-*
 Copyright: 2002-2003, Bastien Nocera
 License: LGPL-2+
 
+Files: ./src/sugar/activity/activityfactory.py,
+	./src/sugar/activity/activity.py,
+	./src/sugar/presence/buddy.py,
+	./src/sugar/presence/presenceservice.py
+Copyright: 2006-2007, Red Hat, Inc
+	2010, Collabora Ltd. <http://www.collabora.co.uk/>
+License: LGPL-2+
+
 Files: ./src/sugar/eggdesktopfile.h,
 	./src/sugar/eggsmclient*
 Copyright: 2007, Novell, Inc
-License: LGPL-2+
-
-Files: ./src/sugar/activity/activity.py,
-	./src/sugar/graphics/radiotoolbutton.py,
-	./src/sugar/graphics/toolbutton.py
-Copyright: 2006-2007, Red Hat, Inc
-	2007-2009, One Laptop Per Child
 License: LGPL-2+
 
 Files: ./config.guess,
@@ -73,6 +74,12 @@ Files: ./m4/ltoptions.m4,
 	./lt~obsolete.m4
 Copyright: 2004-2005,2007-2008, Free Software Foundation, Inc
 License: other-GAP-FSF-notice
+
+Files: ./src/sugar/graphics/radiotoolbutton.py,
+	./src/sugar/graphics/toolbutton.py
+Copyright: 2007, Red Hat, Inc
+	2007-2008, One Laptop Per Child
+License: LGPL-2+
 
 Files: ./missing
 Copyright: 1996, Fran,cois Pinard <pinard@iro.umontreal.ca>
@@ -113,9 +120,24 @@ Copyright: 2009, Aleksey Lim
 	2009, Simon Schampijer
 License: LGPL-2+
 
+Files: ./src/sugar/graphics/alert.py
+Copyright: 2007, One Laptop Per Child
+	2010, Anish Mangal <anishmangal2002@gmail.com>
+License: LGPL-2+
+
 Files: ./src/sugar/graphics/colorbutton.py
 Copyright: 2007, Red Hat, Inc
 	2008, Benjamin Berg <benjamin@sipsolutions.net>
+License: LGPL-2+
+
+Files: ./src/sugar/presence/connectionmanager.py
+Copyright: 2010, Collabora Ltd. <http://www.collabora.co.uk/>
+License: LGPL-2+
+
+Files: ./src/sugar/activity/activity.py
+Copyright: 2006-2007, Red Hat, Inc
+	2007-2009, One Laptop Per Child
+	2010, Collabora Ltd. <http://www.collabora.co.uk/>
 License: LGPL-2+
 
 Files: ./src/sugar/eggsmclient-xsmp.c
