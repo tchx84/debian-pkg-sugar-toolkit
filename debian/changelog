@@ -1,3 +1,10 @@
+sugar-toolkit-0.90 (0.90.2-1) unstable; urgency=low
+
+  * New upstream stable release.
+  * Shorten Vcs-Git stanza.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 14 Oct 2010 21:03:50 +0200
+
 sugar-toolkit-0.90 (0.90.1-2) unstable; urgency=low
 
   * Fix recommend (not provide) sugar-presence-service: Apparently only
