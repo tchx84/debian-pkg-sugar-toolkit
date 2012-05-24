@@ -1,3 +1,9 @@
+sugar-toolkit-0.96 (0.90.2-3) UNRELEASED; urgency=low
+
+  * Switch packaging to upstream branch 0.96.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 24 May 2012 22:21:50 +0200
+
 sugar-toolkit-0.90 (0.90.2-2) unstable; urgency=low
 
   * Tidy rules file: Resolve $pkgbranch from $DEB_SOURCE_PACKAGE.
