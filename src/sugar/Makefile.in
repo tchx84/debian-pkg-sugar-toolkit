@@ -82,9 +82,8 @@ am__sugarext_la_OBJECTS = $(am__objects_1) \
 	_sugarext_la-gsm-xsmp.lo _sugarext_la-gsm-session.lo \
 	_sugarext_la-eggaccelerators.lo _sugarext_la-eggdesktopfile.lo \
 	_sugarext_la-eggsmclient.lo _sugarext_la-eggsmclient-xsmp.lo \
-	_sugarext_la-sexy-icon-entry.lo \
-	_sugarext_la-sugar-address-entry.lo _sugarext_la-sugar-grid.lo \
-	_sugarext_la-sugar-key-grabber.lo _sugarext_la-sugar-menu.lo
+	_sugarext_la-sugar-grid.lo _sugarext_la-sugar-key-grabber.lo \
+	_sugarext_la-sugar-menu.lo
 _sugarext_la_OBJECTS = $(am__sugarext_la_OBJECTS)
 _sugarext_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(_sugarext_la_CFLAGS) \
@@ -165,6 +164,7 @@ CYGPATH_W = @CYGPATH_W@
 DATADIRNAME = @DATADIRNAME@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -201,6 +201,7 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
@@ -221,6 +222,8 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 POFILES = @POFILES@
 POSUB = @POSUB@
 PO_IN_DATADIR_FALSE = @PO_IN_DATADIR_FALSE@
@@ -246,6 +249,7 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
@@ -278,7 +282,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -342,10 +345,6 @@ _sugarext_la_SOURCES = \
 	eggsmclient.c			\
 	eggsmclient-private.h		\
 	eggsmclient-xsmp.c		\
-	sexy-icon-entry.h		\
-	sexy-icon-entry.c		\
-	sugar-address-entry.c		\
-	sugar-address-entry.h		\
 	sugar-grid.c			\
 	sugar-grid.h			\
 	sugar-key-grabber.c		\
@@ -448,8 +447,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-gsm-client.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-gsm-session.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-gsm-xsmp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sexy-icon-entry.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-address-entry.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-grid.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-key-grabber.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/_sugarext_la-sugar-marshal.Plo@am__quote@
@@ -573,20 +570,6 @@ _sugarext_la-eggsmclient-xsmp.lo: eggsmclient-xsmp.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='eggsmclient-xsmp.c' object='_sugarext_la-eggsmclient-xsmp.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-eggsmclient-xsmp.lo `test -f 'eggsmclient-xsmp.c' || echo '$(srcdir)/'`eggsmclient-xsmp.c
-
-_sugarext_la-sexy-icon-entry.lo: sexy-icon-entry.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-sexy-icon-entry.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-sexy-icon-entry.Tpo -c -o _sugarext_la-sexy-icon-entry.lo `test -f 'sexy-icon-entry.c' || echo '$(srcdir)/'`sexy-icon-entry.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/_sugarext_la-sexy-icon-entry.Tpo $(DEPDIR)/_sugarext_la-sexy-icon-entry.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sexy-icon-entry.c' object='_sugarext_la-sexy-icon-entry.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-sexy-icon-entry.lo `test -f 'sexy-icon-entry.c' || echo '$(srcdir)/'`sexy-icon-entry.c
-
-_sugarext_la-sugar-address-entry.lo: sugar-address-entry.c
-@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-sugar-address-entry.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-sugar-address-entry.Tpo -c -o _sugarext_la-sugar-address-entry.lo `test -f 'sugar-address-entry.c' || echo '$(srcdir)/'`sugar-address-entry.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/_sugarext_la-sugar-address-entry.Tpo $(DEPDIR)/_sugarext_la-sugar-address-entry.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sugar-address-entry.c' object='_sugarext_la-sugar-address-entry.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -c -o _sugarext_la-sugar-address-entry.lo `test -f 'sugar-address-entry.c' || echo '$(srcdir)/'`sugar-address-entry.c
 
 _sugarext_la-sugar-grid.lo: sugar-grid.c
 @am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(_sugarext_la_CFLAGS) $(CFLAGS) -MT _sugarext_la-sugar-grid.lo -MD -MP -MF $(DEPDIR)/_sugarext_la-sugar-grid.Tpo -c -o _sugarext_la-sugar-grid.lo `test -f 'sugar-grid.c' || echo '$(srcdir)/'`sugar-grid.c

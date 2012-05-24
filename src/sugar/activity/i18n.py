@@ -19,6 +19,7 @@
 
 import gconf
 
+from gettext import gettext
 import locale
 import os
 import struct
@@ -94,6 +95,23 @@ def _extract_modification_time(file_path):
     raise ValueError('Could not find a revision date')
 
 
+# We ship our own version of pgettext() because Python 2.x will never contain
+# it: http://bugs.python.org/issue2504#msg122482
+def pgettext(context, message):
+    """
+    Return the localized translation of message, based on context and
+    the current global domain, language, and locale directory.
+
+    Similar to gettext(). Context is a string used to disambiguate
+    messages that are the same in the source language (usually english),
+    but might be different in one or more of the target languages.
+    """
+    translation = gettext('\x04'.join([context, message]))
+    if '\x04' in translation:
+        return message
+    return translation
+
+
 def get_locale_path(bundle_id):
     """ Returns the locale path, which is the directory where the preferred
         MO file is located.
@@ -118,7 +136,7 @@ def get_locale_path(bundle_id):
         candidate_dirs[os.environ['SUGAR_LOCALEDIR']] = 2
 
     gconf_client = gconf.client_get_default()
-    package_dir = gconf_client.get_string("/desktop/sugar/i18n/langpackdir")
+    package_dir = gconf_client.get_string('/desktop/sugar/i18n/langpackdir')
     if package_dir is not None and package_dir is not '':
         candidate_dirs[package_dir] = 1
 

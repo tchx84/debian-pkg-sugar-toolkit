@@ -144,6 +144,7 @@ class BaseBuddy(gobject.GObject):
 
 class Buddy(BaseBuddy):
     __gtype_name__ = 'PresenceBuddy'
+
     def __init__(self, account_path, contact_id):
         _logger.debug('Buddy.__init__')
         BaseBuddy.__init__(self)
@@ -181,7 +182,8 @@ class Buddy(BaseBuddy):
                 CONNECTION_INTERFACE_CONTACTS,
                 'GetContactAttributes',
                 'auasb',
-                ([self.contact_handle], [CONNECTION_INTERFACE_ALIASING], False),
+                ([self.contact_handle], [CONNECTION_INTERFACE_ALIASING],
+                 False),
                 reply_handler=self.__got_attributes_cb,
                 error_handler=self.__error_handler_cb)
 
@@ -242,5 +244,5 @@ class Owner(BaseBuddy):
         BaseBuddy.__init__(self)
 
         client = gconf.client_get_default()
-        self.props.nick = client.get_string("/desktop/sugar/user/nick")
-        self.props.color = client.get_string("/desktop/sugar/user/color")
+        self.props.nick = client.get_string('/desktop/sugar/user/nick')
+        self.props.color = client.get_string('/desktop/sugar/user/color')

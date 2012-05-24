@@ -61,7 +61,8 @@ class _SVGLoader(object):
                 logging.error(
                     'Icon %s, entity %s is invalid.', file_name, entity)
 
-        import rsvg # XXX this is very slow!  why?
+        # XXX this is very slow!  why?
+        import rsvg
         return rsvg.Handle(data=icon)
 
 
@@ -181,9 +182,9 @@ class _IconBuffer(object):
 
             if not sensitive:
                 pixbuf = self._get_insensitive_pixbuf(pixbuf, widget)
-            surface = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
-            context.set_source_surface(surface, 0, 0)
-            context.paint()
+            gdkcontext = gtk.gdk.CairoContext(context)
+            gdkcontext.set_source_pixbuf(pixbuf, 0, 0)
+            gdkcontext.paint()
 
     def _get_size(self, icon_width, icon_height, padding):
         if self.width is not None and self.height is not None:
@@ -240,13 +241,9 @@ class _IconBuffer(object):
         icon_source.set_direction_wildcarded(False)
         icon_source.set_size_wildcarded(False)
 
-        # Please note that the pixbuf returned by this function is leaked
-        # with current stable versions of pygtk. The relevant bug is
-        # http://bugzilla.gnome.org/show_bug.cgi?id=502871
-        #   -- 2007-12-14 Benjamin Berg
         pixbuf = widget.style.render_icon(icon_source, widget.get_direction(),
                                           gtk.STATE_INSENSITIVE, -1, widget,
-                                          "sugar-icon")
+                                          'sugar-icon')
 
         return pixbuf
 
@@ -283,8 +280,9 @@ class _IconBuffer(object):
             surface = cairo.ImageSurface(cairo.FORMAT_RGB24, int(width),
                                          int(height))
             context = cairo.Context(surface)
-            context = gtk.gdk.CairoContext(context)
-            context.set_source_color(self.background_color)
+            context.set_source_rgb(self.background_color.red,
+                                   self.background_color.blue,
+                                   self.background_color.green)
             context.paint()
 
         context.scale(float(width) / (icon_width + padding * 2),
@@ -298,16 +296,15 @@ class _IconBuffer(object):
             else:
                 pixbuf = handle.get_pixbuf()
                 pixbuf = self._get_insensitive_pixbuf(pixbuf, widget)
-
-                pixbuf_surface = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
-                context.set_source_surface(pixbuf_surface, 0, 0)
-                context.paint()
+                gdkcontext = gtk.gdk.CairoContext(context)
+                gdkcontext.set_source_pixbuf(pixbuf, 0, 0)
+                gdkcontext.paint()
         else:
             if not sensitive:
                 pixbuf = self._get_insensitive_pixbuf(pixbuf, widget)
-            pixbuf_surface = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
-            context.set_source_surface(pixbuf_surface, 0, 0)
-            context.paint()
+            gdkcontext = gtk.gdk.CairoContext(context)
+            gdkcontext.set_source_pixbuf(pixbuf, 0, 0)
+            gdkcontext.paint()
 
         if self.badge_name:
             context.restore()
@@ -331,6 +328,8 @@ class Icon(gtk.Image):
         # collected while it's still used if it's a sugar.util.TempFilePath.
         # See #1175
         self._file = None
+        self._alpha = 1.0
+        self._scale = 1.0
 
         gobject.GObject.__init__(self, **kwargs)
 
@@ -419,8 +418,22 @@ class Icon(gtk.Image):
             (allocation.height - requisition[1]) * yalign)
 
         cr = self.window.cairo_create()
+
+        if self._scale != 1.0:
+            cr.scale(self._scale, self._scale)
+
+            margin = self._buffer.width * (1 - self._scale) / 2
+            x, y = x + margin, y + margin
+
+            x = x / self._scale
+            y = y / self._scale
+
         cr.set_source_surface(surface, x, y)
-        cr.paint()
+
+        if self._alpha == 1.0:
+            cr.paint()
+        else:
+            cr.paint_with_alpha(self._alpha)
 
     def set_xo_color(self, value):
         """
@@ -523,6 +536,22 @@ class Icon(gtk.Image):
     badge_name = gobject.property(
         type=str, getter=get_badge_name, setter=set_badge_name)
 
+    def set_alpha(self, value):
+        if self._alpha != value:
+            self._alpha = value
+            self.queue_draw()
+
+    alpha = gobject.property(
+        type=float, setter=set_alpha)
+
+    def set_scale(self, value):
+        if self._scale != value:
+            self._scale = value
+            self.queue_draw()
+
+    scale = gobject.property(
+        type=float, setter=set_scale)
+
 
 class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
@@ -533,6 +562,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
         self._buffer = _IconBuffer()
         self._palette_invoker = CanvasInvoker()
+        self._alpha = 1.0
 
         hippo.CanvasBox.__init__(self, **kwargs)
 
@@ -774,8 +804,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         None
 
         """
-        logging.warning(
-            'CanvasIcon: the scale parameter is currently unsupported')
         if self._buffer.scale != value:
             self._buffer.scale = value
             self.emit_request_changed()
@@ -795,6 +823,14 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
     scale = gobject.property(
         type=float, getter=get_scale, setter=set_scale)
+
+    def set_alpha(self, alpha):
+        if self._alpha != alpha:
+            self._alpha = alpha
+            self.emit_paint_needed(0, 0, -1, -1)
+
+    alpha = gobject.property(
+        type=float, setter=set_alpha)
 
     def set_cache(self, value):
         """
@@ -877,7 +913,10 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             y = (height - surface.get_height()) / 2
 
             cr.set_source_surface(surface, x, y)
-            cr.paint()
+            if self._alpha == 1.0:
+                cr.paint()
+            else:
+                cr.paint_with_alpha(self._alpha)
 
     def do_get_content_width_request(self):
         """

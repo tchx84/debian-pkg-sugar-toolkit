@@ -22,6 +22,7 @@ UNSTABLE. Used only internally by Activity and jarabe.
 import gtk
 import logging
 
+
 def _property_get_trapped(window, prop, prop_type):
     gtk.gdk.error_trap_push()
 
@@ -31,11 +32,13 @@ def _property_get_trapped(window, prop, prop_type):
     error = gtk.gdk.error_trap_pop()
     if error:
         logging.debug('Received X Error (%i) while getting '
-                      'a property on a window' % error)
+                      'a property on a window', error)
 
     return prop_info
 
+
 def _property_change_trapped(window, prop, prop_type, format, mode, data):
+    # pylint: disable=W0622
     gtk.gdk.error_trap_push()
 
     window.property_change(prop, prop_type, format, mode, data)
@@ -43,10 +46,10 @@ def _property_change_trapped(window, prop, prop_type, format, mode, data):
     error = gtk.gdk.error_trap_pop()
     if error:
         logging.debug('Received X Error (%i) while setting '
-                      'a property on a window' % error)
+                      'a property on a window', error)
         raise RuntimeError('Received X Error (%i) while setting '
                            'a property on a window' % error)
-    
+
 
 def get_activity_id(wnck_window):
     window = gtk.gdk.window_foreign_new(wnck_window.get_xid())
@@ -83,4 +86,3 @@ def set_activity_id(window, activity_id):
 def set_bundle_id(window, bundle_id):
     _property_change_trapped(window, '_SUGAR_BUNDLE_ID', 'STRING', 8,
                              gtk.gdk.PROP_MODE_REPLACE, bundle_id)
-

@@ -68,11 +68,13 @@ from telepathy.interfaces import CHANNEL, \
                                  CLIENT, \
                                  CLIENT_HANDLER
 from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT
+from telepathy.constants import CONNECTION_HANDLE_TYPE_ROOM
 
+import sugar
 from sugar import util
 from sugar.presence import presenceservice
+from sugar.activity import i18n
 from sugar.activity.activityservice import ActivityService
-from sugar.activity.namingalert import NamingAlert
 from sugar.graphics import style
 from sugar.graphics.window import Window
 from sugar.graphics.alert import Alert
@@ -88,15 +90,16 @@ from sugar.activity.widgets import ActivityToolbox
 
 _ = lambda msg: gettext.dgettext('sugar-toolkit', msg)
 
-SCOPE_PRIVATE = "private"
-SCOPE_INVITE_ONLY = "invite"  # shouldn't be shown in UI, it's implicit
-SCOPE_NEIGHBORHOOD = "public"
+SCOPE_PRIVATE = 'private'
+SCOPE_INVITE_ONLY = 'invite'  # shouldn't be shown in UI, it's implicit
+SCOPE_NEIGHBORHOOD = 'public'
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_PATH = '/org/laptop/Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
 
 CONN_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
+
 
 class _ActivitySession(gobject.GObject):
 
@@ -221,6 +224,9 @@ class Activity(Window, gtk.Container):
     __gsignals__ = {
         'shared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
         'joined': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        # For internal use only, use can_close() if you want to perform extra
+        # checks before actually closing
+        '_closing': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self, handle, create_jobject=True):
@@ -253,9 +259,26 @@ class Activity(Window, gtk.Container):
             the base class __init()__ before doing Activity specific things.
 
         """
+
+        # Stuff that needs to be done early
+
+        locale_path = i18n.get_locale_path(self.get_bundle_id())
+        gettext.bindtextdomain(self.get_bundle_id(), locale_path)
+        gettext.bindtextdomain('sugar-toolkit', sugar.locale_path)
+        gettext.textdomain(self.get_bundle_id())
+
+        icons_path = os.path.join(get_bundle_path(), 'icons')
+        gtk.icon_theme_get_default().append_search_path(icons_path)
+
+        # This code can be removed when we grow an xsettings daemon (the GTK+
+        # init routines will then automatically figure out the font settings)
+        settings = gtk.settings_get_default()
+        settings.set_property('gtk-font-name',
+                              '%s %f' % (style.FONT_FACE, style.FONT_SIZE))
+
         Window.__init__(self)
 
-        if os.environ.has_key('SUGAR_ACTIVITY_ROOT'):
+        if 'SUGAR_ACTIVITY_ROOT' in os.environ:
             # If this activity runs inside Sugar, we want it to take all the
             # screen. Would be better if it was the shell to do this, but we
             # haven't found yet a good way to do it there. See #1263.
@@ -268,7 +291,7 @@ class Activity(Window, gtk.Container):
         # but they get truncated anyway so if more characters
         # are supported in the future we will get a better view
         # of the processes
-        proc_title = "%s <%s>" % (get_bundle_name(), handle.activity_id)
+        proc_title = '%s <%s>' % (get_bundle_name(), handle.activity_id)
         util.set_proc_title(proc_title)
 
         self.connect('realize', self.__realize_cb)
@@ -304,13 +327,16 @@ class Activity(Window, gtk.Container):
 
         if handle.object_id:
             self._jobject = datastore.get(handle.object_id)
-            self.set_title(self._jobject.metadata['title'])
 
-            if self._jobject.metadata.has_key('share-scope'):
+            if 'share-scope' in self._jobject.metadata:
                 share_scope = self._jobject.metadata['share-scope']
 
         self.shared_activity = None
         self._join_id = None
+
+        if handle.object_id is None and create_jobject:
+            logging.debug('Creating a jobject.')
+            self._jobject = self._initialize_journal_object()
 
         if handle.invited:
             wait_loop = gobject.MainLoop()
@@ -327,19 +353,26 @@ class Activity(Window, gtk.Container):
                                                   warn_if_none=False)
             self._set_up_sharing(mesh_instance, share_scope)
 
-        if handle.object_id is None and create_jobject:
-            logging.debug('Creating a jobject.')
-            self._jobject = self._initialize_journal_object()
-            self.set_title(self._jobject.metadata['title'])
+        if not create_jobject:
+            self.set_title(get_bundle_name())
+            return
+
+        if self.shared_activity is not None:
+            self._jobject.metadata['title'] = self.shared_activity.props.name
+            self._jobject.metadata['icon-color'] = \
+                self.shared_activity.props.color
+        else:
+            self._jobject.metadata.connect('updated',
+                                           self.__jobject_updated_cb)
+        self.set_title(self._jobject.metadata['title'])
+
+    def run_main_loop(self):
+        gtk.main()
 
     def _initialize_journal_object(self):
         title = _('%s Activity') % get_bundle_name()
-
-        if self.shared_activity is not None:
-            icon_color = self.shared_activity.props.color
-        else:
-            client = gconf.client_get_default()
-            icon_color = client.get_string('/desktop/sugar/user/color')
+        client = gconf.client_get_default()
+        icon_color = client.get_string('/desktop/sugar/user/color')
 
         jobject = datastore.create()
         jobject.metadata['title'] = title
@@ -359,18 +392,23 @@ class Activity(Window, gtk.Container):
 
         return jobject
 
+    def __jobject_updated_cb(self, jobject):
+        if self.get_title() == jobject['title']:
+            return
+        self.set_title(jobject['title'])
+
     def _set_up_sharing(self, mesh_instance, share_scope):
         # handle activity share/join
-        logging.debug("*** Act %s, mesh instance %r, scope %s",
+        logging.debug('*** Act %s, mesh instance %r, scope %s',
                       self._activity_id, mesh_instance, share_scope)
         if mesh_instance is not None:
             # There's already an instance on the mesh, join it
-            logging.debug("*** Act %s joining existing mesh instance %r",
+            logging.debug('*** Act %s joining existing mesh instance %r',
                           self._activity_id, mesh_instance)
             self.shared_activity = mesh_instance
             self.shared_activity.connect('notify::private',
                                          self.__privacy_changed_cb)
-            self._join_id = self.shared_activity.connect("joined",
+            self._join_id = self.shared_activity.connect('joined',
                                                          self.__joined_cb)
             if not self.shared_activity.props.joined:
                 self.shared_activity.join()
@@ -388,17 +426,22 @@ class Activity(Window, gtk.Container):
             else:
                 logging.debug('Unknown share scope %r', share_scope)
 
-    def __got_channel_cb(self, wait_loop, connection_path, channel_path):
+    def __got_channel_cb(self, wait_loop, connection_path, channel_path,
+                         handle_type):
         logging.debug('Activity.__got_channel_cb')
-        connection_name = connection_path.replace('/', '.')[1:]
-
-        bus = dbus.SessionBus()
-        channel = bus.get_object(connection_name, channel_path)
-        room_handle = channel.Get(CHANNEL, 'TargetHandle')
-
         pservice = presenceservice.get_instance()
-        mesh_instance = pservice.get_activity_by_handle(connection_path,
-                                                        room_handle)
+
+        if handle_type == CONNECTION_HANDLE_TYPE_ROOM:
+            connection_name = connection_path.replace('/', '.')[1:]
+            bus = dbus.SessionBus()
+            channel = bus.get_object(connection_name, channel_path)
+            room_handle = channel.Get(CHANNEL, 'TargetHandle')
+            mesh_instance = pservice.get_activity_by_handle(connection_path,
+                                                            room_handle)
+        else:
+            mesh_instance = pservice.get_activity(self._activity_id,
+                                                  warn_if_none=False)
+
         self._set_up_sharing(mesh_instance, SCOPE_PRIVATE)
         wait_loop.quit()
 
@@ -508,8 +551,7 @@ class Activity(Window, gtk.Container):
         which isn't specific to a journal item here. If (meta-)data is in
         anyway specific to a journal entry, it MUST be stored in the DataStore.
         """
-        if os.environ.has_key('SUGAR_ACTIVITY_ROOT') and \
-           os.environ['SUGAR_ACTIVITY_ROOT']:
+        if os.environ.get('SUGAR_ACTIVITY_ROOT'):
             return os.environ['SUGAR_ACTIVITY_ROOT']
         else:
             return '/'
@@ -568,7 +610,8 @@ class Activity(Window, gtk.Container):
         if self._closing:
             self._show_keep_failed_dialog()
             self._closing = False
-        raise RuntimeError('Error saving activity object to datastore: %s', err)
+        raise RuntimeError('Error saving activity object to datastore: %s',
+                           err)
 
     def _cleanup_jobject(self):
         if self._jobject:
@@ -777,7 +820,7 @@ class Activity(Window, gtk.Container):
         its 'private' property.
         """
         if self.shared_activity and self.shared_activity.props.joined:
-            raise RuntimeError("Activity %s already shared." %
+            raise RuntimeError('Activity %s already shared.' %
                                self._activity_id)
         verb = private and 'private' or 'public'
         logging.debug('Requesting %s share of activity %s.', verb,
@@ -822,6 +865,7 @@ class Activity(Window, gtk.Container):
             try:
                 self.save()
             except:
+                # pylint: disable=W0702
                 logging.exception('Error saving activity object to datastore')
                 self._show_keep_failed_dialog()
                 return False
@@ -853,19 +897,14 @@ class Activity(Window, gtk.Container):
         if not self.can_close():
             return
 
-        if skip_save or self._jobject is None or \
-                self.metadata.get('title_set_by_user', '0') == '1':
-            if not self._closing:
-                if not self._prepare_close(skip_save):
-                    return
+        self.emit('_closing')
 
-            if not self._updating_jobject:
-                self._complete_close()
-        else:
-            title_alert = NamingAlert(self, get_bundle_path())
-            title_alert.set_transient_for(self.get_toplevel())
-            title_alert.show()
-            self.reveal()
+        if not self._closing:
+            if not self._prepare_close(skip_save):
+                return
+
+        if not self._updating_jobject:
+            self._complete_close()
 
     def __realize_cb(self, window):
         wm.set_bundle_id(window.window, self.get_bundle_id())
@@ -879,7 +918,7 @@ class Activity(Window, gtk.Container):
         """Returns the jobject metadata or None if there is no jobject.
 
         Activities can set metadata in write_file() using:
-            self.metadata['MyKey'] = "Something"
+            self.metadata['MyKey'] = 'Something'
 
         and retrieve metadata in read_file() using:
             self.metadata.get('MyKey', 'aDefaultValue')
@@ -927,7 +966,7 @@ class _ClientHandler(dbus.service.Object, DBusProperties):
     def __get_filters_cb(self):
         logging.debug('__get_filters_cb')
         filters = {
-            CHANNEL + '.ChannelType'     : CHANNEL_TYPE_TEXT,
+            CHANNEL + '.ChannelType': CHANNEL_TYPE_TEXT,
             CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
             }
         filter_dict = dbus.Dictionary(filters, signature='sv')
@@ -943,8 +982,11 @@ class _ClientHandler(dbus.service.Object, DBusProperties):
                 account, connection, channels, requests_satisfied,
                 user_action_time, handler_info)
         try:
-            for channel in channels:
-                self._got_channel_cb(connection, channel[0])
+            for object_path, properties in channels:
+                channel_type = properties[CHANNEL + '.ChannelType']
+                handle_type = properties[CHANNEL + '.TargetHandleType']
+                if channel_type == CHANNEL_TYPE_TEXT:
+                    self._got_channel_cb(connection, object_path, handle_type)
         except Exception, e:
             logging.exception(e)
 
@@ -972,11 +1014,10 @@ def get_bundle_path():
 
 def get_activity_root():
     """Returns a path for saving Activity specific preferences, etc."""
-    if os.environ.has_key('SUGAR_ACTIVITY_ROOT') and \
-            os.environ['SUGAR_ACTIVITY_ROOT']:
+    if os.environ.get('SUGAR_ACTIVITY_ROOT'):
         return os.environ['SUGAR_ACTIVITY_ROOT']
     else:
-        raise RuntimeError("No SUGAR_ACTIVITY_ROOT set.")
+        raise RuntimeError('No SUGAR_ACTIVITY_ROOT set.')
 
 
 def show_object_in_journal(object_id):

@@ -109,6 +109,7 @@ class Activity(gobject.GObject):
         self._channel_self_handle = None
         self._text_channel_group_flags = 0
         self._buddies = {}
+        self._joined_buddies = {}
 
         self._get_properties_call = None
         if not self.room_handle is None:
@@ -135,7 +136,8 @@ class Activity(gobject.GObject):
                 dbus_interface=CONN_INTERFACE_ACTIVITY_PROPERTIES)
 
     def __activity_properties_changed_cb(self, room_handle, properties):
-        _logger.debug('%r: Activity properties changed to %r', self, properties)
+        _logger.debug('%r: Activity properties changed to %r', self,
+                      properties)
         self._update_properties(properties)
 
     def __got_properties_cb(self, properties):
@@ -179,7 +181,7 @@ class Activity(gobject.GObject):
     def do_get_property(self, pspec):
         """Retrieve a particular property from our property dictionary"""
 
-        if pspec.name == "joined":
+        if pspec.name == 'joined':
             return self._joined
 
         if self._get_properties_call is not None:
@@ -187,17 +189,17 @@ class Activity(gobject.GObject):
                           'wants property %s', self, pspec.name)
             self._get_properties_call.block()
 
-        if pspec.name == "id":
+        if pspec.name == 'id':
             return self._id
-        elif pspec.name == "name":
+        elif pspec.name == 'name':
             return self._name
-        elif pspec.name == "color":
+        elif pspec.name == 'color':
             return self._color
-        elif pspec.name == "type":
+        elif pspec.name == 'type':
             return self._type
-        elif pspec.name == "tags":
+        elif pspec.name == 'tags':
             return self._tags
-        elif pspec.name == "private":
+        elif pspec.name == 'private':
             return self._private
 
     def do_set_property(self, pspec, val):
@@ -205,16 +207,16 @@ class Activity(gobject.GObject):
         # FIXME: need an asynchronous API to set these properties,
         # particularly 'private'
 
-        if pspec.name == "name":
+        if pspec.name == 'name':
             self._name = val
-        elif pspec.name == "color":
+        elif pspec.name == 'color':
             self._color = val
-        elif pspec.name == "tags":
+        elif pspec.name == 'tags':
             self._tags = val
-        elif pspec.name == "private":
+        elif pspec.name == 'private':
             self._private = val
         else:
-            raise ValueError('Unknown property "%s"', pspec.name)
+            raise ValueError('Unknown property %r', pspec.name)
 
         self._publish_properties()
 
@@ -230,7 +232,7 @@ class Activity(gobject.GObject):
         returns list of presence Buddy objects that we can successfully
         create from the buddy object paths that PS has for this activity.
         """
-        return self._buddies.values()
+        return self._joined_buddies.values()
 
     def get_buddy_by_handle(self, handle):
         """Retrieve the Buddy object given a telepathy handle.
@@ -320,6 +322,7 @@ class Activity(gobject.GObject):
         _logger.debug('__add_initial_buddies %r', contact_ids)
         for contact_id in contact_ids:
             self._buddies[contact_id] = self._get_buddy(contact_id)
+            self._joined_buddies[contact_id] = self._get_buddy(contact_id)
         # Once we have the initial members, we can finish the join process
         self._joined = True
         self.emit('joined', True, None)
@@ -338,7 +341,7 @@ class Activity(gobject.GObject):
         if self._channel_self_handle in removed:
             removed.remove(self._channel_self_handle)
         if removed:
-            self._resolve_handles(added, reply_cb=self._remove_buddies)
+            self._resolve_handles(removed, reply_cb=self._remove_buddies)
 
     def _add_buddies(self, contact_ids):
         for contact_id in contact_ids:
@@ -346,6 +349,8 @@ class Activity(gobject.GObject):
                 buddy = self._get_buddy(contact_id)
                 self.emit('buddy-joined', buddy)
                 self._buddies[contact_id] = buddy
+            if contact_id not in self._joined_buddies:
+                self._joined_buddies[contact_id] = buddy
 
     def _remove_buddies(self, contact_ids):
         for contact_id in contact_ids:
@@ -456,18 +461,20 @@ class Activity(gobject.GObject):
     # Leaving
     def __text_channel_closed_cb(self):
         self._joined = False
-        self.emit("joined", False, "left activity")
+        self.emit('joined', False, 'left activity')
 
     def leave(self):
         """Leave this shared activity"""
         _logger.debug('%r: leaving', self)
         self.telepathy_text_chan.Close()
 
+
 class _BaseCommand(gobject.GObject):
     __gsignals__ = {
         'finished': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                      ([object])),
     }
+
     def __init__(self):
         gobject.GObject.__init__(self)
 
@@ -516,6 +523,7 @@ class _ShareCommand(_BaseCommand):
         self.text_channel = join_command.text_channel
         self.text_channel_group_flags = join_command.text_channel_group_flags
         self.tubes_channel = join_command.tubes_channel
+        self.channel_self_handle = join_command.channel_self_handle
 
         self._connection.AddActivity(
             self._activity_id,
@@ -531,6 +539,7 @@ class _ShareCommand(_BaseCommand):
     def __error_handler_cb(self, error):
         self._finished = True
         self.emit('finished', error)
+
 
 class _JoinCommand(_BaseCommand):
     def __init__(self, connection, room_handle):
@@ -679,11 +688,16 @@ class _JoinCommand(_BaseCommand):
         # since only the owner can change invite-only, that would break
         # activity scope changes.
         props = {
-            'anonymous': False,   # otherwise buddy resolution breaks
-            'invite-only': False, # anyone who knows about the channel can join
-            'invite-restricted': False,     # so non-owners can invite others
-            'persistent': False,  # vanish when there are no members
-            'private': True,      # don't appear in server room lists
+            # otherwise buddy resolution breaks
+            'anonymous': False,
+            # anyone who knows about the channel can join
+            'invite-only': False,
+            # so non-owners can invite others
+            'invite-restricted': False,
+            # vanish when there are no members
+            'persistent': False,
+            # don't appear in server room lists
+            'private': True,
         }
         props_to_set = []
         for ident, name, sig_, flags in prop_specs:

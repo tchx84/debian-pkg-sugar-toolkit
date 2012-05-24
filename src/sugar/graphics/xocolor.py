@@ -209,6 +209,10 @@ colors = [
 
 
 def _parse_string(color_string):
+    if not isinstance(color_string, (str, unicode)):
+        logging.error('Invalid color string: %r', color_string)
+        return None
+
     if color_string == 'white':
         return ['#ffffff', '#414141']
     elif color_string == 'insensitive':
@@ -261,7 +265,7 @@ class XoColor:
         return '%s,%s' % (self.stroke, self.fill)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import sys
     import re
 

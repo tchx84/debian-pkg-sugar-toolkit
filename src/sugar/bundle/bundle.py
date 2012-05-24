@@ -71,16 +71,12 @@ class Bundle(object):
         self._zip_file = None
 
         if not os.path.isdir(self._path):
-            self._zip_file = zipfile.ZipFile(self._path)
+            try:
+                self._zip_file = zipfile.ZipFile(self._path)
+            except zipfile.error, exception:
+                raise MalformedBundleException('Error accessing zip file %r: '
+                                               '%s' % (self._path, exception))
             self._check_zip_bundle()
-
-        # manifest = self._get_file(self._infodir + '/contents')
-        # if manifest is None:
-        #     raise MalformedBundleException('No manifest file')
-
-        # signature = self._get_file(self._infodir + '/contents.sig')
-        # if signature is None:
-        #     raise MalformedBundleException('No signature file')
 
     def __del__(self):
         if self._zip_file is not None:
@@ -103,7 +99,7 @@ class Bundle(object):
             if ext != self._unzipped_extension:
                 raise MalformedBundleException(
                     'All files in the bundle must be inside a single ' +
-                    'directory whose name ends with "%s"' %
+                    'directory whose name ends with %r' %
                     self._unzipped_extension)
 
         for file_name in file_names:
@@ -118,7 +114,7 @@ class Bundle(object):
         if self._zip_file is None:
             path = os.path.join(self._path, filename)
             try:
-                f = open(path, "rb")
+                f = open(path, 'rb')
             except IOError:
                 return None
         else:
@@ -170,7 +166,6 @@ class Bundle(object):
         # correctly by hand, but handling all the oddities of
         # Windows/UNIX mappings, extension attributes, deprecated
         # features, etc makes it impractical.
-        # FIXME: use manifest
         if os.spawnlp(os.P_WAIT, 'unzip', 'unzip', '-o', self._path,
                       '-x', 'mimetype', '-d', install_dir):
             # clean up install dir after failure

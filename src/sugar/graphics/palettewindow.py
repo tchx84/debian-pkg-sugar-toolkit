@@ -110,8 +110,8 @@ class MouseSpeedDetector(gobject.GObject):
         (x, y) = self._get_mouse_position()
         self._mouse_pos = (x, y)
 
-        dist2 = (oldx - x)**2 + (oldy - y)**2
-        if dist2 > self._threshold**2:
+        dist2 = (oldx - x) ** 2 + (oldy - y) ** 2
+        if dist2 > self._threshold ** 2:
             return True
         else:
             return False
@@ -147,6 +147,7 @@ class PaletteWindow(gtk.Window):
         self._alignment = None
         self._up = False
         self._old_alloc = None
+        self._palette_state = None
 
         self._popup_anim = animator.Animator(.5, 10)
         self._popup_anim.add(_PopupAnimation(self))
@@ -165,7 +166,7 @@ class PaletteWindow(gtk.Window):
         self.set_data('sugar-accel-group', accel_group)
         self.add_accel_group(accel_group)
 
-        self.set_group_id("default")
+        self.set_group_id('default')
 
         self.connect('show', self.__show_cb)
         self.connect('hide', self.__hide_cb)
@@ -279,12 +280,12 @@ class PaletteWindow(gtk.Window):
 
         if gap:
             wstyle.paint_box_gap(event.window, gtk.STATE_PRELIGHT,
-                                 gtk.SHADOW_IN, event.area, self, "palette",
+                                 gtk.SHADOW_IN, event.area, self, 'palette',
                                  0, 0, allocation.width, allocation.height,
                                  gap[0], gap[1], gap[2])
         else:
             wstyle.paint_box(event.window, gtk.STATE_PRELIGHT,
-                             gtk.SHADOW_IN, event.area, self, "palette",
+                             gtk.SHADOW_IN, event.area, self, 'palette',
                              0, 0, allocation.width, allocation.height)
 
         # Fall trough to the container expose handler.
@@ -642,7 +643,13 @@ class Invoker(gobject.GObject):
         if self._palette is not None:
             self._palette.popdown(immediate=True)
             self._palette.props.invoker = None
-            self._palette.destroy()
+            # GTK pops down the palette before it invokes the actions on the
+            # menu item. We need to postpone destruction of the palette until
+            # after all signals have propagated from the menu item to the
+            # palette owner.
+            gobject.idle_add(lambda old_palette=self._palette:
+                             old_palette.destroy(),
+                             priority=gobject.PRIORITY_LOW)
 
         self._palette = palette
 
@@ -668,6 +675,7 @@ class Invoker(gobject.GObject):
     def __palette_popdown_cb(self, palette):
         if not self.props.cache_palette:
             self.set_palette(None)
+
 
 class WidgetInvoker(Invoker):
 
@@ -739,14 +747,14 @@ class WidgetInvoker(Invoker):
         if gap:
             wstyle.paint_box_gap(event.window, gtk.STATE_PRELIGHT,
                                  gtk.SHADOW_IN, event.area, self._widget,
-                                 "palette-invoker", x, y,
+                                 'palette-invoker', x, y,
                                  self._widget.allocation.width,
                                  self._widget.allocation.height,
                                  gap[0], gap[1], gap[2])
         else:
             wstyle.paint_box(event.window, gtk.STATE_PRELIGHT,
                              gtk.SHADOW_IN, event.area, self._widget,
-                             "palette-invoker", x, y,
+                             'palette-invoker', x, y,
                              self._widget.allocation.width,
                              self._widget.allocation.height)
 
@@ -851,7 +859,7 @@ class ToolInvoker(WidgetInvoker):
     def _get_alignments(self):
         parent = self._widget.get_parent()
         if parent is None:
-            return WidgetInvoker._get_alignments()
+            return WidgetInvoker._get_alignments(self)
 
         if parent.get_orientation() is gtk.ORIENTATION_HORIZONTAL:
             return self.BOTTOM + self.TOP
@@ -936,9 +944,11 @@ class CellRendererInvoker(Invoker):
             self.notify_mouse_leave()
 
     def _redraw_path(self, path):
+        column = None
         for column in self._tree_view.get_columns():
             if self._cell_renderer in column.get_cell_renderers():
                 break
+        assert column is not None
         area = self._tree_view.get_background_area(path, column)
         x, y = \
             self._tree_view.convert_bin_window_to_widget_coords(area.x, area.y)

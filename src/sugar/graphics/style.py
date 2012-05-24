@@ -35,12 +35,11 @@ _TAB_CURVATURE = 1
 
 
 def _compute_zoom_factor():
-    if os.environ.has_key('SUGAR_SCALING'):
-        try:
-            scaling = int(os.environ['SUGAR_SCALING'])
-            return scaling / 100.0
-        except ValueError:
-            logging.error('Invalid SUGAR_SCALING.')
+    try:
+        scaling = int(os.environ.get('SUGAR_SCALING', '100'))
+        return scaling / 100.0
+    except ValueError:
+        logging.error('Invalid SUGAR_SCALING.')
 
     return 1.0
 
@@ -84,7 +83,7 @@ class Color(object):
         if html_color[0] == '#':
             html_color = html_color[1:]
         if len(html_color) != 6:
-            raise ValueError, "input #%s is not in #RRGGBB format" % html_color
+            raise ValueError('input #%s is not in #RRGGBB format' % html_color)
 
         r, g, b = html_color[:2], html_color[2:4], html_color[4:]
         r, g, b = [int(n, 16) for n in (r, g, b)]
