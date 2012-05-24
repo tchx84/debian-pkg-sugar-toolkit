@@ -1,8 +1,14 @@
-sugar-toolkit-0.96 (0.90.2-3) UNRELEASED; urgency=low
+sugar-toolkit-0.96 (0.96.1-1) unstable; urgency=low
+
+  * New upstream stable release.
 
   * Switch packaging to upstream branch 0.96.
+  * Refresh patches.
+  * Update copyright file:
+    + Extend copyright coverage of some files to include recent years.
+    + Drop copyright holder of no longer included files.
 
- -- Jonas Smedegaard <dr@jones.dk>  Thu, 24 May 2012 22:21:50 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 24 May 2012 23:14:52 +0200
 
 sugar-toolkit-0.90 (0.90.2-2) unstable; urgency=low
 
