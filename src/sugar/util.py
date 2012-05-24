@@ -29,7 +29,6 @@ import gettext
 import tempfile
 import logging
 import atexit
-import traceback
 
 
 _ = lambda msg: gettext.dgettext('sugar-toolkit', msg)
@@ -50,7 +49,7 @@ def sha_data(data):
     return sha_hash.digest()
 
 
-def unique_id(data = ''):
+def unique_id(data=''):
     """Generate a likely-unique ID for whatever purpose
 
     data -- suffix appended to working data before hashing
@@ -64,7 +63,7 @@ def unique_id(data = ''):
         to be unique-enough, no attempt is made to make
         perfectly unique values.
     """
-    data_string = "%s%s%s" % (time.time(), random.randint(10000, 100000), data)
+    data_string = '%s%s%s' % (time.time(), random.randint(10000, 100000), data)
     return printable_hash(sha_data(data_string))
 
 
@@ -133,7 +132,7 @@ class LRU:
     """
 
     def __init__(self, count, pairs=[]):
-        # pylint: disable-msg=W0102,W0612
+        # pylint: disable=W0102,W0612
         self.count = max(count, 1)
         self.d = {}
         self.first = None
@@ -336,7 +335,8 @@ def _cleanup_temp_files():
         try:
             os.unlink(path)
         except:
-            logging.error(traceback.format_exc())
+            # pylint: disable=W0702
+            logging.exception('Exception occured in _cleanup_temp_files')
 
 atexit.register(_cleanup_temp_files)
 
@@ -346,9 +346,9 @@ def format_size(size):
         return _('Empty')
     elif size < 1024:
         return _('%d B') % size
-    elif size < 1024**2:
+    elif size < 1024 ** 2:
         return _('%d KB') % (size / 1024)
-    elif size < 1024**3:
-        return _('%d MB') % (size / 1024**2)
+    elif size < 1024 ** 3:
+        return _('%d MB') % (size / 1024 ** 2)
     else:
-        return _('%d GB') % (size / 1024**3)
+        return _('%d GB') % (size / 1024 ** 3)

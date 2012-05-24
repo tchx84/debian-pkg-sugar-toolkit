@@ -40,16 +40,16 @@ import tempfile
 import subprocess
 import pwd
 
-_SHELL_SERVICE = "org.laptop.Shell"
-_SHELL_PATH = "/org/laptop/Shell"
-_SHELL_IFACE = "org.laptop.Shell"
+_SHELL_SERVICE = 'org.laptop.Shell'
+_SHELL_PATH = '/org/laptop/Shell'
+_SHELL_IFACE = 'org.laptop.Shell'
 
-_ACTIVITY_FACTORY_INTERFACE = "org.laptop.ActivityFactory"
+_ACTIVITY_FACTORY_INTERFACE = 'org.laptop.ActivityFactory'
 
 # helper method to close all filedescriptors
 # borrowed from subprocess.py
 try:
-    MAXFD = os.sysconf("SC_OPEN_MAX")
+    MAXFD = os.sysconf('SC_OPEN_MAX')
 except ValueError:
     MAXFD = 256
 
@@ -58,7 +58,7 @@ def _close_fds():
     for i in xrange(3, MAXFD):
         try:
             os.close(i)
-        # pylint: disable-msg=W0704
+        # pylint: disable=W0704
         except Exception:
             pass
 
@@ -293,7 +293,7 @@ class ActivityCreationHandler(gobject.GObject):
     def _find_object_reply_handler(self, jobjects, count):
         if count > 0:
             if count > 1:
-                logging.debug("Multiple objects has the same activity_id.")
+                logging.debug('Multiple objects has the same activity_id.')
             self._handle.object_id = jobjects[0]['uid']
         self._launch_activity()
 

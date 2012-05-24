@@ -29,6 +29,9 @@ from sugar import env
 from sugar.bundle.bundle import Bundle, NotInstalledException, \
     MalformedBundleException
 
+from sugar.bundle.bundleversion import NormalizedVersion
+from sugar.bundle.bundleversion import InvalidVersionError
+
 
 class ContentBundle(Bundle):
     """A Sugar content bundle
@@ -52,7 +55,7 @@ class ContentBundle(Bundle):
         self._subcategory = None
         self._category_class = None
         self._category_icon = None
-        self._library_version = None
+        self._library_version = '0'
         self._bundle_class = None
         self._activity_start = None
         self._global_name = None
@@ -83,11 +86,12 @@ class ContentBundle(Bundle):
         if cp.has_option(section, 'library_version'):
             version = cp.get(section, 'library_version')
             try:
-                self._library_version = int(version)
-            except ValueError:
+                NormalizedVersion(version)
+            except InvalidVersionError:
                 raise MalformedBundleException(
                     'Content bundle %s has invalid version number %s' %
                     (self._path, version))
+            self._library_version = version
 
         if cp.has_option(section, 'l10n'):
             l10n = cp.get(section, 'l10n')
@@ -97,7 +101,7 @@ class ContentBundle(Bundle):
                 self._l10n = False
             else:
                 raise MalformedBundleException(
-                    'Content bundle %s has invalid l10n key "%s"' %
+                    'Content bundle %s has invalid l10n key %r' %
                     (self._path, l10n))
         else:
             raise MalformedBundleException(
@@ -196,7 +200,7 @@ class ContentBundle(Bundle):
         return os.path.join(self.get_root_dir(), self._activity_start)
 
     def get_start_uri(self):
-        return "file://" + urllib.pathname2url(self.get_start_path())
+        return 'file://' + urllib.pathname2url(self.get_start_path())
 
     def get_bundle_id(self):
         # TODO treat ContentBundle in special way
@@ -220,7 +224,7 @@ class ContentBundle(Bundle):
         else:
             return False
 
-    def install(self, install_path):
+    def install(self):
         # TODO ignore passed install_path argument
         # needs rethinking while fixing ContentBundle support
         install_path = env.get_user_library_path()

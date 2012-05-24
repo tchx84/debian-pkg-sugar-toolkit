@@ -24,18 +24,19 @@ from functools import partial
 import dbus
 from dbus import PROPERTIES_IFACE
 from telepathy.interfaces import ACCOUNT, \
-                                 ACCOUNT_MANAGER, \
-                                 CONNECTION
+                                 ACCOUNT_MANAGER
 from telepathy.constants import CONNECTION_STATUS_CONNECTED
 
 ACCOUNT_MANAGER_SERVICE = 'org.freedesktop.Telepathy.AccountManager'
 ACCOUNT_MANAGER_PATH = '/org/freedesktop/Telepathy/AccountManager'
+
 
 class Connection(object):
     def __init__(self, account_path, connection):
         self.account_path = account_path
         self.connection = connection
         self.connected = False
+
 
 class ConnectionManager(object):
     """Track available telepathy connections"""
@@ -75,7 +76,8 @@ class ConnectionManager(object):
                 Connection(account_path, connection)
 
         account = bus.get_object(ACCOUNT_MANAGER_SERVICE, account_path)
-        if account.Get(ACCOUNT, 'ConnectionStatus') == CONNECTION_STATUS_CONNECTED:
+        status = account.Get(ACCOUNT, 'ConnectionStatus')
+        if status == CONNECTION_STATUS_CONNECTED:
             self._connections_per_account[account_path].connected = True
         else:
             self._connections_per_account[account_path].connected = False
@@ -108,8 +110,8 @@ class ConnectionManager(object):
                 return account_path
         return None
 
-_connection_manager = None
 
+_connection_manager = None
 def get_connection_manager():
     global _connection_manager
     if not _connection_manager:

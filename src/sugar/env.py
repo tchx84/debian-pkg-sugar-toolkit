@@ -24,24 +24,17 @@ import os
 
 
 def is_emulator():
-    if os.environ.has_key('SUGAR_EMULATOR'):
-        if os.environ['SUGAR_EMULATOR'] == 'yes':
-            return True
-    return False
+    return os.environ.get('SUGAR_EMULATOR', 'no') == 'yes'
 
 
 def get_profile_path(path=None):
-    if os.environ.has_key('SUGAR_PROFILE'):
-        profile_id = os.environ['SUGAR_PROFILE']
-    else:
-        profile_id = 'default'
-
+    profile_id = os.environ.get('SUGAR_PROFILE', 'default')
     base = os.path.join(os.path.expanduser('~/.sugar'), profile_id)
     if not os.path.isdir(base):
         try:
             os.makedirs(base, 0770)
         except OSError:
-            print "Could not create user directory."
+            print 'Could not create user directory.'
 
     if path != None:
         return os.path.join(base, path)

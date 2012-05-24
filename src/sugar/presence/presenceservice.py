@@ -37,12 +37,14 @@ from telepathy.interfaces import ACCOUNT, \
                                  CONNECTION
 from telepathy.constants import HANDLE_TYPE_CONTACT
 
+
 _logger = logging.getLogger('sugar.presence.presenceservice')
 
 ACCOUNT_MANAGER_SERVICE = 'org.freedesktop.Telepathy.AccountManager'
 ACCOUNT_MANAGER_PATH = '/org/freedesktop/Telepathy/AccountManager'
 
 CONN_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
+
 
 class PresenceService(gobject.GObject):
     """Provides simplified access to the Telepathy framework to activities"""
@@ -70,8 +72,8 @@ class PresenceService(gobject.GObject):
         """
         if self._activity_cache is not None:
             if self._activity_cache.props.id != activity_id:
-                raise RuntimeError('Activities can only access their own shared'
-                                   'instance')
+                raise RuntimeError('Activities can only access their own'
+                                   ' shared instance')
             return self._activity_cache
         else:
             connection_manager = get_connection_manager()
@@ -80,7 +82,7 @@ class PresenceService(gobject.GObject):
             for account_path, connection in connections_per_account.items():
                 if not connection.connected:
                     continue
-                logging.debug("Calling GetActivity on %s", account_path)
+                logging.debug('Calling GetActivity on %s', account_path)
                 try:
                     room_handle = connection.connection.GetActivity(
                             activity_id,
@@ -103,8 +105,8 @@ class PresenceService(gobject.GObject):
     def get_activity_by_handle(self, connection_path, room_handle):
         if self._activity_cache is not None:
             if self._activity_cache.room_handle != room_handle:
-                raise RuntimeError('Activities can only access their own shared'
-                                   'instance')
+                raise RuntimeError('Activities can only access their own'
+                                   ' shared instance')
             return self._activity_cache
         else:
             connection_manager = get_connection_manager()
@@ -170,12 +172,12 @@ class PresenceService(gobject.GObject):
     def __share_activity_cb(self, activity):
         """Finish sharing the activity
         """
-        self.emit("activity-shared", True, activity, None)
+        self.emit('activity-shared', True, activity, None)
 
     def __share_activity_error_cb(self, activity, error):
         """Notify with GObject event of unsuccessful sharing of activity
         """
-        self.emit("activity-shared", False, activity, error)
+        self.emit('activity-shared', False, activity, error)
 
     def share_activity(self, activity, properties=None, private=True):
         if properties is None:
@@ -225,8 +227,8 @@ class PresenceService(gobject.GObject):
 
         returns the bus name and the object path of the Telepathy connection
         """
-        connection_manager = get_connection_manager()
-        account_path, connection = connection_manager.get_preferred_connection()
+        manager = get_connection_manager()
+        account_path, connection = manager.get_preferred_connection()
         if connection is None:
             return None
         else:

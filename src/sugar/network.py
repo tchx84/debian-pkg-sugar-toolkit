@@ -75,6 +75,12 @@ class GlibTCPServer(SocketServer.TCPServer):
         # let the request be closed by the request handler when its done
         pass
 
+    def shutdown_request(self, request):
+        """Called to shutdown and close an individual request."""
+        # like close_request, let the request be closed by the request handler
+        # when done
+        pass
+
 
 class ChunkedGlibHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     """RequestHandler class that integrates with Glib mainloop.  It writes
@@ -147,12 +153,12 @@ class ChunkedGlibHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         """
         path = self.translate_path(self.path)
         if not path or not os.path.exists(path):
-            self.send_error(404, "File not found")
+            self.send_error(404, 'File not found')
             return None
 
         f = None
         if os.path.isdir(path):
-            for index in "index.html", "index.htm":
+            for index in 'index.html', 'index.htm':
                 index = os.path.join(path, index)
                 if os.path.exists(index):
                     path = index
@@ -166,12 +172,12 @@ class ChunkedGlibHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             # transmitted *less* than the content-length!
             f = open(path, 'rb')
         except IOError:
-            self.send_error(404, "File not found")
+            self.send_error(404, 'File not found')
             return None
         self.send_response(200)
-        self.send_header("Content-type", ctype)
-        self.send_header("Content-Length", str(os.fstat(f.fileno())[6]))
-        self.send_header("Content-Disposition", 'attachment; filename="%s"' %
+        self.send_header('Content-type', ctype)
+        self.send_header('Content-Length', str(os.fstat(f.fileno())[6]))
+        self.send_header('Content-Disposition', 'attachment; filename="%s"' %
                          os.path.basename(path))
         self.end_headers()
         return f
@@ -209,8 +215,8 @@ class GlibURLDownloader(gobject.GObject):
         self._outf = None
         self._fname = None
         if destfd and not destfile:
-            raise ValueError("Must provide destination file too when" \
-                             "specifying file descriptor")
+            raise ValueError('Must provide destination file too when'
+                             ' specifying file descriptor')
         if destfile:
             self._suggested_fname = os.path.basename(destfile)
             self._fname = os.path.abspath(os.path.expanduser(destfile))
@@ -238,29 +244,29 @@ class GlibURLDownloader(gobject.GObject):
 
     def cancel(self):
         if self._srcid == 0:
-            raise RuntimeError("Download already canceled or stopped")
+            raise RuntimeError('Download already canceled or stopped')
         self.cleanup(remove=True)
 
     def _get_filename_from_headers(self, headers):
-        if not headers.has_key("Content-Disposition"):
+        if 'Content-Disposition' not in headers:
             return None
 
-        ftag = "filename="
-        data = headers["Content-Disposition"]
+        ftag = 'filename='
+        data = headers['Content-Disposition']
         fidx = data.find(ftag)
         if fidx < 0:
             return None
-        fname = data[fidx+len(ftag):]
+        fname = data[fidx + len(ftag):]
         if fname[0] == '"' or fname[0] == "'":
             fname = fname[1:]
-        if fname[len(fname)-1] == '"' or fname[len(fname)-1] == "'":
-            fname = fname[:len(fname)-1]
+        if fname[len(fname) - 1] == '"' or fname[len(fname) - 1] == "'":
+            fname = fname[:len(fname) - 1]
         return fname
 
     def _read_next_chunk(self, source, condition):
         if condition & gobject.IO_ERR:
             self.cleanup(remove=True)
-            self.emit("error", "Error downloading file.")
+            self.emit('error', 'Error downloading file.')
             return False
         elif not (condition & gobject.IO_IN):
             # shouldn't get here, but...
@@ -274,19 +280,19 @@ class GlibURLDownloader(gobject.GObject):
             # error writing data to file?
             if count < len(data):
                 self.cleanup(remove=True)
-                self.emit("error", "Error writing to download file.")
+                self.emit('error', 'Error writing to download file.')
                 return False
 
-            self.emit("progress", self._written)
+            self.emit('progress', self._written)
 
             # done?
             if len(data) < self.CHUNK_SIZE:
                 self.cleanup()
-                self.emit("finished", self._fname, self._suggested_fname)
+                self.emit('finished', self._fname, self._suggested_fname)
                 return False
         except Exception, err:
             self.cleanup(remove=True)
-            self.emit("error", "Error downloading file: %s" % err)
+            self.emit('error', 'Error downloading file: %r' % err)
             return False
         return True
 
