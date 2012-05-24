@@ -9,6 +9,7 @@ sugar-toolkit-0.90 (0.90.2-2) unstable; urgency=low
   * Fix typo in long description.
   * Extend copyright of Debian packaging to cover recent years.
   * Avoid .la files.
+    Closes: bug#633225. Thanks to Neil Williams.
   * Update package relations:
     + Tighten build-dependency on cdbs and python: Needed for python2
       helper.
@@ -16,7 +17,7 @@ sugar-toolkit-0.90 (0.90.2-2) unstable; urgency=low
     + Relax build-depend unversioned on debhelper and devscripts: Needed
       versions satisfied even in oldstable.
 
- -- Jonas Smedegaard <dr@jones.dk>  Thu, 24 May 2012 22:11:56 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 24 May 2012 22:15:16 +0200
 
 sugar-toolkit-0.90 (0.90.2-1) unstable; urgency=low
 
