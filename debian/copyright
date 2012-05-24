@@ -12,7 +12,6 @@ Copyright: 1998, Carsten Schaar, and twm
   1999-2000,2002,2006-2008, Red Hat, Inc
   2001, George Lebl
   2003, Josiah Carlson
-  2004-2006, Christian Hammond
   2007, Eduardo Silva <edsiper@gmail.com>
   2007, Novell, Inc
   2006-2010, One Laptop Per Child
@@ -57,16 +56,16 @@ License: GPL-2+ with Autoconf exception
  the same distribution terms that you use for the rest of that program.
 
 Files: m4/lt*
-Copyright: 2004-2005,2007-2008, Free Software Foundation, Inc.
+Copyright: 2004-2005,2007-2009, Free Software Foundation, Inc.
 License: GAP
 
 Files: configure
-Copyright: 1992-2009, Free Software Foundation, Inc.
+Copyright: 1992-2010, Free Software Foundation, Inc.
 License: GAP~configure
 
 Files: ltmain.sh
  m4/libtool.m4
-Copyright: 1996-2001,2003-2008, Free Software Foundation, Inc.
+Copyright: 1996-2001,2003-2010, Free Software Foundation, Inc.
 License: GPL-2+ with Libtool exception
  As a special exception to the GNU General Public License, if you
  distribute this file as part of a program or library that is built
