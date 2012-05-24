@@ -4,11 +4,11 @@ Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
 Uploaders: Jonas Smedegaard <dr@jones.dk>
 Build-Depends: autotools-dev,
- devscripts (>= 2.10.7~),
- python-central,
- cdbs (>= 0.4.75~),
+ devscripts,
+ python (>= 2.6.5),
+ cdbs (>= 0.4.97~),
  python-all-dev,
- debhelper (>= 6),
+ debhelper,
  dh-buildinfo,
  libglib2.0-dev,
  python-gtk2-dev,
@@ -19,11 +19,10 @@ Build-Depends: autotools-dev,
  intltool,
  libxml-parser-perl,
  chrpath
-Standards-Version: 3.9.1
-Vcs-Git: git://git.debian.org/git/collab-maint/sugar-toolkit.git
-Vcs-Browser: http://git.debian.org/?p=collab-maint/sugar-toolkit.git;a=summary
+Standards-Version: 3.9.3
+Vcs-Git: git://git.debian.org/git/collab-maint/sugar-toolkit
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/sugar-toolkit.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
-XS-Python-Version: >= 2.5
 
 Package: python-sugar-toolkit-0.90
 Architecture: any
@@ -33,11 +32,10 @@ Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-XB-Python-Version: ${python:Versions}
 Description: Sugar graphical shell - core widgets
  Sugar is a graphical user interface aimed at children.
  .
- Originating as intregral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
  Sugar has since grown into a more widely usable low-ressource desktop
  environment for kids.
  .
