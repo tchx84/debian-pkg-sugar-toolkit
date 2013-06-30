@@ -18,11 +18,11 @@ Provides: ${python:Provides}, ${cdbs:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 Description: Sugar graphical shell - core widgets
- Sugar is a graphical user interface aimed at children.
- .
- Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
- Sugar has since grown into a more widely usable low-ressource desktop
- environment for kids.
+ Sugar is a desktop environment. It is conceived as a platform upon
+ which children learn with Sugar Activities. The platform provides
+ mechanisms for collaboration, reflection, and exploration. Sugar
+ Activities cover a broad range of applications: browsing, drawing,
+ composing, writing, programming, etc.
  .
  This package contains a set of widgets to build HIG compliant
  applications and interfaces to interact with system services like
