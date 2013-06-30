@@ -1,3 +1,30 @@
+sugar-toolkit-0.96 (0.96.1-2) UNRELEASED; urgency=low
+
+  * Remove debian/source/local-options: abort-on-upstream-changes and
+    unapply-patches are default in dpkg-source since 1.16.1.
+  * Update package relations:
+    + Fix tighten dependency on telepathy-mission-control-5 to include
+      epoch.
+    + Simplify to drop fallback dependencies for python-rsvg and
+      python-gconf: They are available even in oldstable.
+    + Relax to depend unversioned on python-gobject: Needed version
+      satisfied even in oldstable.
+    + Relax to build-depend unversioned on python: Needed version
+      satisfied even in oldstable.
+  * Bump debhelper compatibility level to 8.
+  * Use canonical hostname (anonscm.debian.org) in Vcs-Git URI.
+  * Rewrite README.source emphasizing control.in file as *not* a
+    show-stopper for contributions, and referring to
+    CDBS+git-buildpackage wiki page for details.
+  * Fix use comment pseudo-sections in copyright file to obey silly
+    restrictions of copyright format 1.0.
+  * Modernize long description, based on upstream wiki phrases.
+  * Bump packaging license to GPL-3+, and extend copyrigt coverage for
+    myself to include current year.
+  * Bump standards-version to 3.9.4.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 30 Jun 2013 22:04:52 +0200
+
 sugar-toolkit-0.96 (0.96.1-1) unstable; urgency=low
 
   * New upstream stable release.
