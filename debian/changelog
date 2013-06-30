@@ -1,5 +1,13 @@
-sugar-toolkit-0.96 (0.96.1-2) UNRELEASED; urgency=low
+sugar-toolkit-0.96 (0.96.3-1) unstable; urgency=low
 
+  [ upstream ]
+  * New release.
+    + Display spinner cursor when saving after closing the activity.
+    + ToolButton: add 'icon_name' as a GObject property.
+    + Activity Toolbar Description input field wrap text.
+    + Move the translation initialisation to an earlier stage.
+
+  [ Jonas Smedegaard ]
   * Remove debian/source/local-options: abort-on-upstream-changes and
     unapply-patches are default in dpkg-source since 1.16.1.
   * Update package relations:
@@ -16,14 +24,17 @@ sugar-toolkit-0.96 (0.96.1-2) UNRELEASED; urgency=low
   * Rewrite README.source emphasizing control.in file as *not* a
     show-stopper for contributions, and referring to
     CDBS+git-buildpackage wiki page for details.
-  * Fix use comment pseudo-sections in copyright file to obey silly
-    restrictions of copyright format 1.0.
+  * Update copyright file:
+    + Fix use comment pseudo-sections in copyright file to obey silly
+      restrictions of copyright format 1.0.
+    + Extend copyright coverage for autotools to include recent years.
   * Modernize long description, based on upstream wiki phrases.
   * Bump packaging license to GPL-3+, and extend copyrigt coverage for
     myself to include current year.
   * Bump standards-version to 3.9.4.
+  * Stop tracking md5sum of upstream tarball.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 30 Jun 2013 22:04:52 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 30 Jun 2013 22:24:09 +0200
 
 sugar-toolkit-0.96 (0.96.1-1) unstable; urgency=low
 
