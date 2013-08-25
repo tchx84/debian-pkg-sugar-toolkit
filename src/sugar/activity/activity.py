@@ -54,6 +54,7 @@ import os
 import time
 from hashlib import sha1
 from functools import partial
+import json
 
 import gconf
 import gtk
@@ -61,7 +62,6 @@ import gobject
 import dbus
 import dbus.service
 from dbus import PROPERTIES_IFACE
-import cjson
 from telepathy.server import DBusProperties
 from telepathy.interfaces import CHANNEL, \
                                  CHANNEL_TYPE_TEXT, \
@@ -324,6 +324,13 @@ class Activity(Window, gtk.Container):
             if 'share-scope' in self._jobject.metadata:
                 share_scope = self._jobject.metadata['share-scope']
 
+            if 'launch-times' in self._jobject.metadata:
+                self._jobject.metadata['launch-times'] += ', %d' % \
+                    int(time.time())
+            else:
+                self._jobject.metadata['launch-times'] = \
+                    str(int(time.time()))
+
         self.shared_activity = None
         self._join_id = None
 
@@ -376,6 +383,7 @@ class Activity(Window, gtk.Container):
         jobject.metadata['preview'] = ''
         jobject.metadata['share-scope'] = SCOPE_PRIVATE
         jobject.metadata['icon-color'] = icon_color
+        jobject.metadata['launch-times'] = str(int(time.time()))
         jobject.file_path = ''
 
         # FIXME: We should be able to get an ID synchronously from the DS,
@@ -677,8 +685,8 @@ class Activity(Window, gtk.Container):
 
         buddies_dict = self._get_buddies()
         if buddies_dict:
-            self.metadata['buddies_id'] = cjson.encode(buddies_dict.keys())
-            self.metadata['buddies'] = cjson.encode(self._get_buddies())
+            self.metadata['buddies_id'] = json.dumps(buddies_dict.keys())
+            self.metadata['buddies'] = json.dumps(self._get_buddies())
 
         preview = self.get_preview()
         if preview is not None:
