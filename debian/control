@@ -2,8 +2,9 @@ Source: sugar-toolkit-0.98
 Section: python
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
-Uploaders: Jonas Smedegaard <dr@jones.dk>, Santiago Ruano Rincón <santiago@debian.org>
-Build-Depends: cdbs (>= 0.4.97~),
+Uploaders: Jonas Smedegaard <dr@jones.dk>,
+ Santiago Ruano Rincón <santiago@debian.org>
+Build-Depends: cdbs (>= 0.4.90~),
  autotools-dev,
  devscripts,
  python,
@@ -19,17 +20,21 @@ Build-Depends: cdbs (>= 0.4.97~),
  intltool,
  libxml-parser-perl,
  chrpath
-Standards-Version: 3.9.4
-Vcs-Git: git://anonscm.debian.org/git/collab-maint/sugar-toolkit
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/sugar-toolkit.git
+Standards-Version: 3.9.6
+Vcs-Git: git://anonscm.debian.org/collab-maint/sugar-toolkit
+Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/sugar-toolkit.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 
 Package: python-sugar-toolkit-0.98
 Architecture: any
-Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
+Depends: ${cdbs:Depends},
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
-Provides: ${python:Provides}, ${cdbs:Provides}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 Description: Sugar graphical shell - core widgets

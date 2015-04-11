@@ -1,11 +1,25 @@
+sugar-toolkit-0.98 (0.98.1-2) experimental; urgency=medium
+
+  * Declare compliance with Debian Policy 3.9.6.
+  * Update Vcs-Git field to use canonical URL.
+  * Update Vcs-Browser field to use cgit and https.
+  * Wrap and sort Uploaders and package relations fields.
+  * Update copyright info:
+    + Extend coverage for myself.
+    + Fix use SPDX shortname for X11 license.
+      Thanks to Paul Richards Tagliamonte.
+  * Track xz compressed upstream tarballs (favored over bzip2).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 11 Apr 2015 10:17:11 +0200
+
 sugar-toolkit-0.98 (0.98.1-1) unstable; urgency=low
 
   [ upstream ]
-  * New release. 
+  * New release.
 
   [ Santiago ]
-  * Bump packaging to upstream version 0.98
-  * Adding myself to Uploaders
+  * Bump packaging to upstream version 0.98.
+  * Adding myself to Uploaders.
 
  -- Santiago Ruano Rincón <santiago@debian.org>  Fri, 06 Sep 2013 10:22:16 +0200
 
