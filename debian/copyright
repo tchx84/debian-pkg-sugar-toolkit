@@ -92,7 +92,7 @@ Copyright: 1995-1997, Ulrich Drepper <drepper@gnu.ai.mit.edu>
 License: GAP~gettext
 
 Files: debian/*
-Copyright: 2008-2013, Jonas Smedegaard <dr@jones.dk>
+Copyright: 2008-2013,2015, Jonas Smedegaard <dr@jones.dk>
 License: GPL-3+
 
 License: LGPL-2+
