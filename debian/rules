@@ -65,7 +65,7 @@ bdeps +=, chrpath
 #  * telepathy-* versioning follows http://wiki.sugarlabs.org/go/0.90/Notes
 #  * zip, git and subversion are used in .xo format packaging routines
 python-depends = gtk2 dbus gobject cairo telepathy
-python-depends += sugar-$(pkgbranch) hippocanvas gconf dateutil rsvg
+python-depends += sugar-0.98 hippocanvas gconf dateutil rsvg
 depends = $(patsubst %,$(comma) python-%,$(python-depends))
 recommends = sugar-presence-service-0.90, ttf-dejavu-core, unzip
 recommends +=, dbus-x11, telepathy-mission-control-5 (>= 1:5.6)
