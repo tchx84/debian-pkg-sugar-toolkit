@@ -66,7 +66,7 @@ bdeps +=, chrpath
 python-depends = gtk2 dbus gobject cairo telepathy
 python-depends += sugar-$(pkgbranch) hippocanvas gconf dateutil rsvg
 depends = $(patsubst %,$(comma) python-%,$(python-depends))
-recommends = sugar-$(pkgbranch), python-carquinyol-$(pkgbranch)
+recommends = python-carquinyol-$(pkgbranch)
 recommends +=, sugar-presence-service-0.90
 recommends +=, python-jarabe-$(pkgbranch), ttf-dejavu-core, unzip
 recommends +=, dbus-x11, telepathy-mission-control-5 (>= 1:5.6)
