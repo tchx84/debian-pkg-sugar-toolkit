@@ -22,13 +22,14 @@ Provides: ${cdbs:Provides},
  ${python:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - core widgets
+Description: Sugar graphical shell - legacy core widgets
  Sugar is a desktop environment. It is conceived as a platform upon
  which children learn with Sugar Activities. The platform provides
  mechanisms for collaboration, reflection, and exploration. Sugar
  Activities cover a broad range of applications: browsing, drawing,
  composing, writing, programming, etc.
  .
- This package contains a set of widgets to build HIG compliant
- applications and interfaces to interact with system services like
- presence and the datastore.
+ This package contains a deprecated set of widgets to build HIG
+ compliant applications and interfaces to interact with system services
+ like presence and the datastore.  Please use python-sugar3 instead
+ where possible.
