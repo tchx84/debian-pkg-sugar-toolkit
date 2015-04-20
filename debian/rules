@@ -63,6 +63,7 @@ bdeps +=, chrpath
 #  * python-sugar (sugar.mime and sugar.dispatch) used in
 #    sugar.datastore.datastore
 #  * telepathy-* versioning follows http://wiki.sugarlabs.org/go/0.90/Notes
+#  * shared-mime-info (update-mime-database) used in sugar.bundle.bundlebuilder
 #  * unzip used in sugar.bundle.bundle
 #  * git used in sugar.activity.bundlebuilder
 python-depends = gtk2 dbus gobject cairo telepathy
@@ -73,6 +74,7 @@ recommends +=, dbus-x11, telepathy-mission-control-5 (>= 1:5.6)
 recommends +=, telepathy-gabble (>= 0.10), telepathy-salut (>= 0.4)
 recommends +=, python-carquinyol-$(pkgmainbranch) | python-carquinyol
 recommends +=, python-jarabe-$(pkgmainbranch) | python-jarabe
+recommends +=, shared-mime-info
 suggests = git, ttf-dejavu-extra
 
 CDBS_BUILD_DEPENDS +=, $(bdeps)
