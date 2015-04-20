@@ -1,5 +1,5 @@
 Source: sugar-toolkit-0.98
-Section: python
+Section: oldlibs
 Priority: optional
 Maintainer: Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>
 Uploaders: Jonas Smedegaard <dr@jones.dk>,
@@ -37,13 +37,13 @@ Provides: ${cdbs:Provides},
  ${python:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - core widgets
- Sugar is a desktop environment. It is conceived as a platform upon
- which children learn with Sugar Activities. The platform provides
- mechanisms for collaboration, reflection, and exploration. Sugar
- Activities cover a broad range of applications: browsing, drawing,
- composing, writing, programming, etc.
+Description: Sugar Learning Platform - legacy core widgets
+ Sugar Learning Platform promotes collaborative learning through Sugar
+ Activities that encourage critical thinking, the heart of a quality
+ education.  Designed from the ground up especially for children, Sugar
+ offers an alternative to traditional “office-desktop” software.
  .
- This package contains a set of widgets to build HIG compliant
- applications and interfaces to interact with system services like
- presence and the datastore.
+ This package contains a deprecated set of widgets to build HIG
+ compliant applications and interfaces to interact with system services
+ like presence and the datastore.  Please use python-sugar3 instead
+ where possible.

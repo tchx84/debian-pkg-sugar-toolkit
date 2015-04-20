@@ -1,3 +1,15 @@
+sugar-toolkit-0.98 (0.98.1-4) unstable; urgency=medium
+
+  * Move to section oldlibs: Deprecated upstream.
+  * Mention deprecation in short and long description.
+  * Update package relations:
+    + Suggest git (not git-core).
+    + Fix stop suggest subversion: Unused upstream since ~2008.
+    + Fix explicitly recommend shared-mime-info.
+  * Modernize short and long description.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 20 Apr 2015 21:27:06 +0200
+
 sugar-toolkit-0.98 (0.98.1-3) unstable; urgency=medium
 
   * Update copyright info: Add alternate git source URL.
