@@ -26,7 +26,6 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 pkgbase = python-sugar-toolkit
 pkgbranch = $(lastword $(subst -,$(space),$(DEB_SOURCE_PACKAGE)))
 pkg = $(pkgbase)-$(pkgbranch)
-pkgmainbranch = 0.104
 
 DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
@@ -67,14 +66,12 @@ bdeps +=, chrpath
 #  * unzip used in sugar.bundle.bundle
 #  * git used in sugar.activity.bundlebuilder
 python-depends = gtk2 dbus gobject cairo telepathy
-python-depends += sugar-0.98 hippocanvas gconf dateutil rsvg
+python-depends += sugar hippocanvas gconf dateutil rsvg
 depends = $(patsubst %,$(comma) python-%,$(python-depends))
-recommends = sugar-presence-service-0.90, ttf-dejavu-core, unzip
+recommends = sugar-presence-service, ttf-dejavu-core, unzip
 recommends +=, dbus-x11, telepathy-mission-control-5 (>= 1:5.6)
 recommends +=, telepathy-gabble (>= 0.10), telepathy-salut (>= 0.4)
-recommends +=, python-carquinyol-$(pkgmainbranch) | python-carquinyol
-recommends +=, python-jarabe-$(pkgmainbranch) | python-jarabe
-recommends +=, shared-mime-info
+recommends +=, python-carquinyol, python-jarabe, shared-mime-info
 suggests = git, ttf-dejavu-extra
 
 CDBS_BUILD_DEPENDS +=, $(bdeps)
