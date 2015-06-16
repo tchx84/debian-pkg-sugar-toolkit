@@ -1,3 +1,16 @@
+sugar-toolkit (0.98.1-5) UNRELEASED; urgency=medium
+
+  * Update copyright info:
+    + Use License-Grant and License-Reference fields.
+      Thanks to Ben Finney.
+  * Add lintian overrides regarding license in License-Reference field.
+    See bug#786450.
+  * Update package relations: Recommend/depend on unbranched Glucose
+    parts (i.e. core libraries).
+  * Drop branch from source and binary package.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 16 Jun 2015 08:35:52 -0500
+
 sugar-toolkit-0.98 (0.98.1-4) unstable; urgency=medium
 
   * Move to section oldlibs: Deprecated upstream.
