@@ -1,4 +1,4 @@
-sugar-toolkit (0.98.1-5) UNRELEASED; urgency=medium
+sugar-toolkit (0.98.1-5) experimental; urgency=medium
 
   * Update copyright info:
     + Use License-Grant and License-Reference fields.
@@ -8,8 +8,9 @@ sugar-toolkit (0.98.1-5) UNRELEASED; urgency=medium
   * Update package relations: Recommend/depend on unbranched Glucose
     parts (i.e. core libraries).
   * Drop branch from source and binary package.
+  * Modernize git-buildpackage config: Avoid "git-" prefix.
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 16 Jun 2015 08:35:52 -0500
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 16 Jun 2015 08:42:04 -0500
 
 sugar-toolkit-0.98 (0.98.1-4) unstable; urgency=medium
 
