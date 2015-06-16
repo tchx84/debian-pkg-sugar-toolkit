@@ -1,4 +1,4 @@
-Source: sugar-toolkit-0.98
+Source: sugar-toolkit
 Section: oldlibs
 Priority: optional
 Maintainer: Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>
@@ -10,7 +10,7 @@ Vcs-Git: git://anonscm.debian.org/pkg-sugar/sugar-toolkit
 Vcs-Browser: https://anonscm.debian.org/cgit/pkg-sugar/sugar-toolkit.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 
-Package: python-sugar-toolkit-0.98
+Package: python-sugar-toolkit
 Architecture: any
 Depends: ${cdbs:Depends},
  ${misc:Depends},
@@ -18,10 +18,7 @@ Depends: ${cdbs:Depends},
  ${shlibs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
-Provides: ${cdbs:Provides},
- ${python:Provides}
-Conflicts: ${cdbs:Conflicts}
-Replaces: ${cdbs:Replaces}
+Provides: ${python:Provides}
 Description: Sugar Learning Platform - legacy core widgets
  Sugar Learning Platform promotes collaborative learning through Sugar
  Activities that encourage critical thinking, the heart of a quality
