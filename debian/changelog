@@ -19,8 +19,26 @@ sugar-toolkit (0.98.1-5) experimental; urgency=medium
     parts (i.e. core libraries).
   * Drop branch from source and binary package.
   * Modernize git-buildpackage config: Avoid "git-" prefix.
+  * Switch packaging git branch back to master.
 
  -- Jonas Smedegaard <dr@jones.dk>  Tue, 16 Jun 2015 08:42:04 -0500
+
+sugar-toolkit-0.98 (0.98.1-4+unstable1) unstable; urgency=medium
+
+  * Update copyright info:
+    + Use License-Grant and License-Reference fields.
+      Thanks to Ben Finney.
+  * Add lintian overrides regarding license in License-Reference field.
+    See bug#786450.
+  * Modernize git-buildpackage config: Avoid "git-" prefix.
+  * Update package relations:
+    + Relax to recommend unversioned telepathy-mission-control-5 and
+      telepathy-salut: Needed versions satisfied even in oldstable.
+    + Fix Recommend telepathy-gabble-legacy or older telepathy-gabble
+      (not recent telepathy-gabble): Old Tubes API needed.
+  * Switch packaging git branch to master-0.104.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 17 Jun 2015 18:18:54 -0500
 
 sugar-toolkit-0.98 (0.98.1-4) unstable; urgency=medium
 
