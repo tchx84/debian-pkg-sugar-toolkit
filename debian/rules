@@ -66,15 +66,16 @@ bdeps +=, chrpath
 #  * shared-mime-info (update-mime-database) used in sugar.bundle.bundlebuilder
 #  * unzip used in sugar.bundle.bundle
 #  * git used in sugar.activity.bundlebuilder
+#  * legacy/older telepathy-gabble needed for its Tubes ABI
 python-depends = gtk2 dbus gobject cairo telepathy
 python-depends += sugar-0.98 hippocanvas gconf dateutil rsvg
 depends = $(patsubst %,$(comma) python-%,$(python-depends))
 recommends = sugar-presence-service-0.90, ttf-dejavu-core, unzip
-recommends +=, dbus-x11, telepathy-mission-control-5 (>= 1:5.6)
-recommends +=, telepathy-gabble (>= 0.10), telepathy-salut (>= 0.4)
+recommends +=, dbus-x11, telepathy-mission-control-5, telepathy-salut
 recommends +=, python-carquinyol-$(pkgmainbranch) | python-carquinyol
 recommends +=, python-jarabe-$(pkgmainbranch) | python-jarabe
 recommends +=, shared-mime-info
+recommends +=, telepathy-gabble-legacy | telepathy-gabble (<< 0.17.25)
 suggests = git, ttf-dejavu-extra
 
 CDBS_BUILD_DEPENDS +=, $(bdeps)
