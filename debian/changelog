@@ -1,3 +1,9 @@
+sugar-toolkit (0.98.1-7) unstable; urgency=medium
+
+  * Bump debhelper compatibility level to 9.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 25 Jun 2015 16:24:27 -0500
+
 sugar-toolkit (0.98.1-6) experimental; urgency=medium
 
   * Update package relations:
