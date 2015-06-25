@@ -41,6 +41,10 @@ binary-post-install/$(pkg)::
 binary-strip/$(pkg)::
 	find $(DEB_DESTDIR)/usr/lib -type f -name '*.so' -exec chrpath -d '{}' ';'
 
+# Build-depend unversioned on debhelper
+#  TODO: Drop when adopted in cdbs
+CDBS_BUILD_DEPENDS_rules_debhelper_v9 = debhelper
+
 # Needed by upstream build process
 bdeps = libglib2.0-dev, python-gtk2-dev, libsm-dev, libice-dev
 bdeps +=, libasound2-dev | libasound-dev, gettext, intltool
