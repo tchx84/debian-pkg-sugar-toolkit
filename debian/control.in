@@ -18,7 +18,10 @@ Depends: ${cdbs:Depends},
  ${shlibs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
-Provides: ${python:Provides}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
+Conflicts: ${cdbs:Conflicts}
+Replaces: ${cdbs:Replaces}
 Description: Sugar Learning Platform - legacy core widgets
  Sugar Learning Platform promotes collaborative learning through Sugar
  Activities that encourage critical thinking, the heart of a quality
