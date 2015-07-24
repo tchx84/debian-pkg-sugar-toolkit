@@ -84,6 +84,14 @@ CDBS_DEPENDS_$(pkg) = $(depends)
 CDBS_RECOMMENDS_$(pkg) = $(recommends)
 CDBS_SUGGESTS_$(pkg) = $(suggests)
 
+# Replace previous package names to avoid conflicts
+older-toolkit = python-sugar-toolkit-0.88
+older-toolkit +=, python-sugar-toolkit-0.96
+older-toolkit +=, python-sugar-toolkit-0.98
+CDBS_PROVIDES_$(pkg) +=, $(older-toolkit)
+CDBS_REPLACES_$(pkg) +=, $(older-toolkit)
+CDBS_CONFLICTS_$(pkg) +=, $(older-toolkit)
+
 # Avoid .la files - see http://wiki.debian.org/ReleaseGoals/LAFileRemoval
 binary-post-install/$(pkg)::
 	find '$(cdbs_curdestdir)' -name '*.la' -delete
